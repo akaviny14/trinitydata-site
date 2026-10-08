@@ -49,9 +49,9 @@
 }
 
 /* ===== Variáveis de superfície =====
-   Claro: página e superfícies claras (os painéis de exemplo são claros nos dois temas, como um painel real).
+   Claro: página e superfícies claras (os painéis de exemplo seguem o tema).
    Escuro: tema escuro e seções de destaque. */
-:root, [data-tema="claro"] .superficie, .dash {
+:root, [data-tema="claro"] .superficie, [data-tema="claro"] .dash {
   --fundo: var(--td-neutro-0);
   --titulo: var(--td-azul-800);
   --texto: var(--td-neutro-700);
@@ -193,7 +193,7 @@ a:hover { color: var(--link-hover); }
 .so-celular { display: none !important; }
 
 /* Entrada suave dos blocos */
-.surge { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .9s var(--suave); }
+.surge { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .65s var(--suave); }
 .surge.visto { opacity: 1; transform: none; }
 
 /* ===== Botões ===== */
@@ -256,14 +256,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .peca {
   position: absolute; background: var(--peca-fundo); border: 1px solid var(--peca-borda);
   border-radius: 8px; box-shadow: var(--peca-sombra);
-  transition: transform 1s var(--suave), opacity .8s ease, background-color .35s ease, border-color .35s ease;
+  transition: transform .7s var(--suave), opacity .55s ease, background-color .35s ease, border-color .35s ease;
 }
 .p-ind { top: 0; right: 0; width: 470px; padding: 16px 18px 18px; z-index: 3; }
 .p-graf { top: 128px; left: 0; width: 470px; padding: 18px 20px 16px; z-index: 2; }
 .p-aviso {
   top: 388px; right: 8px; width: 300px; padding: 12px 14px 12px 16px; z-index: 4;
   border-top: 3px solid var(--td-semantica-atencao);
-  transition: transform .6s var(--suave), opacity .5s ease, background-color .35s ease, border-color .35s ease;
+  transition: transform .45s var(--suave), opacity .35s ease, background-color .35s ease, border-color .35s ease;
 }
 .legenda-palco { position: absolute; left: 0; bottom: 0; }
 .palco:not(.montado) .p-ind { transform: translate(56px, -40px) rotate(1.6deg); opacity: 0; }
@@ -295,9 +295,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .graf-leg .fonte { flex-basis: 100%; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; }
 .sw-barra { width: 10px; height: 10px; border-radius: 2px; background: var(--barra); }
 .sw-meta { width: 14px; border-top: 2px dashed var(--meta); }
-.barra { fill: var(--barra); transform-box: fill-box; transform-origin: 50% 100%; transition: transform .7s var(--suave), fill .35s ease; }
+.barra { fill: var(--barra); transform-box: fill-box; transform-origin: 50% 100%; transition: transform .5s var(--suave), fill .35s ease; }
 .linha-real { fill: none; stroke: var(--barra); stroke-width: 2; display: none; }
-.linha-meta { fill: none; stroke: var(--meta); stroke-width: 1.5; stroke-dasharray: 4 3; transition: clip-path 1s var(--suave) .5s; clip-path: inset(0 0 0 0); }
+.linha-meta { fill: none; stroke: var(--meta); stroke-width: 1.5; stroke-dasharray: 4 3; transition: clip-path .7s var(--suave) .35s; clip-path: inset(0 0 0 0); }
 .grade-g { stroke: var(--grade-graf); }
 .eixo-g { stroke: var(--eixo); }
 .palco:not(.desenhado) .barra { transform: scaleY(0); }
@@ -319,6 +319,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 
 /* ===== 3. Dores ===== */
 .dores-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: start; }
+.dores-grid > div:first-child { position: sticky; top: 116px; }
 .sintomas { list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-direction: column; }
 .sintomas li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 8px; padding: 18px 0; border-top: 1px solid var(--divisa); font-size: 17px; line-height: 1.5; color: var(--texto); }
 .sintomas li span { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); padding-top: 4px; }
@@ -363,12 +364,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .sol { background: var(--cartao); border: 1px solid var(--cartao-borda); border-top: 3px solid var(--filete); border-radius: 8px; padding: 24px 22px 22px; display: flex; flex-direction: column; gap: 16px; transition: transform .35s var(--suave), opacity .7s ease, background-color .35s ease, box-shadow .35s ease; }
 .sol.visto:hover { transform: translateY(-3px); box-shadow: var(--peca-sombra); }
 .sol svg.ic { width: 32px; height: 32px; color: var(--sobretitulo); }
-.sol h3 { font-size: 19px; line-height: 1.3; font-weight: 700; color: var(--titulo); margin: 0; }
-.ad { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 0; }
-.ad div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; font-size: 15px; line-height: 1.45; }
-.ad dt { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--texto-suave); padding-top: 2px; }
-.ad dd { margin: 0; color: var(--texto); }
-.ad .dep dd { color: var(--titulo); font-weight: 500; }
+.sol { --dep-fundo: var(--td-azul-50); }
+[data-tema="escuro"] .sol { --dep-fundo: var(--td-azul-800); background: var(--td-azul-900); border-color: var(--td-azul-800); border-top-color: var(--filete); }
+.sol h3 { font-size: 20px; line-height: 1.28; font-weight: 700; color: var(--titulo); margin: 0; }
+.ad { display: flex; flex-direction: column; gap: 14px; margin: 0; }
+.ad div { display: flex; flex-direction: column; gap: 4px; line-height: 1.45; }
+.ad dt { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--texto-suave); }
+.ad dd { margin: 0; font-size: 14px; color: var(--texto-suave); }
+.ad .dep { background: var(--dep-fundo); border-left: 3px solid var(--filete); border-radius: 0 4px 4px 0; padding: 12px 14px; }
+.ad .dep dt { color: var(--sobretitulo); }
+.ad .dep dd { font-size: 16px; color: var(--titulo); font-weight: 600; }
+.sol .rodape-sol .etiqueta { border: 0; padding: 0; color: var(--texto-suave); letter-spacing: .04em; }
 .sol .rodape-sol { margin-top: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding-top: 4px; }
 
 /* ===== 5. Ferramentas ===== */
@@ -385,7 +391,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 
 /* ===== 6. Demonstração ===== */
 .exemplos { overflow: hidden; }
-.abas { display: flex; gap: 8px; margin-top: 40px; flex-wrap: wrap; }
+.abas-caixa { position: relative; margin-top: 40px; }
+.abas { display: flex; gap: 8px; flex-wrap: wrap; }
+.abas-mais { display: none; }
 .aba {
   font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; min-height: 44px;
   padding: 10px 16px; border-radius: 6px; border: 1.5px solid var(--etiqueta-borda); background: transparent; color: var(--texto);
@@ -395,8 +403,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .aba[aria-selected="true"] { background: var(--botao-fundo); border-color: var(--botao-fundo); color: var(--botao-texto); }
 .demo { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 56px; margin-top: 32px; align-items: start; }
 .demo-palco { position: relative; }
-.demo-palco .mm { left: -56px; top: -56px; width: calc(100% + 112px); height: calc(100% + 112px); }
-.painel-troca { position: relative; transition: opacity .35s ease, transform .5s var(--suave); }
+.demo-palco .mm { left: -56px; top: 0; width: calc(100% + 112px); height: calc(100% + 56px); }
+.painel-troca { position: relative; transition: opacity .25s ease, transform .35s var(--suave); }
 .painel-troca.saindo { opacity: 0; transform: translateY(10px); }
 .lado h3 { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; font-weight: 500; color: var(--texto-suave); margin: 8px 0 14px; }
 .lado ul { list-style: none; margin: 0 0 28px; padding: 0; }
@@ -405,23 +413,36 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .lado .tit-rel { font-size: 21px; font-weight: 700; color: var(--titulo); margin: 8px 0 20px; line-height: 1.3; }
 .lado .feito { font-size: 13px; color: var(--texto-suave); margin-top: 20px; line-height: 1.5; }
 
-/* Painel de exemplo (claro nos dois temas, como um painel real) */
-.dash { position: relative; background: var(--fundo); color: var(--texto); border-radius: 10px; border: 1px solid var(--td-neutro-100); box-shadow: 0 24px 48px -28px rgba(14, 20, 23, .55); overflow: hidden; }
-.dash-cab { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--td-neutro-100); }
-.dash-cab b { font-size: 17px; color: var(--titulo); }
-.dash-cab span { font-size: 13px; color: var(--texto-suave); }
-.dash-cab .rotulo { margin-left: auto; }
-.dash-filtros { display: flex; gap: 8px; padding: 10px 20px; border-bottom: 1px solid var(--td-neutro-100); background: var(--td-neutro-50); }
-.dash-filtros span { font-size: 13px; color: var(--texto); border: 1px solid var(--td-neutro-100); background: var(--td-neutro-0); border-radius: 4px; padding: 4px 10px; }
-.dash-corpo { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+/* Painel de exemplo: peças soltas sobre o milimetrado, na linguagem da abertura.
+   Tema claro: peças claras. Tema escuro: Azul 900 com borda Azul 600. */
+.dash {
+  --dp-fundo: var(--td-neutro-0); --dp-borda: var(--td-neutro-100); --dp-sombra: 0 18px 40px -24px rgba(14, 20, 23, .6);
+  --trilho: var(--td-neutro-50); --marca-meta: var(--td-neutro-900); --g-linha: var(--td-neutro-100); --g-base: var(--td-neutro-500);
+  --crit-rotulo: var(--td-semantica-critico-texto);
+  position: relative; display: flex; flex-direction: column; gap: 14px; color: var(--texto);
+}
+[data-tema="escuro"] .dash {
+  --dp-fundo: var(--td-azul-900); --dp-borda: var(--td-azul-600); --dp-sombra: 0 16px 36px -20px rgba(14, 20, 23, .7);
+  --trilho: var(--td-azul-800); --marca-meta: var(--td-neutro-0); --g-linha: var(--td-azul-800); --g-base: var(--td-azul-200);
+  --crit-rotulo: var(--td-neutro-0);
+}
+.dpeca {
+  background: var(--dp-fundo); border: 1px solid var(--dp-borda); border-radius: 8px; box-shadow: var(--dp-sombra); padding: 16px 18px; min-width: 0;
+  transition: transform .5s var(--suave), opacity .4s ease, background-color .35s ease, border-color .35s ease;
+}
+.desenhar .dpeca { opacity: 0; transform: translateY(14px); }
 .dash .kpis { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); }
-.dash .kpi { border-color: var(--td-neutro-100); border-top-color: var(--filete); }
+.dash .kpi { border-color: var(--dp-borda); border-top-color: var(--filete); }
 .dash .kpi.atencao { border-top-color: var(--td-semantica-atencao); }
 .dash .kpi.critico { border-top-color: var(--td-semantica-critico); }
+.dash-alerta { border-top: 3px solid var(--td-semantica-critico); padding: 12px 16px; }
+.dash-alerta .aviso-l { color: var(--crit-rotulo); }
+.dash-alerta .aviso-l i { background: var(--td-semantica-critico); }
+.dash-alerta.acende { animation: acende 1.2s ease 1; }
+@keyframes acende { 0% { box-shadow: 0 0 0 0 rgba(176, 63, 51, .55); } 100% { box-shadow: 0 0 0 12px rgba(176, 63, 51, 0); } }
 .dash-graf { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 14px; }
-.ch-card { border: 1px solid var(--td-neutro-100); border-radius: 4px; padding: 12px 14px 12px; min-width: 0; }
 .ch-card.largo { grid-column: 1 / -1; }
-.ch-tit { font-size: 14px; font-weight: 600; color: var(--titulo); margin: 0 0 10px; display: flex; justify-content: space-between; gap: 8px; }
+.ch-tit { font-size: 14px; font-weight: 600; color: var(--titulo); margin: 0 0 12px; display: flex; justify-content: space-between; gap: 8px; }
 .ch-tit small { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; font-weight: 400; color: var(--texto-suave); }
 .ch { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 6px; }
 .ch-y { display: flex; flex-direction: column; justify-content: space-between; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--eixo); text-align: right; height: calc(var(--h, 120px) + 14px); margin-top: -7px; }
@@ -431,31 +452,34 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .ch-leg span { display: inline-flex; align-items: center; gap: 6px; }
 .ch-leg i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; background: var(--c); }
 .ch-leg i.tr { height: 0; width: 14px; border-top: 2px dashed var(--c); border-radius: 0; background: none; }
-.ch-leg .meta-l i { width: 2px; height: 12px; border-radius: 0; background: var(--td-neutro-900); }
+.ch-leg .meta-l i { width: 2px; height: 12px; border-radius: 0; background: var(--marca-meta); }
 .s1 { --c: var(--td-viz-1); } .s2 { --c: var(--td-viz-2); } .s3 { --c: var(--td-viz-3); } .s4 { --c: var(--td-viz-4); } .s5 { --c: var(--td-viz-5); }
-.g-grade { stroke: var(--td-neutro-100); }
-.g-eixo { stroke: var(--td-neutro-500); }
-.b { fill: var(--c); transform-box: fill-box; transform-origin: 50% 100%; transition: transform .7s var(--suave); }
-.ln { fill: none; stroke: var(--c); stroke-width: 2; clip-path: inset(0 0 0 0); transition: clip-path 1.1s var(--suave) .2s; }
+/* No escuro, as duas primeiras séries clareiam como na abertura (barra Azul 400, meta Azul 200). */
+[data-tema="escuro"] .dash .s1 { --c: var(--td-azul-400); }
+[data-tema="escuro"] .dash .s2 { --c: var(--td-azul-200); }
+.g-grade { stroke: var(--g-linha); }
+.g-eixo { stroke: var(--g-base); }
+.b { fill: var(--c); transform-box: fill-box; transform-origin: 50% 100%; transition: transform .5s var(--suave); }
+.ln { fill: none; stroke: var(--c); stroke-width: 2; clip-path: inset(0 0 0 0); transition: clip-path .8s var(--suave) .15s; }
 .ln.tr { stroke-width: 1.5; stroke-dasharray: 4 3; }
 .desenhar .b { transform: scaleY(0); }
 .desenhar .ln { clip-path: inset(0 100% 0 0); }
 .hb { display: flex; flex-direction: column; gap: 10px; }
 .hb-l { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--texto); margin-bottom: 4px; }
 .hb-l b { font-family: "DM Mono", ui-monospace, monospace; font-weight: 400; white-space: nowrap; }
-.hb-t { position: relative; height: 8px; background: var(--td-neutro-50); border-radius: 2px; }
-.hb-t i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--c); border-radius: 2px; transform-origin: 0 50%; transition: transform .8s var(--suave); }
-.hb-t em { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--td-neutro-900); }
+.hb-t { position: relative; height: 8px; background: var(--trilho); border-radius: 2px; }
+.hb-t i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--c); border-radius: 2px; transform-origin: 0 50%; transition: transform .55s var(--suave); }
+.hb-t em { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--marca-meta); }
 .desenhar .hb-t i { transform: scaleX(0); }
 .funil { display: flex; flex-direction: column; gap: 6px; }
 .funil div { display: grid; grid-template-columns: 92px minmax(0, 1fr) 84px; gap: 10px; align-items: center; font-size: 13px; }
 .funil span { color: var(--texto); }
-.funil i { height: 22px; background: var(--td-viz-1); border-radius: 2px; transform-origin: 0 50%; transition: transform .8s var(--suave); }
+.funil i { height: 22px; background: var(--c); border-radius: 2px; transform-origin: 0 50%; transition: transform .55s var(--suave); }
 .funil b { font-family: "DM Mono", ui-monospace, monospace; font-weight: 400; color: var(--texto); text-align: right; white-space: nowrap; }
 .desenhar .funil i { transform: scaleX(0); }
 .tab { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tab th { text-align: left; font-family: "DM Mono", ui-monospace, monospace; font-weight: 400; letter-spacing: .04em; color: var(--texto-suave); padding: 0 6px 6px 0; border-bottom: 1px solid var(--td-neutro-100); }
-.tab td { padding: 7px 6px 7px 0; border-bottom: 1px solid var(--td-neutro-100); color: var(--texto); }
+.tab th { text-align: left; font-family: "DM Mono", ui-monospace, monospace; font-weight: 400; letter-spacing: .04em; color: var(--texto-suave); padding: 0 6px 6px 0; border-bottom: 1px solid var(--g-linha); }
+.tab td { padding: 7px 6px 7px 0; border-bottom: 1px solid var(--g-linha); color: var(--texto); }
 .tab td.n { font-family: "DM Mono", ui-monospace, monospace; text-align: right; white-space: nowrap; }
 .tab th.n { text-align: right; }
 .tab tr.tot td { font-weight: 600; color: var(--titulo); }
@@ -466,11 +490,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .donut svg { width: 120px; height: 120px; transform: rotate(-90deg); }
 .donut circle { fill: none; stroke: var(--c); stroke-width: 16; }
 .donut .hb-l span i { width: 10px; height: 10px; border-radius: 2px; background: var(--c); display: inline-block; margin-right: 6px; }
-.alerta-dash { display: flex; align-items: center; gap: 12px; background: var(--td-semantica-critico); color: var(--td-neutro-0); border-radius: 6px; padding: 10px 14px; font-size: 14px; }
-.alerta-dash b { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; font-weight: 500; }
-.alerta-dash.acende { animation: acende 1.2s ease 1; }
-@keyframes acende { 0% { box-shadow: 0 0 0 0 rgba(176, 63, 51, .55); } 100% { box-shadow: 0 0 0 12px rgba(176, 63, 51, 0); } }
-.dash-pe { display: flex; justify-content: space-between; padding: 10px 20px; border-top: 1px solid var(--td-neutro-100); font-size: 13px; color: var(--texto-suave); }
+.dash-pe { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.dash-embed { padding: 0; overflow: hidden; }
+.dash-embed iframe { display: block; width: 100%; aspect-ratio: 16 / 10; border: 0; }
 
 /* Celular com o relatório */
 .rel { display: flex; justify-content: center; padding: 8px 0; }
@@ -482,7 +504,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .fone-cab span { font-size: 13px; color: var(--td-azul-200); }
 .fone-chat { padding: 16px 12px 22px; min-height: 380px; display: flex; flex-direction: column; gap: 8px; }
 .fone-dia { align-self: center; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--td-neutro-500); background: var(--td-neutro-0); border-radius: 4px; padding: 2px 8px; }
-.bolha { align-self: flex-start; max-width: 92%; background: var(--td-neutro-0); color: var(--td-neutro-900); border-radius: 4px 12px 12px 12px; padding: 10px 12px 6px; font-size: 14px; line-height: 1.5; border: 1px solid var(--td-neutro-100); transition: opacity .5s ease, transform .6s var(--suave); }
+.bolha { align-self: flex-start; max-width: 92%; background: var(--td-neutro-0); color: var(--td-neutro-900); border-radius: 4px 12px 12px 12px; padding: 10px 12px 6px; font-size: 14px; line-height: 1.5; border: 1px solid var(--td-neutro-100); transition: opacity .35s ease, transform .42s var(--suave); }
 .bolha p { margin: 0 0 6px; }
 .bolha .num { font-family: "DM Mono", ui-monospace, monospace; color: var(--td-azul-800); white-space: nowrap; }
 .bolha .at { color: var(--td-semantica-atencao-texto); font-weight: 600; }
@@ -496,7 +518,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .como .wrap { position: relative; }
 .passos { list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .passo { position: relative; padding: 28px 24px 0 0; border-top: 2px solid var(--divisa); }
-.passo::before { content: ""; position: absolute; left: 0; top: -2px; height: 2px; width: 100%; background: var(--filete); transform: scaleX(0); transform-origin: 0 50%; transition: transform .7s var(--suave); }
+.passo::before { content: ""; position: absolute; left: 0; top: -2px; height: 2px; width: 100%; background: var(--filete); transform: scaleX(0); transform-origin: 0 50%; transition: transform .5s var(--suave); }
 .passo.ativo::before { transform: scaleX(1); }
 .passo .n { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); display: block; margin-bottom: 14px; transition: color .4s ease; }
 .passo.ativo .n { color: var(--sobretitulo); }
@@ -632,8 +654,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .peca { position: relative; inset: auto; }
   .p-ind, .p-graf { width: auto; }
   .p-ind { padding: 12px 12px 14px; }
-  .p-graf { margin: -10px 0 0 14px; padding: 14px 14px 12px; }
-  .p-aviso { position: relative; top: auto; right: auto; width: 86%; margin: -14px 0 0 auto; }
+  .p-graf { margin: 12px 0 0 14px; padding: 14px 14px 16px; }
+  .p-aviso { position: relative; top: auto; right: auto; width: 78%; margin: -10px -4px 0 auto; }
   .ind-cab { flex-direction: column; gap: 2px; margin-bottom: 10px; }
   .kpis { gap: 6px; }
   .kpi { padding: 8px 8px; }
@@ -646,32 +668,38 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .palco:not(.desenhado) .linha-real { clip-path: inset(0 100% 0 0); }
   .mercado { padding: 56px 0; }
   .numeros { grid-template-columns: minmax(0, 1fr); gap: 10px; }
-  .numero { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 4px 14px; padding: 14px 14px; }
-  .numero b { font-size: 21px; grid-row: span 2; white-space: normal; }
+  .numero { gap: 6px; padding: 14px 16px 16px; }
+  .numero b { font-size: 26px; }
   .numero p { font-size: 14px; }
   .dores-grid, .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .dores-grid > div:first-child { position: static; }
   .sintomas li { font-size: 16px; }
-  .passagem { height: 150px; }
-  .passagem svg { height: 100px; top: 32px; }
-  .passagem .rot-a { left: 16px; } .passagem .rot-b { right: 16px; }
+  .passagem { height: 170px; }
+  .passagem svg { height: 110px; top: 44px; }
+  .passagem .rot-a, .passagem .rot-b { left: 16px; right: auto; transition: opacity .25s ease; }
   .cartoes4 { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 32px; }
   .faixa-trilho span { font-size: 18px; padding: 0 14px; }
   .faixa-trilho span::after { margin-left: 28px; }
   .sem-mov .faixa-trilho { padding: 0 2px; }
-  .abas { flex-wrap: nowrap; overflow-x: auto; margin: 32px -16px 0; padding: 0 16px 4px; scrollbar-width: none; }
+  .abas-caixa { margin-top: 32px; }
+  .abas { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 0 56px 4px 16px; scrollbar-width: none; }
+  .abas-mais {
+    display: flex; align-items: center; justify-content: center; position: absolute; right: -16px; top: 0; bottom: 4px; width: 44px;
+    background: var(--fundo); box-shadow: -14px 0 12px -4px var(--fundo); color: var(--titulo); font-family: "DM Mono", ui-monospace, monospace; font-size: 18px;
+    pointer-events: none; transition: opacity .2s ease;
+  }
+  .abas-caixa.fim .abas-mais { opacity: 0; }
   .aba { flex: none; }
-  .demo-palco .mm { left: -16px; top: -24px; width: calc(100% + 32px); height: calc(100% + 48px); }
-  .dash-cab { flex-wrap: wrap; gap: 4px 10px; padding: 12px 12px; }
-  .dash-cab .rotulo { margin-left: 0; flex-basis: 100%; }
-  .dash-filtros { display: none; }
-  .dash-corpo { padding: 12px; }
+  .demo-palco .mm { left: -16px; top: 0; width: calc(100% + 32px); height: calc(100% + 24px); }
+  .dash { gap: 10px; }
+  .dpeca { padding: 12px 12px 14px; }
   .dash .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .dash .kpi:nth-child(n+4) { display: none; }
   .dash .kpi .v { font-size: 15px; }
+  .dash .kpi .d { white-space: normal; }
   .dash-graf { grid-template-columns: minmax(0, 1fr); }
   .dash-graf .ch-card:not(:first-child) { display: none; }
-  .dash-pe { flex-direction: column; gap: 2px; padding: 10px 12px; }
-  .alerta-dash { font-size: 13px; align-items: flex-start; flex-direction: column; gap: 2px; }
+  .dash-pe { flex-direction: column; gap: 2px; }
   .funil div { grid-template-columns: 84px minmax(0, 1fr) 76px; }
   .fone { width: 280px; }
   .passos { grid-template-columns: minmax(0, 1fr); row-gap: 28px; margin-top: 40px; }
@@ -689,6 +717,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     background: var(--fundo); border-top: 1px solid var(--divisa); transform: translateY(110%); transition: transform .4s var(--suave), background-color .35s ease;
   }
   .barra-cel.mostra { transform: none; }
+  .ajustes { transition: bottom .4s var(--suave); }
+  .barra-on .ajustes { bottom: 88px; }
   .barra-cel .btn { flex: 1; min-height: 48px; }
   .barra-cel .btn-zap { flex: none; width: 48px; padding: 0; }
   .barra-cel .btn-zap svg { width: 22px; height: 22px; }
@@ -737,7 +767,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <svg class="i-lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
       </button>
       <a class="btn btn-sec so-tela" href="#blog">Blog</a>
-      <a class="btn so-tela" href="#avaliar">Avaliar meu cenário</a>
+      <a class="btn so-tela" href="#avaliar">Falar com a Trinity</a>
       <button class="btn btn-sec so-celular" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu-cel">Menu</button>
     </div>
     <div class="menu-cel" id="menu-cel">
@@ -746,7 +776,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       <a href="#como-funciona">Como funciona</a>
       <a href="#sobre">Sobre</a>
       <a href="#blog">Blog</a>
-      <a class="btn" href="#avaliar">Avaliar meu cenário</a>
+      <a class="btn" href="#avaliar">Falar com a Trinity</a>
     </div>
   </div>
 </header>
@@ -762,10 +792,10 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <h1>Os dados da sua empresa num só lugar, sempre atualizados</h1>
         <p class="sub">Centralizamos os dados que hoje estão espalhados em planilhas, sistemas e plataformas e entregamos visibilidade de vendas, caixa e operação, sem montagem manual.</p>
         <div class="chamada">
-          <a class="btn btn-grande" href="#avaliar">Avaliar meu cenário</a>
+          <a class="btn btn-grande" href="#avaliar">Falar com a Trinity</a>
           <a class="seta" href="#exemplos">Ver exemplos ↓</a>
         </div>
-        <p class="nota">Uma conversa de 30 minutos sobre o seu cenário · sem custo</p>
+        <p class="nota">Conte o que você precisa e retornamos o contato.</p>
       </div>
 
       <div class="palco" id="palco" aria-label="Painel de exemplo, visão geral, com dados fictícios">
@@ -921,7 +951,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <div class="wrap">
       <h2 class="secao-tit surge">Um painel mostra em segundos o que hoje leva dias para montar</h2>
       <p class="secao-sub surge">Exemplos construídos com dados fictícios, para cenários comuns em empresas médias.</p>
-      <div class="abas" role="tablist" id="abas" aria-label="Exemplos de painel"></div>
+      <div class="abas-caixa" id="abas-caixa"><div class="abas" role="tablist" id="abas" aria-label="Exemplos de painel"></div><span class="abas-mais" aria-hidden="true">→</span></div>
       <div class="demo">
         <div class="demo-palco">
           <canvas class="mm" id="mm-demo" aria-hidden="true"></canvas>
@@ -938,15 +968,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <div class="wrap">
       <h2 class="secao-tit surge">Do primeiro contato ao projeto entregue, em cinco passos</h2>
       <ol class="passos" id="passos">
-        <li class="passo"><span class="n">01</span><h3>Conversa inicial <span class="etiqueta">sem custo</span></h3><p>30 minutos para conhecer a sua operação e entender o que está travando.</p></li>
+        <li class="passo"><span class="n">01</span><h3>Entendimento do cenário</h3><p>Conhecemos a sua operação e o que está travando hoje.</p></li>
         <li class="passo"><span class="n">02</span><h3>Análise <span class="etiqueta">pacote de horas</span></h3><p>Com acesso aos dados, levantamos sistemas, métricas e processos e desenhamos o projeto.</p></li>
         <li class="passo"><span class="n">03</span><h3>Proposta</h3><p>Escopo, ferramentas, prazo e investimento com base na análise. Você decide se constrói conosco ou com o seu time.</p></li>
         <li class="passo"><span class="n">04</span><h3>Construção</h3><p>Entregas curtas, com validação da sua equipe a cada etapa.</p></li>
         <li class="passo"><span class="n">05</span><h3>Entrega</h3><p>Treinamento do time para usar e manter o que foi construído.</p></li>
       </ol>
       <div class="como-acao surge">
-        <a class="btn btn-grande" href="#avaliar">Avaliar meu cenário</a>
-        <span>A conversa inicial não tem custo.</span>
+        <a class="btn btn-grande" href="#avaliar">Falar com a Trinity</a>
       </div>
     </div>
   </section>
@@ -1011,12 +1040,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <section class="wrap" id="avaliar" style="scroll-margin-top:76px">
       <div class="final-grid">
         <div>
-          <h2 class="final-tit surge">Vamos conversar sobre os dados da sua empresa</h2>
-          <p class="final-txt surge">Deixe seu contato e a gente fala com você para marcar uma conversa de 30 minutos, sem custo.</p>
+          <h2 class="final-tit surge">Fale com a Trinity sobre os dados da sua empresa</h2>
+          <p class="final-txt surge">Conte o que você precisa e retornamos o contato.</p>
           <ol class="tres surge">
             <li><span>1</span>Você deixa seu contato.</li>
-            <li><span>2</span>A gente responde para marcar a conversa.</li>
-            <li><span>3</span>Conversamos sobre o seu cenário.</li>
+            <li><span>2</span>Retornamos pelo e-mail ou WhatsApp.</li>
+            <li><span>3</span>Entendemos o seu cenário.</li>
           </ol>
         </div>
         <form class="form superficie surge" id="form" novalidate>
@@ -1025,11 +1054,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
             <div class="campo"><label for="f-email">E-mail de trabalho</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="msg">Informe um e-mail válido, como nome@empresa.com.br.</span></div>
             <div class="campo"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" autocomplete="organization" required><span class="msg">Informe o nome da empresa.</span></div>
             <div class="campo"><label for="f-tel">Telefone (WhatsApp)</label><input id="f-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required><span class="msg">Informe um telefone com DDD.</span></div>
-            <button class="btn btn-grande" type="submit">Avaliar meu cenário</button>
+            <button class="btn btn-grande" type="submit">Falar com a Trinity</button>
             <p class="form-pos">Prefere conversar agora? <a data-zap href="#">Falar no WhatsApp</a></p>
             <p class="form-legal">Usamos seus dados só para responder ao contato. <a href="#">Política de privacidade</a>.</p>
           </div>
-          <div class="form-ok" role="status"><b>Contato recebido.</b>A gente responde para marcar a conversa. <span class="prov">PROTÓTIPO: NADA FOI ENVIADO</span></div>
+          <div class="form-ok" role="status"><b>Contato recebido.</b>Retornaremos pelo e-mail ou WhatsApp informado. <span class="prov">PROTÓTIPO: NADA FOI ENVIADO</span></div>
         </form>
       </div>
     </section>
@@ -1055,7 +1084,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9.2 8.6c.3 2.6 2 4.7 4.6 5.6l1.2-1.1 1.8.9-.5 1.6c-3.9.3-8-3.6-8-7.6l1.6-.6.9 1.8z"/></svg>
 </a>
 <div class="barra-cel" id="barra-cel">
-  <a class="btn" href="#avaliar">Avaliar meu cenário</a>
+  <a class="btn" href="#avaliar">Falar com a Trinity</a>
   <a class="btn btn-sec btn-zap" data-zap href="#" aria-label="Falar no WhatsApp">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9.2 8.6c.3 2.6 2 4.7 4.6 5.6l1.2-1.1 1.8.9-.5 1.6c-3.9.3-8-3.6-8-7.6l1.6-.6.9 1.8z"/></svg>
   </a>
@@ -1115,12 +1144,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   // ---------- Ajustes ----------
   var PADRAO = {
     movimento: true, suave: true, caso: false, prov: true,
-    redeInt: 1, redeDens: 1, redeVel: 1, redeAlc: 190,
-    mmInt: 1, mmRastro: 1, avisoAtraso: 1.1,
+    redeInt: 1.3, redeDens: 1, redeVel: 1, redeAlc: 230,
+    mmInt: 1, mmRastro: 1, avisoAtraso: 0.8,
     retInt: 1, retDens: 1, barInt: 1, barDes: 1, ondInt: 1, serInt: 1, serVel: 1
   };
   var S = Object.assign({}, PADRAO);
-  try { Object.assign(S, JSON.parse(localStorage.getItem('td-ajustes') || '{}')); } catch (e) {}
+  try { Object.assign(S, JSON.parse(localStorage.getItem('td-ajustes-2') || '{}')); } catch (e) {}
   if (params.has('parado')) S.movimento = false; // capturas do estado final
   if (params.has('caso')) S.caso = true;
   var simulado = params.get('cursor'); // ?cursor=x,y simula o cursor na abertura
@@ -1128,7 +1157,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   var semCursor = matchMedia('(hover: none)');
   var celular = matchMedia('(max-width: 900px)');
   function movOn() { return S.movimento && !reduzido.matches; }
-  function guardar() { try { localStorage.setItem('td-ajustes', JSON.stringify(S)); } catch (e) {} }
+  function guardar() { try { localStorage.setItem('td-ajustes-2', JSON.stringify(S)); } catch (e) {} }
 
   // ---------- Configuração (dados fictícios num só arquivo) ----------
   var zapUrl = 'https://wa.me/' + (CFG.whatsapp || '');
@@ -1198,7 +1227,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     var y = function (v) { return (100 - v / 3 * 100).toFixed(2); }, s = '';
     [0.5, 33.3, 66.6].forEach(function (g) { s += '<line class="grade-g" x1="0" x2="120" y1="' + g + '" y2="' + g + '" vector-effect="non-scaling-stroke"/>'; });
     s += '<line class="eixo-g" x1="0" x2="120" y1="100" y2="100" vector-effect="non-scaling-stroke"/>';
-    vals.forEach(function (v, i) { s += '<rect class="barra" x="' + (i * 10 + 2) + '" y="' + y(v) + '" width="6" height="' + (100 - y(v)).toFixed(2) + '" style="transition-delay:' + (0.35 + i * 0.04).toFixed(2) + 's"/>'; });
+    vals.forEach(function (v, i) { s += '<rect class="barra" x="' + (i * 10 + 2) + '" y="' + y(v) + '" width="6" height="' + (100 - y(v)).toFixed(2) + '" style="transition-delay:' + (0.25 + i * 0.03).toFixed(2) + 's"/>'; });
     s += '<polyline class="linha-real" vector-effect="non-scaling-stroke" points="' + vals.map(function (v, i) { return (i * 10 + 5) + ',' + y(v); }).join(' ') + '"/>';
     s += '<polyline class="linha-meta" vector-effect="non-scaling-stroke" points="' + meta.map(function (m, i) { return (i * 10 + 5) + ',' + y(m); }).join(' ') + '"/>';
     document.getElementById('graf-svg').innerHTML = s;
@@ -1211,9 +1240,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (!movOn()) { palco.classList.add('montado', 'desenhado'); palco.classList.remove('aviso-off'); return; }
     palco.classList.remove('montado', 'desenhado'); palco.classList.add('aviso-off');
     void palco.offsetWidth;
-    timers.push(setTimeout(function () { palco.classList.add('montado'); }, 120));
-    timers.push(setTimeout(function () { palco.classList.add('desenhado'); }, 520));
-    timers.push(setTimeout(function () { palco.classList.remove('aviso-off'); }, 120 + S.avisoAtraso * 1000));
+    timers.push(setTimeout(function () { palco.classList.add('montado'); }, 90));
+    timers.push(setTimeout(function () { palco.classList.add('desenhado'); }, 360));
+    timers.push(setTimeout(function () { palco.classList.remove('aviso-off'); }, 90 + S.avisoAtraso * 1000));
   }
 
   var abertura = document.getElementById('abertura');
@@ -1229,7 +1258,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       nos = [];
       for (var gx = -passo * 0.5; gx < C.w + passo; gx += passo)
         for (var gy = -passo * 0.5; gy < C.h + passo; gy += passo)
-          nos.push({ bx: gx + (rnd() - 0.5) * passo * 0.7, by: gy + (rnd() - 0.5) * passo * 0.7, f: rnd() * 6.28, d: (nos.length % 7 === 2) });
+          nos.push({ bx: gx + (rnd() - 0.5) * passo * 0.4, by: gy + (rnd() - 0.5) * passo * 0.4, f: rnd() * 6.28, d: (nos.length % 7 === 2) });
       arestas = [];
       for (var i = 0; i < nos.length; i++) for (var j = i + 1; j < nos.length; j++) {
         var dd = Math.hypot(nos[i].bx - nos[j].bx, nos[i].by - nos[j].by);
@@ -1397,7 +1426,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         rects[i].setAttribute('x', (i * passo + (passo - larg) / 2).toFixed(1));
         rects[i].setAttribute('y', Math.max(0, y).toFixed(1)); rects[i].setAttribute('width', larg.toFixed(1)); rects[i].setAttribute('height', Math.max(2, h).toFixed(1));
       }
-      rotA.style.opacity = (1 - p).toFixed(2); rotB.style.opacity = p.toFixed(2);
+      if (celular.matches) { rotA.style.opacity = p < 0.5 ? 1 : 0; rotB.style.opacity = p < 0.5 ? 0 : 1; } // no celular, um rótulo por vez
+      else { rotA.style.opacity = (1 - p).toFixed(2); rotB.style.opacity = p.toFixed(2); }
       return false;
     }
     padroes.push({ construir: construir, quadro: quadro, ativo: function () { return visivel(passagem); } });
@@ -1427,7 +1457,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   function hbar(ls) { // [{n, txt, v (0–100), cls, meta}]
     return '<div class="hb">' + ls.map(function (l, i) { return '<div class="' + (l.cls || 's1') + '"><div class="hb-l"><span>' + l.n + '</span><b>' + l.txt + '</b></div><div class="hb-t"><i style="width:' + l.v + '%;transition-delay:' + (i * 0.06) + 's"></i>' + (l.meta != null ? '<em style="left:' + l.meta + '%"></em>' : '') + '</div></div>'; }).join('') + '</div>';
   }
-  function funil(rows) { var max = rows[0].v; return '<div class="funil">' + rows.map(function (r, i) { return '<div><span>' + r.n + '</span><i style="width:' + (r.v / max * 100).toFixed(1) + '%;transition-delay:' + (i * 0.07) + 's"></i><b>' + r.txt + '</b></div>'; }).join('') + '</div>'; }
+  function funil(rows) { var max = rows[0].v; return '<div class="funil s1">' + rows.map(function (r, i) { return '<div><span>' + r.n + '</span><i style="width:' + (r.v / max * 100).toFixed(1) + '%;transition-delay:' + (i * 0.07) + 's"></i><b>' + r.txt + '</b></div>'; }).join('') + '</div>'; }
   function tabela(cols, rows, num) { return '<table class="tab"><thead><tr>' + cols.map(function (c, i) { return '<th' + (num[i] ? ' class="n"' : '') + '>' + c + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr' + (r.tot ? ' class="tot"' : '') + '>' + r.c.map(function (c, i) { return '<td' + (num[i] ? ' class="n"' : '') + '>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table>'; }
   function donut(parts) {
     var C = 2 * Math.PI * 40, acc = 0, s = '';
@@ -1435,12 +1465,13 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     return '<div class="donut"><svg viewBox="0 0 120 120" aria-hidden="true">' + s + '</svg><div class="hb">' + parts.map(function (p) { return '<div class="' + p.cls + '"><div class="hb-l"><span><i></i>' + p.n + '</span><b>' + String(p.v).replace('.', ',') + '%</b></div></div>'; }).join('') + '</div></div>';
   }
   function kpi(r, v, d, est, dcls) { return '<div class="kpi ' + (est || '') + '"><span class="r">' + r + '</span><span class="v">' + v + '</span><span class="d ' + (dcls || '') + '">' + d + '</span></div>'; }
-  function card(tit, corpo, extra, cls) { return '<div class="ch-card ' + (cls || '') + '"><p class="ch-tit">' + tit + (extra ? '<small>' + extra + '</small>' : '') + '</p>' + corpo + '</div>'; }
+  function card(tit, corpo, extra, cls) { return '<div class="ch-card dpeca ' + (cls || '') + '"><p class="ch-tit">' + tit + (extra ? '<small>' + extra + '</small>' : '') + '</p>' + corpo + '</div>'; }
   var M12 = ['N', 'D', 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O'];
 
+  // ferramenta: quando preenchida, aparece como rótulo no painel e na legenda.
+  // embed: endereço de um painel público real (Power BI, Metabase); quando preenchido, substitui o painel desenhado.
   var EXEMPLOS = [
-    { aba: 'Financeiro', ferramenta: 'Power BI', titulo: 'Financeiro', periodo: 'Empresa X · outubro/2026',
-      filtros: ['Período: out/2026', 'Unidade: Todas', 'Centro de custo: Todos'],
+    { aba: 'Financeiro', ferramenta: '', embed: '', titulo: 'Financeiro', periodo: 'Empresa X · outubro/2026',
       ind: ['Fluxo de caixa projetado e realizado', 'Margem por produto', 'Inadimplência'],
       kpis: [kpi('SALDO EM CAIXA', 'R$ 1,86 mi', '▲ 4,2% vs set'), kpi('MARGEM BRUTA', '34,2%', '▲ 1,1 p.p.'), kpi('A RECEBER', 'R$ 742 mil', '38 títulos', '', 'ne'), kpi('INADIMPLÊNCIA', '4,8%', '▲ limite 4,0%', 'atencao', 'at')],
       graf: [
@@ -1448,16 +1479,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         card('Margem por produto', hbar([{ n: 'Serviços', txt: '52%', v: 100 }, { n: 'Linha Premium', txt: '41%', v: 79 }, { n: 'Linha Padrão', txt: '33%', v: 63 }, { n: 'Acessórios', txt: '28%', v: 54 }])),
         card('DRE resumida · R$ mil', tabela(['Conta', 'Out', 'Set'], [{ c: ['Receita líquida', '2.170', '2.046'] }, { c: ['CMV', '−1.428', '−1.362'] }, { c: ['Lucro bruto', '742', '684'], tot: 1 }, { c: ['Despesas operacionais', '−455', '−441'] }, { c: ['EBITDA', '287', '243'], tot: 1 }], [0, 1, 1]), '', 'largo')
       ] },
-    { aba: 'Comercial', ferramenta: 'Metabase', titulo: 'Comercial', periodo: 'Empresa X · outubro/2026',
-      filtros: ['Período: out/2026', 'Equipe: Todas', 'Canal: Todos'],
+    { aba: 'Comercial', ferramenta: '', embed: '', titulo: 'Comercial', periodo: 'Empresa X · outubro/2026',
       ind: ['Conversão por etapa do funil', 'Meta e realizado por vendedor', 'Ticket médio e recorrência'],
       kpis: [kpi('VENDAS DO MÊS', 'R$ 1,32 mi', '▲ 8,5% vs set'), kpi('CONVERSÃO', '5,7%', 'lead → venda', '', 'ne'), kpi('TICKET MÉDIO', 'R$ 4.870', '▲ 2,1%'), kpi('RECORRÊNCIA', '42%', 'clientes que voltam', '', 'ne')],
       graf: [
         card('Funil de vendas', funil([{ n: 'Leads', v: 1240, txt: '1.240' }, { n: 'Qualificados', v: 612, txt: '612 · 49%' }, { n: 'Propostas', v: 248, txt: '248 · 41%' }, { n: 'Negociação', v: 131, txt: '131 · 53%' }, { n: 'Fechados', v: 71, txt: '71 · 54%' }]), 'outubro'),
         card('Meta e realizado por vendedor', hbar([{ n: 'Ana Ribeiro', txt: '112%', v: 93, meta: 83 }, { n: 'Carlos Mendes', txt: '96%', v: 80, meta: 83 }, { n: 'Juliana Prado', txt: '88%', v: 73, meta: 83 }, { n: 'Rafael Souza', txt: '74%', v: 61, meta: 83 }]) + legenda([['s1', 'Realizado'], ['meta-l', 'Meta (100%)']]))
       ] },
-    { aba: 'Operação', ferramenta: 'Power BI', titulo: 'Operação', periodo: 'Empresa X · hoje, 08:00',
-      filtros: ['Data: hoje', 'Região: Todas', 'Status: Todos'],
+    { aba: 'Operação', ferramenta: '', embed: '', titulo: 'Operação', periodo: 'Empresa X · hoje, 08:00',
       alerta: '37 pedidos atrasados, acima do limite de 20. Sul concentra 21.',
       ind: ['Pedidos por status', 'Tempo médio de atendimento', 'Exceções do dia'],
       kpis: [kpi('EM ANDAMENTO', '286', 'pedidos abertos', '', 'ne'), kpi('TEMPO MÉDIO', '2,4 dias', '▼ 0,3 vs set'), kpi('ATRASADOS', '37', 'limite 20', 'critico', 'cr'), kpi('EXCEÇÕES DO DIA', '5', '2 resolvidas', '', 'ne')],
@@ -1465,23 +1494,21 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         card('Pedidos por status', hbar([{ n: 'Em separação', txt: '94', v: 100 }, { n: 'Em transporte', txt: '84', v: 89 }, { n: 'Faturado', txt: '71', v: 76 }, { n: 'Aguardando estoque', txt: '37', v: 39 }])),
         card('Exceções do dia', tabela(['Pedido', 'Motivo', 'Há'], [{ c: ['48.213', 'Atraso na entrega · Sul', '<span class="chip cr">4 dias</span>'] }, { c: ['48.190', 'Sem estoque', '<span class="chip at">2 dias</span>'] }, { c: ['48.177', 'Endereço incompleto', '1 dia'] }, { c: ['48.152', 'Pagamento pendente', '1 dia'] }], [0, 0, 1]))
       ] },
-    { aba: 'Logística', ferramenta: 'Metabase', titulo: 'Logística', periodo: 'Empresa X · últimas 12 semanas',
-      filtros: ['Período: 12 semanas', 'Rota: Todas', 'Transportadora: Todas'],
+    { aba: 'Logística', ferramenta: '', embed: '', titulo: 'Logística', periodo: 'Empresa X · últimas 12 semanas',
       ind: ['Entregas no prazo (OTD)', 'Custo por entrega e por rota', 'Ocupação da frota'],
       kpis: [kpi('NO PRAZO (OTD)', '93,1%', 'meta 95,0%', 'atencao', 'at'), kpi('CUSTO POR ENTREGA', 'R$ 38,40', '▼ 1,8% vs set'), kpi('OCUPAÇÃO DA FROTA', '81%', '▲ 3 p.p.')],
       graf: [
         card('Entregas no prazo · %', linhas({ series: [{ vals: [94.2, 95.1, 94.6, 93.8, 95.4, 96.0, 94.9, 93.5, 92.8, 93.9, 92.6, 93.1], cls: 's1' }, { vals: [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95], cls: 's2', tr: true }], min: 90, max: 98, ticks: ['90', '92,7', '95,3', '98'], labels: ['S1', '', 'S3', '', 'S5', '', 'S7', '', 'S9', '', 'S11', ''], h: 120, leg: [['s1', 'No prazo'], ['s2', 'Meta', true]] })),
         card('Custo por entrega, por rota', hbar([{ n: 'SP – Sorocaba', txt: 'R$ 44,10', v: 100 }, { n: 'SP – Baixada', txt: 'R$ 41,50', v: 94 }, { n: 'SP – Vale do Paraíba', txt: 'R$ 36,80', v: 83 }, { n: 'SP – Campinas', txt: 'R$ 31,20', v: 71 }]))
       ] },
-    { aba: 'Marketing', ferramenta: 'Looker Studio', titulo: 'Marketing', periodo: 'Empresa X · outubro/2026',
-      filtros: ['Período: out/2026', 'Campanha: Todas'],
+    { aba: 'Marketing', ferramenta: '', embed: '', titulo: 'Marketing', periodo: 'Empresa X · outubro/2026',
       ind: ['Custo por lead e por venda', 'Retorno por canal', 'Origem das vendas'],
       kpis: [kpi('INVESTIMENTO', 'R$ 86,4 mil', '▲ 5,0% vs set', '', 'ne'), kpi('CUSTO POR LEAD', 'R$ 69,70', '▼ 7,4%'), kpi('CUSTO POR VENDA', 'R$ 1.217', '▼ 3,2%'), kpi('RETORNO', '5,8×', 'receita / investimento', '', 'ne')],
       graf: [
         card('Retorno por canal', hbar([{ n: 'E-mail · R$ 4,6 mil', txt: '9,8×', v: 100, cls: 's1' }, { n: 'Google Ads · R$ 34,1 mil', txt: '6,4×', v: 65, cls: 's2' }, { n: 'Meta Ads · R$ 25,8 mil', txt: '4,9×', v: 50, cls: 's3' }, { n: 'LinkedIn · R$ 14,2 mil', txt: '3,1×', v: 32, cls: 's4' }]), 'investimento · retorno'),
         card('Origem das vendas', donut([{ n: 'Google Ads', v: 38, cls: 's1' }, { n: 'Meta Ads', v: 24, cls: 's2' }, { n: 'Indicação', v: 17, cls: 's3' }, { n: 'E-mail', v: 12, cls: 's4' }, { n: 'LinkedIn', v: 9, cls: 's5' }]))
       ] },
-    { aba: 'Relatório automático', ferramenta: 'n8n e Python', relatorio: true,
+    { aba: 'Relatório automático', ferramenta: '', embed: '', relatorio: true,
       ind: ['Mensagem com o nome do gestor e os números da semana', 'Alertas do que precisa de atenção', 'PDF ou link do painel completo'] }
   ];
 
@@ -1492,22 +1519,23 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (e.relatorio) {
       return '<div class="rel"><div class="fone"><div class="fone-tela"><div class="fone-cab"><i></i><div><b>Relatório semanal</b><span>Empresa X</span></div></div><div class="fone-chat">' +
         '<span class="fone-dia">WhatsApp · segunda, 07:00</span>' +
-        '<div class="bolha" style="transition-delay:.2s"><p>Olá, Cláudio, bom dia! Aqui está o relatório semanal das áreas Comercial e Financeiro da Empresa X.</p><p>Faturamento da semana: <span class="num">R$ 184.320</span><br>Meta do mês: <span class="num">72%</span> atingida</p><p><span class="at">Atenção:</span> 3 pedidos parados há mais de 2 dias.</p><span class="hora">07:00</span></div>' +
-        '<div class="bolha" style="transition-delay:.7s"><div class="anexo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>relatório.pdf</div><span class="hora">07:00</span></div>' +
+        '<div class="bolha" style="transition-delay:.15s"><p>Olá, Cláudio, bom dia! Aqui está o relatório semanal das áreas Comercial e Financeiro da Empresa X.</p><p>Faturamento da semana: <span class="num">R$ 184.320</span><br>Meta do mês: <span class="num">72%</span> atingida</p><p><span class="at">Atenção:</span> 3 pedidos parados há mais de 2 dias.</p><span class="hora">07:00</span></div>' +
+        '<div class="bolha" style="transition-delay:.5s"><div class="anexo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>relatório.pdf</div><span class="hora">07:00</span></div>' +
         '</div></div></div></div>';
     }
-    return '<div class="dash"><div class="dash-cab"><b>' + e.titulo + '</b><span>' + e.periodo + '</span><span class="rotulo">EXEMPLO · DADOS FICTÍCIOS</span></div>' +
-      '<div class="dash-filtros">' + e.filtros.map(function (f) { return '<span>' + f + '</span>'; }).join('') + '</div>' +
-      '<div class="dash-corpo">' + (e.alerta ? '<div class="alerta-dash"><b>CRÍTICO</b><span>' + e.alerta + '</span></div>' : '') +
-      '<div class="kpis" style="--n:' + e.kpis.length + '">' + e.kpis.join('') + '</div>' +
-      '<div class="dash-graf">' + e.graf.join('') + '</div></div>' +
-      '<div class="dash-pe"><span>Atualizado hoje, 08:00</span><span>Feito com ' + e.ferramenta + '</span></div></div>';
+    var pe = '<div class="dash-pe rotulo"><span>EXEMPLO · DADOS FICTÍCIOS</span>' + (e.ferramenta ? '<span>' + e.ferramenta.toUpperCase() + '</span>' : '') + '</div>';
+    if (e.embed) return '<div class="dash"><div class="dpeca dash-embed"><iframe src="' + e.embed + '" title="Painel ' + e.titulo + '" loading="lazy" allowfullscreen></iframe></div>' + pe + '</div>';
+    var k = 0, atraso = function () { return ' style="transition-delay:' + (k++ * 0.06).toFixed(2) + 's"'; };
+    return '<div class="dash"><div class="dpeca"' + atraso() + '><div class="ind-cab"><span><b>' + e.titulo + '</b> · ' + e.periodo + '</span><span class="mono">atualizado hoje, 08:00</span></div>' +
+      '<div class="kpis" style="--n:' + e.kpis.length + '">' + e.kpis.join('') + '</div></div>' +
+      (e.alerta ? '<div class="dpeca dash-alerta" role="status"' + atraso() + '><div class="aviso-l"><i></i>CRÍTICO</div><div class="aviso-t">' + e.alerta + '</div></div>' : '') +
+      '<div class="dash-graf">' + e.graf.map(function (g) { return g.replace('<div class="ch-card', '<div' + atraso() + ' class="ch-card'); }).join('') + '</div>' + pe + '</div>';
   }
   function htmlLado(e) {
     var topo = e.relatorio ? '<p class="tit-rel">O que chega sem ninguém montar</p>' : '';
     var link = e.relatorio ? 'Quero receber assim →' : 'Quero algo assim para a minha empresa →';
     return topo + '<h3>PRINCIPAIS INDICADORES</h3><ul>' + e.ind.map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ul>' +
-      '<a class="seta" href="#avaliar">' + link + '</a><p class="feito">Feito com ' + e.ferramenta + ' · dados fictícios · exemplo de demonstração</p>';
+      '<a class="seta" href="#avaliar">' + link + '</a><p class="feito">' + (e.ferramenta ? e.ferramenta + ' · ' : '') + 'dados fictícios · exemplo de demonstração</p>';
   }
   var trocaT;
   function mostrar(i, foco) {
@@ -1522,14 +1550,18 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         painelEl.classList.add('desenhar'); void painelEl.offsetWidth;
         requestAnimationFrame(function () { requestAnimationFrame(function () {
           painelEl.classList.remove('desenhar');
-          var al = painelEl.querySelector('.alerta-dash'); if (al) setTimeout(function () { al.classList.add('acende'); }, 700);
+          var al = painelEl.querySelector('.dash-alerta'); if (al) setTimeout(function () { al.classList.add('acende'); }, 500);
         }); });
       } else painelEl.classList.remove('desenhar');
       mmDemo.construir(); pedirTudo();
     };
     clearTimeout(trocaT);
-    if (movOn() && demoVisto) { painelEl.classList.add('saindo'); trocaT = setTimeout(aplicar, 220); } else aplicar();
+    if (movOn() && demoVisto) { painelEl.classList.add('saindo'); trocaT = setTimeout(aplicar, 150); } else aplicar();
   }
+  var abasCaixa = document.getElementById('abas-caixa');
+  function fimAbas() { abasCaixa.classList.toggle('fim', abasEl.scrollLeft + abasEl.clientWidth >= abasEl.scrollWidth - 4); }
+  abasEl.addEventListener('scroll', fimAbas, { passive: true });
+  addEventListener('resize', fimAbas); fimAbas();
   abasEl.addEventListener('click', function (e) { var b = e.target.closest('.aba'); if (b) { demoVisto = true; mostrar([].indexOf.call(abasEl.children, b)); } });
   abasEl.addEventListener('keydown', function (e) {
     var n = EXEMPLOS.length, i = atual;
@@ -1547,13 +1579,21 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   }, { threshold: 0.25 }).observe(painelEl.parentNode);
 
   // ================= 7. Ondas (avançam passo a passo) =================
-  var como = document.getElementById('como-funciona'), passosEl = document.querySelectorAll('.passo');
+  // A sequência roda sozinha quando a seção entra na tela: um passo a cada 0,5 s, sem prender a rolagem.
+  var como = document.getElementById('como-funciona'), passosEl = document.querySelectorAll('.passo'), passoComo = 0, comoT = [];
+  function rodarComo() {
+    comoT.forEach(clearTimeout); comoT = [];
+    if (!movOn()) { passoComo = 5; pedirTudo(); return; }
+    passoComo = 0;
+    for (var i = 1; i <= 5; i++) (function (i) { comoT.push(setTimeout(function () { passoComo = i; pedirTudo(); }, 200 + (i - 1) * 500)); })(i);
+  }
+  new IntersectionObserver(function (es, ob) { if (es[0].isIntersecting) { ob.disconnect(); rodarComo(); } }, { threshold: 0.35 }).observe(como);
   (function () {
     var cv = document.getElementById('cv-ondas'), C, K = {}, ultimo = -1, vis = 0;
     function construir() { C = prepCanvas(cv); K.b = cor(cv, '--pad-b'); K.a = cor(cv, '--pad-a'); ultimo = -1; }
     function quadro() {
       if (!C) return false;
-      var p = progresso(como, 0.45), passo = p >= 1 ? 5 : Math.floor(p * 5.999);
+      var passo = movOn() ? passoComo : 5;
       passosEl.forEach(function (el, i) { el.classList.toggle('ativo', i < passo); });
       var alvo = passo * 4 + 3, mov = movOn();
       vis += (alvo - vis) * (mov ? 0.12 : 1);
@@ -1591,7 +1631,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   // ================= 11. Perguntas frequentes =================
   (function () {
     var faq = [
-      ['Quanto custa e como funciona a contratação?', 'A conversa inicial é sem custo; a análise é um pacote de horas; o projeto tem proposta própria.', false],
+      ['Quanto custa e como funciona a contratação?', 'A primeira conversa serve para entender o seu cenário; a análise é um pacote de horas; o projeto tem proposta própria.', false],
       ['Nossos dados estão bagunçados. Dá para começar assim?', 'É o cenário mais comum, e a análise existe para isso.', false],
       ['Vamos ficar dependentes de vocês?', 'O que construímos fica documentado, em ferramentas de mercado, e o seu time é treinado para usar e manter.', true],
       ['E se a equipe não usar os painéis?', 'Os painéis são desenhados a partir das perguntas que a equipe já faz, e o treinamento faz parte da entrega.', true],
@@ -1659,7 +1699,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   function observarSurge() { document.querySelectorAll('.surge:not(.visto), .depois-svg:not(.visto)').forEach(function (el) { if (movOn()) surgir.observe(el); else el.classList.add('visto'); }); }
 
   var barraCel = document.getElementById('barra-cel'), aberturaFora = false, finalDentro = false;
-  function atualizarBarra() { barraCel.classList.toggle('mostra', aberturaFora && !finalDentro); }
+  function atualizarBarra() { var on = aberturaFora && !finalDentro; barraCel.classList.toggle('mostra', on); document.body.classList.toggle('barra-on', on); }
   new IntersectionObserver(function (es) { aberturaFora = !es[0].isIntersecting; atualizarBarra(); }).observe(abertura);
   new IntersectionObserver(function (es) { finalDentro = es[0].isIntersecting; atualizarBarra(); }, { threshold: 0.05 }).observe(document.getElementById('avaliar'));
 
