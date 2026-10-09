@@ -306,6 +306,16 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .aviso-l { display: flex; align-items: center; gap: 8px; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; font-weight: 500; color: var(--aviso-rotulo); margin-bottom: 4px; }
 .aviso-l i { width: 8px; height: 8px; border-radius: 50%; background: var(--td-semantica-atencao); display: inline-block; }
 .aviso-t { font-size: 14px; line-height: 1.45; color: var(--texto); }
+/* Cenários da abertura: o aviso muda de tipo (atenção, crítico, meta atingida) e os textos trocam com um esmaecer. */
+.p-aviso.cr { border-top-color: var(--td-semantica-critico); }
+.p-aviso.cr .aviso-l { color: var(--td-semantica-critico-texto); }
+.p-aviso.cr .aviso-l i { background: var(--td-semantica-critico); }
+.p-aviso.ok { border-top-color: var(--td-semantica-positivo); }
+.p-aviso.ok .aviso-l { color: var(--td-semantica-positivo-texto); }
+.p-aviso.ok .aviso-l i { background: var(--td-semantica-positivo); }
+[data-tema="escuro"] .p-aviso.cr .aviso-l, [data-tema="escuro"] .p-aviso.ok .aviso-l { color: var(--td-neutro-0); }
+#hero-kpis, #hero-cab, #hero-tit, #hero-y, .p-graf .graf-leg { transition: opacity .3s ease; }
+.palco.trocando #hero-kpis, .palco.trocando #hero-cab, .palco.trocando #hero-tit, .palco.trocando #hero-y, .palco.trocando .p-graf .graf-leg { opacity: 0; }
 
 /* ===== 2. Faixa de indicadores de mercado (retícula) ===== */
 .mercado { padding: 88px 0 96px; overflow: hidden; }
@@ -325,9 +335,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .sintomas li span { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); padding-top: 4px; }
 .fecho { font-size: 17px; line-height: 1.6; color: var(--titulo); font-weight: 600; margin: 28px 0 0; max-width: 44ch; border-left: 3px solid var(--filete); padding-left: 16px; }
 .ilustra { display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 540px; justify-self: end; width: 100%; }
-.quadro { margin: 0; background: var(--cartao); border: 1px solid var(--cartao-borda); border-radius: 8px; padding: 16px 18px 12px; transition: background-color .35s ease, opacity .7s ease, transform .9s var(--suave); }
+.quadro { margin: 0; background: var(--cartao); border: 1px solid var(--cartao-borda); border-radius: 8px; padding: 16px 18px 18px; transition: background-color .35s ease, opacity .7s ease, transform .9s var(--suave); }
 .quadro .rotulo { display: block; margin-bottom: 6px; }
-.quadro svg { display: block; width: 100%; height: auto; }
+.quadro svg { display: block; width: 100%; height: auto; overflow: visible; }
 .il-txt { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; fill: var(--texto); }
 .il-txt.forte { fill: var(--titulo); font-weight: 500; }
 .il-txt.branco { fill: var(--td-neutro-0); font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-weight: 600; font-size: 14px; }
@@ -420,6 +430,22 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .exemplos { overflow: hidden; padding: 72px 0 80px; }
 .exemplos .secao-tit { max-width: none; }
 .exemplos .secao-sub { margin-top: 10px; }
+.exemplos.apertada { padding: 32px 0 28px; }
+.exemplos.apertada .secao-tit { font-size: 30px; }
+.exemplos.apertada .secao-sub { font-size: 15px; margin-top: 6px; }
+.exemplos.apertada .abas-caixa { margin-top: 18px; }
+.exemplos.apertada .demo { margin-top: 14px; }
+.exemplos.apertada .dash { gap: 8px; }
+.exemplos.apertada .dpeca { padding: 10px 14px; }
+.exemplos.apertada .ind-cab { margin-bottom: 8px; }
+.exemplos.apertada .dash .kpi { padding: 7px 10px; gap: 3px; }
+.exemplos.apertada .dash-alerta { padding: 8px 14px; }
+.exemplos.apertada .ch-sub { margin: 2px 0 10px; }
+.exemplos.apertada .hb { gap: 8px; }
+.exemplos.apertada .fone-chat { min-height: 0; }
+.exemplos.apertada .email { padding: 14px 18px; }
+.exemplos.apertada .email-para { margin-bottom: 12px; padding-bottom: 10px; }
+.exemplos.apertada .email .kpis { margin-bottom: 12px; }
 .abas-caixa { position: relative; margin-top: 28px; }
 .abas { display: flex; gap: 8px; flex-wrap: wrap; }
 .abas-seta { display: none; }
@@ -432,7 +458,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .aba[aria-selected="true"] { background: var(--botao-fundo); border-color: var(--botao-fundo); color: var(--botao-texto); }
 .demo { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 48px; margin-top: 24px; align-items: start; }
 .demo-palco { position: relative; }
-.demo-palco .mm { left: -56px; top: 0; width: calc(100% + 112px); height: calc(100% + 56px); }
+.demo-palco .mm { left: -56px; top: 0; width: calc(100% + 80px); height: calc(100% + 56px); }
+.lado { position: relative; z-index: 1; }
 .painel-troca { position: relative; display: flex; flex-direction: column; justify-content: center; transition: opacity .25s ease, transform .35s var(--suave); }
 .painel-troca.saindo { opacity: 0; transform: translateY(10px); }
 .lado h3 { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; font-weight: 500; color: var(--texto-suave); margin: 8px 0 14px; }
@@ -462,9 +489,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 }
 .dpeca {
   background: var(--dp-fundo); border: 1px solid var(--dp-borda); border-radius: 8px; box-shadow: var(--dp-sombra); padding: 14px 16px; min-width: 0;
-  transition: transform .5s var(--suave), opacity .4s ease, background-color .35s ease, border-color .35s ease;
+  transition: transform .75s var(--suave), opacity .6s ease, background-color .35s ease, border-color .35s ease;
 }
-.desenhar .dpeca { opacity: 0; transform: translateY(14px); }
+.desenhar .dpeca { opacity: 0; transform: translateY(18px); }
+/* Os indicadores entram um a um, depois da peça. */
+.dash .kpi { transition: opacity .5s ease, transform .6s var(--suave); }
+.dash .kpi:nth-child(1) { transition-delay: .3s; } .dash .kpi:nth-child(2) { transition-delay: .45s; }
+.dash .kpi:nth-child(3) { transition-delay: .6s; } .dash .kpi:nth-child(4) { transition-delay: .75s; }
+.desenhar .dash .kpi { opacity: 0; transform: translateY(8px); }
 .dash .kpis { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); }
 .dash .kpi { border-color: var(--dp-borda); border-top-color: var(--filete); }
 .dash .kpi.atencao { border-top-color: var(--td-semantica-atencao); }
@@ -501,7 +533,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .ln-fim .foco b { color: var(--foco-txt); }
 .g-grade { stroke: var(--g-linha); }
 .g-eixo { stroke: var(--g-base); }
-.ln { fill: none; stroke: var(--ctx-c); stroke-width: 1.5; clip-path: inset(0 0 0 0); transition: clip-path .9s var(--suave) .15s; }
+.ln { fill: none; stroke: var(--ctx-c); stroke-width: 1.5; clip-path: inset(0 0 0 0); transition: clip-path 1.5s var(--suave) calc(var(--d, 0s) + .35s); }
 .ln.foco { stroke: var(--foco-c); stroke-width: 2.5; }
 .ln.meta { stroke: var(--meta-c); stroke-dasharray: 5 4; }
 .desenhar .ln { clip-path: inset(0 100% 0 0); }
@@ -510,7 +542,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .ln-pt.at { background: var(--td-semantica-atencao); }
 .ln-pt.cr { background: var(--td-semantica-critico); }
 .desenhar .ln-pt { transform: scale(0); }
-.ln-nota { position: absolute; transform: translate(-100%, -100%); margin: -8px 0 0 -8px; font-size: 13px; font-weight: 600; line-height: 1.2; white-space: nowrap; color: var(--texto-suave); transition: opacity .4s ease .9s; }
+.ln-nota { position: absolute; transform: translate(-100%, -100%); margin: -8px 0 0 -8px; font-size: 13px; font-weight: 600; line-height: 1.2; white-space: nowrap; color: var(--texto-suave); transition: opacity .5s ease calc(var(--d, 0s) + 1.9s); }
 .ln-nota.abaixo { transform: translate(-100%, 0); margin-top: 8px; }
 .ln-nota.foco { color: var(--foco-txt); }
 .ln-nota.at { color: var(--at-txt); }
@@ -526,7 +558,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .hb-l { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--texto); margin-bottom: 5px; }
 .hb-l b { font-family: "DM Mono", ui-monospace, monospace; font-weight: 500; white-space: nowrap; }
 .hb-t { position: relative; height: 10px; background: var(--trilho); border-radius: 2px; }
-.hb-t i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--c); border-radius: 2px; transform-origin: 0 50%; transition: transform .55s var(--suave); }
+.hb-t i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--c); border-radius: 2px; transform-origin: 0 50%; transition: transform .9s var(--suave); }
 .hb-t em { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 1.5px dashed var(--meta-c); }
 .hb-ref { display: flex; align-items: center; gap: 8px; margin: 2px 0 0; font-size: 13px; color: var(--texto-suave); }
 .hb-ref i { width: 0; height: 12px; border-left: 1.5px dashed var(--meta-c); }
@@ -534,7 +566,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .funil { display: flex; flex-direction: column; gap: 7px; }
 .funil div { display: grid; grid-template-columns: 92px minmax(0, 1fr) 84px; gap: 10px; align-items: center; font-size: 13px; }
 .funil span { color: var(--texto); }
-.funil i { height: 22px; background: var(--c); border-radius: 2px; transform-origin: 0 50%; transition: transform .55s var(--suave); }
+.funil i { height: 22px; background: var(--c); border-radius: 2px; transform-origin: 0 50%; transition: transform .9s var(--suave); }
 .funil b { font-family: "DM Mono", ui-monospace, monospace; font-weight: 400; color: var(--texto); text-align: right; white-space: nowrap; }
 .desenhar .funil i { transform: scaleX(0); }
 .chip { display: inline-block; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; padding: 1px 7px; border-radius: 3px; color: var(--td-neutro-0); white-space: nowrap; }
@@ -866,31 +898,31 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       <div class="palco" id="palco" aria-label="Painel de exemplo, visão geral, com dados fictícios">
         <canvas class="mm" id="mm-abertura" aria-hidden="true"></canvas>
         <div class="peca p-ind">
-          <div class="ind-cab"><span><b>Painel de exemplo</b> · visão geral</span><span class="mono">atualizado hoje, 08:00</span></div>
-          <div class="kpis">
+          <div class="ind-cab"><span><b>Painel de exemplo</b> · <span id="hero-cab">visão geral</span></span><span class="mono">atualizado hoje, 08:00</span></div>
+          <div class="kpis" id="hero-kpis">
             <div class="kpi"><span class="r">FATURAMENTO DO MÊS</span><span class="v">R$ 2,48 mi</span><span class="d">▲ 6,0% vs set</span></div>
             <div class="kpi"><span class="r">MARGEM</span><span class="v">18,4%</span><span class="d at">▼ meta 20,0%</span></div>
             <div class="kpi atencao"><span class="r">PEDIDOS ATRASADOS</span><span class="v">37</span><span class="d at">limite 20</span></div>
           </div>
         </div>
         <div class="peca p-graf">
-          <p class="graf-tit">Faturamento mensal</p>
+          <p class="graf-tit" id="hero-tit">Faturamento mensal</p>
           <div class="graf">
-            <div class="graf-y"><span>3</span><span>2</span><span>1</span><span>0</span></div>
+            <div class="graf-y" id="hero-y"><span>3</span><span>2</span><span>1</span><span>0</span></div>
             <div>
               <svg id="graf-svg" viewBox="0 0 120 100" preserveAspectRatio="none" aria-hidden="true"></svg>
               <div class="graf-x" id="graf-x"></div>
             </div>
           </div>
           <div class="graf-leg">
-            <span><i class="sw-barra"></i>Realizado (R$ mi)</span>
-            <span><i class="sw-meta"></i>Meta</span>
-            <span class="fonte">dados de 4 sistemas conciliados</span>
+            <span><i class="sw-barra"></i><span id="hero-l1">Realizado (R$ mi)</span></span>
+            <span><i class="sw-meta"></i><span id="hero-l2">Meta</span></span>
+            <span class="fonte" id="hero-fonte">dados de 4 sistemas conciliados</span>
           </div>
         </div>
-        <div class="peca p-aviso" role="status">
-          <div class="aviso-l"><i></i>ATENÇÃO</div>
-          <div class="aviso-t">Pedidos atrasados fora da faixa: 37, com limite de 20. Sul concentra 21.</div>
+        <div class="peca p-aviso" id="hero-aviso" role="status">
+          <div class="aviso-l"><i></i><span id="hero-aviso-l">ATENÇÃO</span></div>
+          <div class="aviso-t" id="hero-aviso-t">Pedidos atrasados fora da faixa: 37, com limite de 20. Sul concentra 21.</div>
         </div>
         <span class="legenda-palco rotulo so-tela">EXEMPLO · DADOS FICTÍCIOS</span>
       </div>
@@ -936,8 +968,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
             <path class="il-seta" d="M454 168 C 474 150, 470 140, 462 120" marker-end="url(#pta)"/>
             <g class="esp" data-d="-1,-0.6"><g class="flut f1"><g transform="translate(36 30)"><rect class="il-caixa" width="142" height="96" rx="6"/><rect class="il-cab" x="0.75" y="0.75" width="140.5" height="22" rx="5"/><text class="il-txt forte" x="12" y="16">ERP</text><text class="il-txt" x="12" y="50">Faturamento</text><text class="il-txt forte il-num" x="12" y="76" data-v="R$ 2,31 mi|R$ 2,27 mi|R$ 2,36 mi">R$ 2,31 mi</text></g></g></g>
             <g class="esp" data-d="1,-0.7"><g class="flut f2"><g transform="translate(392 22)"><rect class="il-caixa" width="142" height="96" rx="6"/><rect class="il-cab" x="0.75" y="0.75" width="140.5" height="22" rx="5"/><text class="il-txt forte" x="12" y="16">CRM</text><text class="il-txt" x="12" y="50">Vendas</text><text class="il-txt forte il-num" x="12" y="76" data-v="R$ 2,64 mi|R$ 2,71 mi|R$ 2,58 mi">R$ 2,64 mi</text></g></g></g>
-            <g class="esp" data-d="-1,0.6"><g class="flut f3"><g transform="translate(40 196) rotate(-4)"><rect class="il-caixa" width="150" height="88" rx="4"/><path class="il-fina" d="M0 22H150M0 44H150M0 66H150M50 22V88M100 22V88"/><text class="il-txt" x="8" y="15">vendas_v3.xlsx</text><text class="il-txt forte il-num" x="56" y="60" data-v="2,48|2,52|2,44">2,48</text></g></g></g>
-            <g class="esp" data-d="1,0.7"><g class="flut f4"><g transform="translate(386 168) rotate(5)"><rect class="il-caixa" width="128" height="112" rx="4"/><path class="il-linha" d="M16 0V112"/><path class="il-fina" d="M26 40H112M26 60H112M26 80H96M26 100H104"/><circle class="il-caixa" cx="16" cy="18" r="4"/><circle class="il-caixa" cx="16" cy="46" r="4"/><circle class="il-caixa" cx="16" cy="74" r="4"/><circle class="il-caixa" cx="16" cy="100" r="4"/><text class="il-txt" x="30" y="24">caderno</text></g></g></g>
+            <g class="esp" data-d="-1,0.15"><g class="flut f3"><g transform="translate(40 196) rotate(-4)"><rect class="il-caixa" width="150" height="88" rx="4"/><path class="il-fina" d="M0 22H150M0 44H150M0 66H150M50 22V88M100 22V88"/><text class="il-txt" x="8" y="15">vendas_v3.xlsx</text><text class="il-txt forte il-num" x="56" y="60" data-v="2,48|2,52|2,44">2,48</text></g></g></g>
+            <g class="esp" data-d="1,0.15"><g class="flut f4"><g transform="translate(386 168) rotate(5)"><rect class="il-caixa" width="128" height="112" rx="4"/><path class="il-linha" d="M16 0V112"/><path class="il-fina" d="M26 40H112M26 60H112M26 80H96M26 100H104"/><circle class="il-caixa" cx="16" cy="18" r="4"/><circle class="il-caixa" cx="16" cy="46" r="4"/><circle class="il-caixa" cx="16" cy="74" r="4"/><circle class="il-caixa" cx="16" cy="100" r="4"/><text class="il-txt" x="30" y="24">caderno</text></g></g></g>
             <g class="il-dif"><circle class="il-at" cx="282" cy="150" r="18"/><text class="il-txt at" x="282" y="156" text-anchor="middle">≠</text></g>
           </svg>
         </figure>
@@ -1117,7 +1149,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <form class="form superficie surge" id="form" novalidate>
           <div class="form-campos">
             <div class="campo"><label for="f-nome">Nome</label><input id="f-nome" name="nome" autocomplete="name" required><span class="msg">Informe o seu nome.</span></div>
-            <div class="campo"><label for="f-email">E-mail de trabalho</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="msg">Informe um e-mail válido, como nome@empresa.com.br.</span></div>
+            <div class="campo"><label for="f-email">E-mail corporativo</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="msg">Informe um e-mail válido, como nome@empresa.com.br.</span></div>
             <div class="campo"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" autocomplete="organization" required><span class="msg">Informe o nome da empresa.</span></div>
             <div class="campo"><label for="f-tel">Telefone (WhatsApp)</label><input id="f-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required><span class="msg">Informe um telefone com DDD.</span></div>
             <button class="btn btn-grande" type="submit">Falar com a Trinity</button>
@@ -1175,6 +1207,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <label>Respiro <input type="range" min="0" max="2" step="0.1" data-k="mmResp"><output></output></label>
     <label>Vel. respiro <input type="range" min="0" max="3" step="0.1" data-k="mmRespVel"><output></output></label>
     <label>Aviso após <input type="range" min="0" max="3" step="0.1" data-k="avisoAtraso"><output></output></label>
+    <label>Cenário (s) <input type="range" min="0" max="20" step="1" data-k="cenaSeg"><output></output></label>
     <h4>RETÍCULA · MERCADO</h4>
     <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="retInt"><output></output></label>
     <label>Densidade <input type="range" min="0.6" max="1.6" step="0.1" data-k="retDens"><output></output></label>
@@ -1216,7 +1249,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   var PADRAO = {
     movimento: true, suave: true, caso: false, prov: true,
     redeInt: 1.3, redeDens: 1, redeVel: 1, redeAlc: 230,
-    mmInt: 1, mmRastro: 1, mmResp: 1, mmRespVel: 1, avisoAtraso: 0.8,
+    mmInt: 1, mmRastro: 1, mmResp: 1, mmRespVel: 1, avisoAtraso: 0.8, cenaSeg: 9,
     retInt: 1, retDens: 1, barInt: 1, barDes: 1, ondInt: 1, serInt: 1, serVel: 1
   };
   var S = Object.assign({}, PADRAO);
@@ -1292,18 +1325,74 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   menu.addEventListener('click', function (e) { if (e.target.closest('a')) fecharMenu(); });
 
   // ================= 1. Abertura =================
+  // O painel alterna entre cenários (visão geral, caixa, estoque, comercial), cada um com o seu tipo de aviso.
+  var CENAS = [
+    { cab: 'visão geral', tit: 'Faturamento mensal', max: 3, y: ['3', '2', '1', '0'], l1: 'Realizado (R$ mi)', l2: 'Meta', fonte: 'dados de 4 sistemas conciliados',
+      vals: [1.82, 1.95, 1.71, 1.88, 2.04, 2.11, 1.98, 2.17, 2.26, 2.31, 2.34, 2.48], meta: [1.9, 2.0, 1.8, 1.9, 2.0, 2.1, 2.1, 2.2, 2.2, 2.3, 2.4, 2.6],
+      kpis: [['FATURAMENTO DO MÊS', 'R$ 2,48 mi', '▲ 6,0% vs set', '', ''], ['MARGEM', '18,4%', '▼ meta 20,0%', '', 'at'], ['PEDIDOS ATRASADOS', '37', 'limite 20', 'atencao', 'at']],
+      aviso: ['', 'ATENÇÃO', 'Pedidos atrasados fora da faixa: 37, com limite de 20. Sul concentra 21.'] },
+    { cab: 'financeiro', tit: 'Inadimplência mensal', max: 6, y: ['6', '4', '2', '0'], l1: 'Realizado (%)', l2: 'Limite', fonte: 'contas a receber conciliadas com o banco',
+      vals: [3.1, 3.4, 3.2, 3.0, 3.3, 3.5, 3.4, 3.6, 3.8, 3.9, 4.5, 4.8], meta: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+      kpis: [['SALDO EM CAIXA', 'R$ 1,86 mi', '▲ 4,2% vs set', '', ''], ['PRAZO DE RECEBIMENTO', '47 dias', '▲ 5 dias', '', 'at'], ['INADIMPLÊNCIA', '4,8%', 'limite 4,0%', 'atencao', 'at']],
+      aviso: ['', 'ATENÇÃO', 'Inadimplência em 4,8%, acima do limite pelo segundo mês. Doze títulos vencidos há mais de 30 dias.'] },
+    { cab: 'estoque', tit: 'Ruptura de estoque', max: 9, y: ['9', '6', '3', '0'], l1: 'Ruptura (%)', l2: 'Limite', fonte: 'ERP e armazém conciliados',
+      vals: [2.1, 2.4, 1.9, 2.6, 2.2, 2.8, 2.5, 3.1, 3.6, 4.4, 5.3, 6.2], meta: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+      kpis: [['GIRO DE ESTOQUE', '4,1×', '▼ 0,3 vs set', '', 'at'], ['COBERTURA', '38 dias', 'meta 30 dias', '', 'ne'], ['RUPTURA', '6,2%', 'limite 3,0%', 'critico', 'cr']],
+      aviso: ['cr', 'CRÍTICO', 'Ruptura em 6,2%, o dobro do limite. Catorze itens da curva A sem estoque no CD Campinas.'] },
+    { cab: 'comercial', tit: 'Vendas mensais', max: 1.5, y: ['1,5', '1,0', '0,5', '0'], l1: 'Realizado (R$ mi)', l2: 'Meta', fonte: 'CRM e ERP conciliados',
+      vals: [0.98, 1.01, 0.93, 1.05, 1.09, 1.12, 1.08, 1.15, 1.19, 1.21, 1.22, 1.32], meta: [1.0, 1.0, 1.0, 1.05, 1.05, 1.1, 1.1, 1.15, 1.15, 1.2, 1.25, 1.3],
+      kpis: [['VENDAS DO MÊS', 'R$ 1,32 mi', '▲ 8,5% vs set', '', ''], ['META DO MÊS', '102%', 'atingida', '', ''], ['TICKET MÉDIO', 'R$ 4.870', '▲ 2,1%', '', '']],
+      aviso: ['ok', 'META ATINGIDA', 'Outubro fechou 2% acima da meta de vendas, com o ticket médio em alta.'] }
+  ];
+  var gsvg = document.getElementById('graf-svg');
   (function () {
-    var vals = [1.82, 1.95, 1.71, 1.88, 2.04, 2.11, 1.98, 2.17, 2.26, 2.31, 2.34, 2.48];
-    var meta = [1.9, 2.0, 1.8, 1.9, 2.0, 2.1, 2.1, 2.2, 2.2, 2.3, 2.4, 2.6];
-    var y = function (v) { return (100 - v / 3 * 100).toFixed(2); }, s = '';
+    var s = '';
     [0.5, 33.3, 66.6].forEach(function (g) { s += '<line class="grade-g" x1="0" x2="120" y1="' + g + '" y2="' + g + '" vector-effect="non-scaling-stroke"/>'; });
     s += '<line class="eixo-g" x1="0" x2="120" y1="100" y2="100" vector-effect="non-scaling-stroke"/>';
-    vals.forEach(function (v, i) { s += '<rect class="barra" x="' + (i * 10 + 2) + '" y="' + y(v) + '" width="6" height="' + (100 - y(v)).toFixed(2) + '" style="transition-delay:' + (0.25 + i * 0.03).toFixed(2) + 's"/>'; });
-    s += '<polyline class="linha-real" vector-effect="non-scaling-stroke" points="' + vals.map(function (v, i) { return (i * 10 + 5) + ',' + y(v); }).join(' ') + '"/>';
-    s += '<polyline class="linha-meta" vector-effect="non-scaling-stroke" points="' + meta.map(function (m, i) { return (i * 10 + 5) + ',' + y(m); }).join(' ') + '"/>';
-    document.getElementById('graf-svg').innerHTML = s;
+    for (var i = 0; i < 12; i++) s += '<rect class="barra" x="' + (i * 10 + 2) + '" y="100" width="6" height="0" style="transition-delay:' + (0.25 + i * 0.03).toFixed(2) + 's"/>';
+    s += '<polyline class="linha-real" vector-effect="non-scaling-stroke"/><polyline class="linha-meta" vector-effect="non-scaling-stroke"/>';
+    gsvg.innerHTML = s;
     document.getElementById('graf-x').innerHTML = 'NDJFMAMJJASO'.split('').map(function (m) { return '<span>' + m + '</span>'; }).join('');
   })();
+  var hBarras = gsvg.querySelectorAll('.barra'), hReal = gsvg.querySelector('.linha-real'), hMeta = gsvg.querySelector('.linha-meta'), geo = null;
+  function emY(c, arr) { return arr.map(function (v) { return 100 - v / c.max * 100; }); }
+  function pontos(arr) { return arr.map(function (y, i) { return (i * 10 + 5) + ',' + y.toFixed(2); }).join(' '); }
+  function desenharGeo() {
+    for (var i = 0; i < 12; i++) { hBarras[i].setAttribute('y', geo.v[i].toFixed(2)); hBarras[i].setAttribute('height', (100 - geo.v[i]).toFixed(2)); }
+    hReal.setAttribute('points', pontos(geo.v)); hMeta.setAttribute('points', pontos(geo.m));
+  }
+  function textosCena(c) {
+    function txt(id, t) { document.getElementById(id).textContent = t; }
+    txt('hero-cab', c.cab); txt('hero-tit', c.tit); txt('hero-l1', c.l1); txt('hero-l2', c.l2); txt('hero-fonte', c.fonte);
+    document.getElementById('hero-y').innerHTML = c.y.map(function (t) { return '<span>' + t + '</span>'; }).join('');
+    document.getElementById('hero-kpis').innerHTML = c.kpis.map(function (k) { return '<div class="kpi ' + k[3] + '"><span class="r">' + k[0] + '</span><span class="v">' + k[1] + '</span><span class="d ' + k[4] + '">' + k[2] + '</span></div>'; }).join('');
+    var av = document.getElementById('hero-aviso'); av.classList.remove('cr', 'ok'); if (c.aviso[0]) av.classList.add(c.aviso[0]);
+    txt('hero-aviso-l', c.aviso[1]); txt('hero-aviso-t', c.aviso[2]);
+    palco.setAttribute('aria-label', 'Painel de exemplo, ' + c.cab + ', com dados fictícios');
+  }
+  var cena = Math.min(CENAS.length - 1, +params.get('cena') || 0), cenaT = 0;
+  function aplicarCena(i, animar) {
+    var c = CENAS[i], alvoV = emY(c, c.vals), alvoM = emY(c, c.meta);
+    if (!animar || !geo) { geo = { v: alvoV, m: alvoM }; desenharGeo(); textosCena(c); return; }
+    palco.classList.add('trocando', 'aviso-off');
+    setTimeout(function () { textosCena(c); palco.classList.remove('trocando'); }, 320);
+    var deV = geo.v.slice(), deM = geo.m.slice(), t0 = performance.now();
+    (function passo(t) {
+      var k = Math.min(1, (t - t0) / 950); k = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      geo.v = deV.map(function (a, j) { return a + (alvoV[j] - a) * k; }); geo.m = deM.map(function (a, j) { return a + (alvoM[j] - a) * k; });
+      desenharGeo(); if (k < 1) requestAnimationFrame(passo);
+    })(t0);
+    setTimeout(function () { palco.classList.remove('aviso-off'); }, 1300);
+  }
+  // Troca de cenário a cada S.cenaSeg segundos, só com a abertura na tela e o movimento ligado.
+  function agendarCena() {
+    clearTimeout(cenaT);
+    if (!S.cenaSeg || params.has('cena')) return;
+    cenaT = setTimeout(function () {
+      if (movOn() && visivel(abertura) && !document.hidden) { cena = (cena + 1) % CENAS.length; aplicarCena(cena, true); }
+      agendarCena();
+    }, S.cenaSeg * 1000);
+  }
 
   var palco = document.getElementById('palco'), timers = [];
   function montar() {
@@ -1317,6 +1406,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   }
 
   var abertura = document.getElementById('abertura');
+  aplicarCena(cena, false); agendarCena();
 
   // Rede: atrás do texto; os nós perto do cursor se acendem e se ligam.
   (function () {
@@ -1491,12 +1581,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     var ligas = depois.querySelectorAll('.il-liga'), u1 = -1, u2 = -1;
     function construir() { u1 = u2 = -1; if (depois.pauseAnimations) { if (movOn()) depois.unpauseAnimations(); else depois.pauseAnimations(); } }
     function quadro() {
-      var p1 = movOn() ? progresso(hoje, 0.5) : 0, p2 = progresso(depois, 0.55);
+      var p1 = movOn() ? progresso(hoje, 0.5) : 0, p2 = progresso(depois, 0.9);
       if (Math.abs(p1 - u1) > 0.002) { u1 = p1; esp.forEach(function (e) { e.g.setAttribute('transform', 'translate(' + (e.dx * 14 * p1).toFixed(1) + ' ' + (e.dy * 14 * p1).toFixed(1) + ')'); }); }
       if (Math.abs(p2 - u2) > 0.002) {
         u2 = p2; var q = lim(p2 * 1.25);
         ligas.forEach(function (l, i) { l.style.strokeDashoffset = (400 * (1 - lim(q * 1.3 - (i > 3 ? 0.3 : 0)))).toFixed(1); });
-        depois.classList.toggle('fluindo', q >= 0.98 || !movOn());
+        if (q >= 0.98 || !movOn()) depois.classList.add('fluindo');
       }
       return false;
     }
@@ -1560,7 +1650,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   // Todos os painéis têm a mesma estrutura: indicadores, leitura do período, gráfico principal e gráfico de apoio.
   // o: {series:[{vals, tipo:'foco'|'ctx'|'meta', rot, val}], min, max, ticks:[valor, texto][], labels, marcas:[{i, s, txt, tipo}]}
   function linhas(o) {
-    var n = o.labels.length, W = (n - 1) * 10, H = 150;
+    var n = o.labels.length, W = (n - 1) * 10;
     var y = function (v) { return 100 - (v - o.min) / (o.max - o.min) * 100; };
     var s = o.ticks.map(function (t) { return '<line class="g-grade" x1="0" x2="' + W + '" y1="' + y(t[0]).toFixed(2) + '" y2="' + y(t[0]).toFixed(2) + '" vector-effect="non-scaling-stroke"/>'; }).join('');
     s += '<line class="g-eixo" x1="0" x2="' + W + '" y1="100" y2="100" vector-effect="non-scaling-stroke"/>';
@@ -1568,23 +1658,23 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     var eixo = '<div class="ch-y">' + o.ticks.map(function (t) { return '<span style="top:' + y(t[0]).toFixed(2) + '%">' + t[1] + '</span>'; }).join('') + '</div>';
     // Rótulos no fim das linhas, afastados quando ficam muito perto.
     var fins = o.series.filter(function (se) { return se.rot; }).map(function (se) { return { se: se, p: y(se.vals[n - 1]) }; }).sort(function (a, b) { return a.p - b.p; });
-    var folga = 30 / H * 100;
-    for (var k = 1; k < fins.length; k++) if (fins[k].p - fins[k - 1].p < folga) fins[k].p = fins[k - 1].p + folga;
-    var fim = '<div class="ln-fim">' + fins.map(function (f) { return '<span class="' + f.se.tipo + '" style="top:' + f.p.toFixed(2) + '%"><b>' + f.se.val + '</b>' + f.se.rot + '</span>'; }).join('') + '</div>';
+    var topo = '';
+    fins.forEach(function (f, k) { topo = k ? 'max(' + f.p.toFixed(2) + '%, calc(' + topo + ' + 32px))' : f.p.toFixed(2) + '%'; f.top = topo; });
+    var fim = '<div class="ln-fim">' + fins.map(function (f) { return '<span class="' + f.se.tipo + '" style="top:' + f.top + '"><b>' + f.se.val + '</b>' + f.se.rot + '</span>'; }).join('') + '</div>';
     var marcas = (o.marcas || []).map(function (m, j) {
       var mx = m.i / (n - 1) * 100, my = y(o.series[m.s || 0].vals[m.i]);
-      return '<i class="ln-pt ' + m.tipo + '" style="left:' + mx.toFixed(2) + '%;top:' + my.toFixed(2) + '%;transition-delay:' + (0.7 + j * 0.1) + 's"></i>' +
+      return '<i class="ln-pt ' + m.tipo + '" style="left:' + mx.toFixed(2) + '%;top:' + my.toFixed(2) + '%;transition-delay:calc(var(--d, 0s) + ' + (1.6 + j * 0.15).toFixed(2) + 's)"></i>' +
         (m.txt ? '<span class="ln-nota ' + m.tipo + (m.abaixo ? ' abaixo' : '') + '" style="left:' + mx.toFixed(2) + '%;top:' + my.toFixed(2) + '%">' + m.txt + '</span>' : '');
     }).join('');
     var xs = '<div class="ch-x" style="grid-template-columns:repeat(' + n + ',1fr)">' + o.labels.map(function (l) { return '<span>' + l + '</span>'; }).join('') + '</div>';
-    return '<div class="ch" style="--h:' + H + 'px">' + eixo + '<div><div class="ln-area"><svg viewBox="0 0 ' + W + ' 100" preserveAspectRatio="none">' + s + '</svg>' + marcas + '</div>' + xs + '</div>' + fim + '</div>';
+    return '<div class="ch">' + eixo + '<div><div class="ln-area"><svg viewBox="0 0 ' + W + ' 100" preserveAspectRatio="none">' + s + '</svg>' + marcas + '</div>' + xs + '</div>' + fim + '</div>';
   }
   function hbar(ls, ref) { // [{n, txt, v (0–100), tipo}], ref: {v, txt} linha de referência comum
     return '<div class="hb">' + ls.map(function (l, i) {
-      return '<div class="t-' + (l.tipo || 'ctx') + '"><div class="hb-l"><span>' + l.n + '</span><b>' + l.txt + '</b></div><div class="hb-t"><i style="width:' + l.v + '%;transition-delay:' + (i * 0.06) + 's"></i>' + (ref ? '<em style="left:' + ref.v + '%"></em>' : '') + '</div></div>';
+      return '<div class="t-' + (l.tipo || 'ctx') + '"><div class="hb-l"><span>' + l.n + '</span><b>' + l.txt + '</b></div><div class="hb-t"><i style="width:' + l.v + '%;transition-delay:calc(var(--d, 0s) + ' + (0.35 + i * 0.14).toFixed(2) + 's)"></i>' + (ref ? '<em style="left:' + ref.v + '%"></em>' : '') + '</div></div>';
     }).join('') + (ref ? '<p class="hb-ref"><i></i>' + ref.txt + '</p>' : '') + '</div>';
   }
-  function funil(rows) { var max = rows[0].v; return '<div class="funil">' + rows.map(function (r, i) { return '<div class="t-' + (r.tipo || 'ctx') + '"><span>' + r.n + '</span><i style="width:' + (r.v / max * 100).toFixed(1) + '%;transition-delay:' + (i * 0.07) + 's"></i><b>' + r.txt + '</b></div>'; }).join('') + '</div>'; }
+  function funil(rows) { var max = rows[0].v; return '<div class="funil">' + rows.map(function (r, i) { return '<div class="t-' + (r.tipo || 'ctx') + '"><span>' + r.n + '</span><i style="width:' + (r.v / max * 100).toFixed(1) + '%;transition-delay:calc(var(--d, 0s) + ' + (0.35 + i * 0.14).toFixed(2) + 's)"></i><b>' + r.txt + '</b></div>'; }).join('') + '</div>'; }
   function kpi(r, v, d, est, dcls) { return '<div class="kpi ' + (est || '') + '"><span class="r">' + r + '</span><span class="v">' + v + '</span><span class="d ' + (dcls || '') + '">' + d + '</span></div>'; }
   function card(tit, sub, corpo, cls) { return '<div class="ch-card dpeca ' + (cls || '') + '"><p class="ch-tit">' + tit + '</p><p class="ch-sub">' + sub + '</p>' + corpo + '</div>'; }
   var M12 = ['N', 'D', 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O'];
@@ -1662,17 +1752,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (e.relatorio) {
       return '<div class="dash"><div class="rel"><div class="fone"><div class="fone-tela"><div class="fone-cab"><i></i><div><b>Relatório semanal</b><span>Empresa X</span></div></div><div class="fone-chat">' +
         '<span class="fone-dia">segunda, 07:00</span>' +
-        '<div class="bolha" style="transition-delay:.15s"><p>Olá, Cláudio, bom dia! Aqui está o relatório semanal das áreas Comercial e Financeiro da Empresa X.</p><p>Faturamento da semana: <span class="num">R$ 184.320</span><br>Meta do mês: <span class="num">72%</span> atingida</p><p><span class="at">Atenção:</span> 3 pedidos parados há mais de 2 dias.</p><span class="hora">07:00</span></div>' +
-        '<div class="bolha" style="transition-delay:.5s"><div class="anexo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>relatório.pdf</div><span class="hora">07:00</span></div>' +
+        '<div class="bolha" style="transition-delay:.7s"><p>Olá, Cláudio, bom dia! Aqui está o relatório semanal das áreas Comercial e Financeiro da Empresa X.</p><p>Faturamento da semana: <span class="num">R$ 184.320</span><br>Meta do mês: <span class="num">72%</span> atingida</p><p><span class="at">Atenção:</span> 3 pedidos parados há mais de 2 dias.</p><span class="hora">07:00</span></div>' +
+        '<div class="bolha" style="transition-delay:1.6s"><div class="anexo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>relatório.pdf</div><span class="hora">07:00</span></div>' +
         '</div></div></div>' +
-        '<div class="dpeca email so-tela" style="transition-delay:.3s"><p class="rotulo">E-MAIL · SEGUNDA, 07:00</p><p class="email-assunto">Relatório semanal · Comercial e Financeiro</p><p class="email-para">Para: Cláudio Moreira · Empresa X</p>' +
+        '<div class="dpeca email so-tela" style="transition-delay:1s"><p class="rotulo">E-MAIL · SEGUNDA, 07:00</p><p class="email-assunto">Relatório semanal · Comercial e Financeiro</p><p class="email-para">Para: Cláudio Moreira · Empresa X</p>' +
         '<div class="kpis" style="--n:3">' + kpi('FATURAMENTO DA SEMANA', 'R$ 184 mil', '▲ 3,1% vs anterior') + kpi('META DO MÊS', '72%', 'faltam 8 dias', '', 'ne') + kpi('PEDIDOS PARADOS', '3', 'há mais de 2 dias', 'atencao', 'at') + '</div>' +
         '<p class="ch-tit">O mês caminha para fechar na meta</p><p class="ch-sub">% da meta acumulada · outubro</p>' +
         hbar([{ n: 'Realizado até hoje', txt: '72%', v: 72, tipo: 'foco' }, { n: 'Esperado para a data', txt: '74%', v: 74 }]) +
         '<p class="email-link">Abrir o painel completo →</p></div></div>' + pe + '</div>';
     }
     if (e.embed) return '<div class="dash"><div class="dpeca dash-embed"><iframe src="' + e.embed + '" title="Painel ' + e.titulo + '" loading="lazy" allowfullscreen></iframe></div>' + pe + '</div>';
-    var k = 0, atraso = function () { return ' style="transition-delay:' + (k++ * 0.06).toFixed(2) + 's"'; };
+    var k = 0, atraso = function () { var d = (k++ * 0.22).toFixed(2); return ' style="--d:' + d + 's;transition-delay:' + d + 's"'; };
     var l = e.leitura;
     return '<div class="dash"><div class="dpeca"' + atraso() + '><div class="ind-cab"><span><b>' + e.titulo + '</b> · ' + e.periodo + '</span><span class="mono">atualizado hoje, 08:00</span></div>' +
       '<div class="kpis" style="--n:' + e.kpis.length + '">' + e.kpis.join('') + '</div></div>' +
@@ -1695,6 +1785,22 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     EXEMPLOS.forEach(function (e) { med.innerHTML = htmlPainel(e); max = Math.max(max, med.offsetHeight); });
     med.remove();
     painelEl.style.minHeight = Math.ceil(max) + 'px';
+  }
+  // A seção precisa caber na tela abaixo do cabeçalho: primeiro aperta o respiro, depois baixa a altura dos gráficos.
+  function caberExemplos() {
+    var ex = document.getElementById('exemplos'), demo = ex.querySelector('.demo');
+    ex.classList.remove('apertada'); ex.style.removeProperty('--h'); demo.style.zoom = ''; igualarPainel();
+    if (celular.matches) return;
+    var livre = innerHeight - document.querySelector('.cab').offsetHeight, sobra = ex.offsetHeight - livre;
+    if (sobra > 0) { ex.classList.add('apertada'); igualarPainel(); sobra = ex.offsetHeight - livre; }
+    if (sobra > 0) { ex.style.setProperty('--h', Math.max(100, 150 - sobra) + 'px'); igualarPainel(); sobra = ex.offsetHeight - livre; }
+    // Último recurso em telas baixas: a demonstração inteira encolhe na proporção que falta.
+    var z = 1;
+    for (var it = 0; it < 4 && Math.abs(sobra) > 2 && (sobra > 0 || z < 1); it++) {
+      var hd = demo.getBoundingClientRect().height;
+      z = Math.min(1, Math.max(0.72, z * (hd - sobra) / hd)); demo.style.zoom = z.toFixed(3);
+      sobra = ex.getBoundingClientRect().height - livre;
+    }
   }
   var trocaT;
   function mostrar(i, foco) {
@@ -1742,7 +1848,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   if (movOn()) painelEl.classList.add('desenhar');
   new IntersectionObserver(function (es, ob) {
     if (es[0].isIntersecting) { ob.disconnect(); mostrar(atual); demoVisto = true; }
-  }, { threshold: 0.25 }).observe(painelEl.parentNode);
+  }, { threshold: 0.5 }).observe(painelEl.parentNode);
 
   // ================= 7. Ondas (avançam passo a passo) =================
   // A sequência roda sozinha quando a seção entra na tela: um passo a cada 0,5 s, sem prender a rolagem.
@@ -1896,12 +2002,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (id.length < 2) return;
     var alvo = document.querySelector(id); if (!alvo) return;
     var off = -document.querySelector('.cab').offsetHeight;
+    // Na tela larga, a chamada final enquadra pelo formulário, que é o bloco mais alto, com uma folga acima.
+    if (id === '#avaliar' && !celular.matches) { alvo = document.getElementById('form'); off -= 32; }
     if (lenis) lenis.scrollTo(alvo, { offset: off }); else window.scrollTo({ top: alvo.getBoundingClientRect().top + scrollY + off, behavior: movOn() ? 'smooth' : 'auto' });
   });
 
   // ================= Início =================
   function reconstruir() {
-    igualarPainel();
+    caberExemplos();
     raiz.classList.toggle('sem-mov', !movOn());
     raiz.classList.toggle('marcar-prov', !!S.prov);
     document.getElementById('caso').hidden = !S.caso;
@@ -1934,6 +2042,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       if (inp.nextElementSibling) inp.nextElementSibling.textContent = S[k];
       guardar(); reconstruir();
       if (k === 'movimento') { montar(); mostrar(atual); }
+      if (k === 'cenaSeg') agendarCena();
     });
     document.getElementById('remontar').addEventListener('click', montar);
     document.getElementById('padrao').addEventListener('click', function () { S = Object.assign({}, PADRAO); guardar(); sincronizar(); reconstruir(); montar(); });
