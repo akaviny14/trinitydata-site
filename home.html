@@ -502,8 +502,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .dash .kpi.atencao { border-top-color: var(--td-semantica-atencao); }
 .dash .kpi.critico { border-top-color: var(--td-semantica-critico); }
 /* Leitura do período: uma frase que resume o painel (crítico, atenção ou neutra). */
-.dash-alerta { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 16px; align-items: baseline; border-left: 3px solid var(--filete); padding: 11px 16px; }
-.dash-alerta .aviso-l { margin: 0; color: var(--texto-suave); }
+.dash-alerta { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 16px; align-items: baseline; border-left: 3px solid var(--filete); padding: 11px 16px; }
+.dash-alerta .aviso-l { margin: 0; color: var(--texto-suave); white-space: nowrap; min-width: 112px; }
 .dash-alerta .aviso-l i { background: var(--filete); }
 .dash-alerta.at { border-left-color: var(--td-semantica-atencao); }
 .dash-alerta.at .aviso-l { color: var(--at-txt); }
@@ -1211,6 +1211,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <h4>RETÍCULA · MERCADO</h4>
     <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="retInt"><output></output></label>
     <label>Densidade <input type="range" min="0.6" max="1.6" step="0.1" data-k="retDens"><output></output></label>
+    <label>Ondas <input type="range" min="0" max="2" step="0.1" data-k="retOnda"><output></output></label>
     <h4>BARRAS · PASSAGEM</h4>
     <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="barInt"><output></output></label>
     <label>Desencontro <input type="range" min="0" max="2" step="0.1" data-k="barDes"><output></output></label>
@@ -1249,8 +1250,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   var PADRAO = {
     movimento: true, suave: true, caso: false, prov: true,
     redeInt: 1.3, redeDens: 1, redeVel: 1, redeAlc: 230,
-    mmInt: 1, mmRastro: 1, mmResp: 1, mmRespVel: 1, avisoAtraso: 0.8, cenaSeg: 9,
-    retInt: 1, retDens: 1, barInt: 1, barDes: 1, ondInt: 1, serInt: 1, serVel: 1
+    mmInt: 1, mmRastro: 1, mmResp: 1, mmRespVel: 1, avisoAtraso: 0.8, cenaSeg: 6,
+    retInt: 1, retDens: 1, retOnda: 1, barInt: 1, barDes: 1, ondInt: 1, serInt: 1, serVel: 1
   };
   var S = Object.assign({}, PADRAO);
   try { Object.assign(S, JSON.parse(localStorage.getItem('td-ajustes-2') || '{}')); } catch (e) {}
@@ -1269,6 +1270,19 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   document.querySelectorAll('[data-email]').forEach(function (a) { a.href = 'mailto:' + (CFG.email || ''); });
   document.querySelectorAll('[data-linkedin]').forEach(function (a) { a.href = CFG.linkedin || '#'; a.target = '_blank'; a.rel = 'noopener'; });
   document.querySelectorAll('[data-cfg]').forEach(function (el) { if (CFG[el.dataset.cfg]) el.textContent = CFG[el.dataset.cfg]; });
+
+  // ---------- Datas dos exemplos: sempre relativas a hoje (o mês corrente fecha as séries) ----------
+  var HOJE = new Date(), MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+  var mHoje = HOJE.getMonth(), mAnt = (mHoje + 11) % 12;
+  var M12 = []; for (var mi = 11; mi >= 0; mi--) M12.push(MESES[(mHoje - mi + 12) % 12].charAt(0).toUpperCase());
+  var D14 = []; for (var di = 13; di >= 0; di--) { var dd = new Date(HOJE); dd.setDate(HOJE.getDate() - di); D14.push(di === 13 || di === 6 || di === 0 ? dd.getDate() + '/' + (dd.getMonth() + 1) : ''); }
+  var TOKENS = {
+    '{mes}': MESES[mHoje], '{Mes}': MESES[mHoje].charAt(0).toUpperCase() + MESES[mHoje].slice(1), '{mesAnt}': MESES[mAnt],
+    '{ant3}': MESES[mAnt].slice(0, 3), '{ano}': String(HOJE.getFullYear()),
+    '{per12}': MESES[(mHoje + 1) % 12].slice(0, 3) + '–' + MESES[mHoje].slice(0, 3),
+    '{faltam}': String(new Date(HOJE.getFullYear(), mHoje + 1, 0).getDate() - HOJE.getDate())
+  };
+  function datas(t) { return t.replace(/\{(mes|Mes|mesAnt|ant3|ano|per12|faltam)\}/g, function (k) { return TOKENS[k]; }); }
 
   // ---------- Utilitários ----------
   function prepCanvas(c) {
@@ -1329,20 +1343,20 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   var CENAS = [
     { cab: 'visão geral', tit: 'Faturamento mensal', max: 3, y: ['3', '2', '1', '0'], l1: 'Realizado (R$ mi)', l2: 'Meta', fonte: 'dados de 4 sistemas conciliados',
       vals: [1.82, 1.95, 1.71, 1.88, 2.04, 2.11, 1.98, 2.17, 2.26, 2.31, 2.34, 2.48], meta: [1.9, 2.0, 1.8, 1.9, 2.0, 2.1, 2.1, 2.2, 2.2, 2.3, 2.4, 2.6],
-      kpis: [['FATURAMENTO DO MÊS', 'R$ 2,48 mi', '▲ 6,0% vs set', '', ''], ['MARGEM', '18,4%', '▼ meta 20,0%', '', 'at'], ['PEDIDOS ATRASADOS', '37', 'limite 20', 'atencao', 'at']],
+      kpis: [['FATURAMENTO DO MÊS', 'R$ 2,48 mi', '▲ 6,0% vs {ant3}', '', ''], ['MARGEM', '18,4%', '▼ meta 20,0%', '', 'at'], ['PEDIDOS ATRASADOS', '37', 'limite 20', 'atencao', 'at']],
       aviso: ['', 'ATENÇÃO', 'Pedidos atrasados fora da faixa: 37, com limite de 20. Sul concentra 21.'] },
     { cab: 'financeiro', tit: 'Inadimplência mensal', max: 6, y: ['6', '4', '2', '0'], l1: 'Realizado (%)', l2: 'Limite', fonte: 'contas a receber conciliadas com o banco',
       vals: [3.1, 3.4, 3.2, 3.0, 3.3, 3.5, 3.4, 3.6, 3.8, 3.9, 4.5, 4.8], meta: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-      kpis: [['SALDO EM CAIXA', 'R$ 1,86 mi', '▲ 4,2% vs set', '', ''], ['PRAZO DE RECEBIMENTO', '47 dias', '▲ 5 dias', '', 'at'], ['INADIMPLÊNCIA', '4,8%', 'limite 4,0%', 'atencao', 'at']],
+      kpis: [['SALDO EM CAIXA', 'R$ 1,86 mi', '▲ 4,2% vs {ant3}', '', ''], ['PRAZO DE RECEBIMENTO', '47 dias', '▲ 5 dias', '', 'at'], ['INADIMPLÊNCIA', '4,8%', 'limite 4,0%', 'atencao', 'at']],
       aviso: ['', 'ATENÇÃO', 'Inadimplência em 4,8%, acima do limite pelo segundo mês. Doze títulos vencidos há mais de 30 dias.'] },
     { cab: 'estoque', tit: 'Ruptura de estoque', max: 9, y: ['9', '6', '3', '0'], l1: 'Ruptura (%)', l2: 'Limite', fonte: 'ERP e armazém conciliados',
       vals: [2.1, 2.4, 1.9, 2.6, 2.2, 2.8, 2.5, 3.1, 3.6, 4.4, 5.3, 6.2], meta: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      kpis: [['GIRO DE ESTOQUE', '4,1×', '▼ 0,3 vs set', '', 'at'], ['COBERTURA', '38 dias', 'meta 30 dias', '', 'ne'], ['RUPTURA', '6,2%', 'limite 3,0%', 'critico', 'cr']],
+      kpis: [['GIRO DE ESTOQUE', '4,1×', '▼ 0,3 vs {ant3}', '', 'at'], ['COBERTURA', '38 dias', 'meta 30 dias', '', 'ne'], ['RUPTURA', '6,2%', 'limite 3,0%', 'critico', 'cr']],
       aviso: ['cr', 'CRÍTICO', 'Ruptura em 6,2%, o dobro do limite. Catorze itens da curva A sem estoque no CD Campinas.'] },
     { cab: 'comercial', tit: 'Vendas mensais', max: 1.5, y: ['1,5', '1,0', '0,5', '0'], l1: 'Realizado (R$ mi)', l2: 'Meta', fonte: 'CRM e ERP conciliados',
       vals: [0.98, 1.01, 0.93, 1.05, 1.09, 1.12, 1.08, 1.15, 1.19, 1.21, 1.22, 1.32], meta: [1.0, 1.0, 1.0, 1.05, 1.05, 1.1, 1.1, 1.15, 1.15, 1.2, 1.25, 1.3],
-      kpis: [['VENDAS DO MÊS', 'R$ 1,32 mi', '▲ 8,5% vs set', '', ''], ['META DO MÊS', '102%', 'atingida', '', ''], ['TICKET MÉDIO', 'R$ 4.870', '▲ 2,1%', '', '']],
-      aviso: ['ok', 'META ATINGIDA', 'Outubro fechou 2% acima da meta de vendas, com o ticket médio em alta.'] }
+      kpis: [['VENDAS DO MÊS', 'R$ 1,32 mi', '▲ 8,5% vs {ant3}', '', ''], ['META DO MÊS', '102%', 'atingida', '', ''], ['TICKET MÉDIO', 'R$ 4.870', '▲ 2,1%', '', '']],
+      aviso: ['ok', 'META ATINGIDA', '{Mes} fechou 2% acima da meta de vendas, com o ticket médio em alta.'] }
   ];
   var gsvg = document.getElementById('graf-svg');
   (function () {
@@ -1352,7 +1366,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     for (var i = 0; i < 12; i++) s += '<rect class="barra" x="' + (i * 10 + 2) + '" y="100" width="6" height="0" style="transition-delay:' + (0.25 + i * 0.03).toFixed(2) + 's"/>';
     s += '<polyline class="linha-real" vector-effect="non-scaling-stroke"/><polyline class="linha-meta" vector-effect="non-scaling-stroke"/>';
     gsvg.innerHTML = s;
-    document.getElementById('graf-x').innerHTML = 'NDJFMAMJJASO'.split('').map(function (m) { return '<span>' + m + '</span>'; }).join('');
+    document.getElementById('graf-x').innerHTML = M12.map(function (m) { return '<span>' + m + '</span>'; }).join('');
   })();
   var hBarras = gsvg.querySelectorAll('.barra'), hReal = gsvg.querySelector('.linha-real'), hMeta = gsvg.querySelector('.linha-meta'), geo = null;
   function emY(c, arr) { return arr.map(function (v) { return 100 - v / c.max * 100; }); }
@@ -1365,9 +1379,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     function txt(id, t) { document.getElementById(id).textContent = t; }
     txt('hero-cab', c.cab); txt('hero-tit', c.tit); txt('hero-l1', c.l1); txt('hero-l2', c.l2); txt('hero-fonte', c.fonte);
     document.getElementById('hero-y').innerHTML = c.y.map(function (t) { return '<span>' + t + '</span>'; }).join('');
-    document.getElementById('hero-kpis').innerHTML = c.kpis.map(function (k) { return '<div class="kpi ' + k[3] + '"><span class="r">' + k[0] + '</span><span class="v">' + k[1] + '</span><span class="d ' + k[4] + '">' + k[2] + '</span></div>'; }).join('');
+    document.getElementById('hero-kpis').innerHTML = datas(c.kpis.map(function (k) { return '<div class="kpi ' + k[3] + '"><span class="r">' + k[0] + '</span><span class="v">' + k[1] + '</span><span class="d ' + k[4] + '">' + k[2] + '</span></div>'; }).join(''));
     var av = document.getElementById('hero-aviso'); av.classList.remove('cr', 'ok'); if (c.aviso[0]) av.classList.add(c.aviso[0]);
-    txt('hero-aviso-l', c.aviso[1]); txt('hero-aviso-t', c.aviso[2]);
+    txt('hero-aviso-l', c.aviso[1]); txt('hero-aviso-t', datas(c.aviso[2]));
     palco.setAttribute('aria-label', 'Painel de exemplo, ' + c.cab + ', com dados fictícios');
   }
   var cena = Math.min(CENAS.length - 1, +params.get('cena') || 0), cenaT = 0;
@@ -1552,22 +1566,29 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   // ================= 2. Retícula (a densidade muda com a rolagem) =================
   var mercado = document.getElementById('mercado');
   (function () {
-    var cv = document.getElementById('cv-reticula'), C, K = {}, ultimo = -1;
+    // Ondas: de tempos em tempos, um ponto ao acaso solta um anel que cresce e engrossa os pontos por onde passa.
+    var cv = document.getElementById('cv-reticula'), C, K = {}, ultimo = -1, ondas = [], proxOnda = 0, VIDA = 4200;
     function construir() { C = prepCanvas(cv); K.a = cor(cv, '--pad-a'); ultimo = -1; }
-    function quadro() {
+    function quadro(agora) {
       if (!C) return false;
-      var p = progresso(mercado, 0.5), ctx = C.ctx;
-      if (Math.abs(p - ultimo) < 0.002) return false; ultimo = p;
+      var p = progresso(mercado, 0.5), ctx = C.ctx, mov = movOn() && S.retOnda > 0;
+      if (mov && agora > proxOnda) { ondas.push({ x: Math.random() * C.w, y: Math.random() * C.h, t: agora }); proxOnda = agora + 1600 + Math.random() * 1600; }
+      ondas = ondas.filter(function (o) { return agora - o.t < VIDA; });
+      if (!mov && Math.abs(p - ultimo) < 0.002) return false; ultimo = p;
       ctx.clearRect(0, 0, C.w, C.h);
       var passo = 22 / S.retDens;
       ctx.fillStyle = K.a; ctx.globalAlpha = Math.min(1, 0.65 * S.retInt);
       for (var y = passo / 2; y < C.h; y += passo) for (var x = passo / 2; x < C.w; x += passo) {
         var t = lim((x / C.w - 1 + p * 1.15) * 1.6 + (y / C.h - 0.5) * 0.15);
         var r = 0.4 + 2.4 * Math.pow(t, 1.6);
+        for (var oi = 0; oi < ondas.length; oi++) {
+          var o = ondas[oi], idade = (agora - o.t) / VIDA, raio = idade * VIDA / 1000 * 150, dist = Math.hypot(x - o.x, y - o.y) - raio;
+          if (dist > -40 && dist < 40) r += 1.8 * S.retOnda * Math.exp(-dist * dist / 300) * (1 - idade);
+        }
         if (r < 0.5) continue;
         ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill();
       }
-      ctx.globalAlpha = 1; return false;
+      ctx.globalAlpha = 1; return mov;
     }
     padroes.push({ construir: construir, quadro: quadro, ativo: function () { return visivel(mercado); } });
   })();
@@ -1677,39 +1698,37 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   function funil(rows) { var max = rows[0].v; return '<div class="funil">' + rows.map(function (r, i) { return '<div class="t-' + (r.tipo || 'ctx') + '"><span>' + r.n + '</span><i style="width:' + (r.v / max * 100).toFixed(1) + '%;transition-delay:calc(var(--d, 0s) + ' + (0.35 + i * 0.14).toFixed(2) + 's)"></i><b>' + r.txt + '</b></div>'; }).join('') + '</div>'; }
   function kpi(r, v, d, est, dcls) { return '<div class="kpi ' + (est || '') + '"><span class="r">' + r + '</span><span class="v">' + v + '</span><span class="d ' + (dcls || '') + '">' + d + '</span></div>'; }
   function card(tit, sub, corpo, cls) { return '<div class="ch-card dpeca ' + (cls || '') + '"><p class="ch-tit">' + tit + '</p><p class="ch-sub">' + sub + '</p>' + corpo + '</div>'; }
-  var M12 = ['N', 'D', 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O'];
   var S12 = ['S1', '', 'S3', '', 'S5', '', 'S7', '', 'S9', '', 'S11', ''];
-  var D14 = ['24/9', '', '', '', '', '', '', '1/10', '', '', '', '', '', '7/10'];
 
   // ferramenta: quando preenchida, aparece como rótulo no painel e na lateral.
   // embed: endereço de um painel público real (Power BI, Metabase); quando preenchido, substitui o painel desenhado.
   // leitura: [tipo (cr, at, info), rótulo, texto], a frase que resume o período.
   var EXEMPLOS = [
-    { aba: 'Financeiro', ferramenta: '', embed: '', titulo: 'Financeiro', periodo: 'Empresa X · outubro/2026',
+    { aba: 'Financeiro', ferramenta: '', embed: '', titulo: 'Financeiro', periodo: 'Empresa X · {mes}/{ano}',
       ind: ['Inadimplência contra o limite', 'Margem por linha de produto', 'Saldo em caixa e contas a receber'],
-      kpis: [kpi('SALDO EM CAIXA', 'R$ 1,86 mi', '▲ 4,2% vs set'), kpi('MARGEM BRUTA', '34,2%', '▲ 1,1 p.p.'), kpi('A RECEBER', 'R$ 742 mil', '38 títulos', '', 'ne'), kpi('INADIMPLÊNCIA', '4,8%', 'limite 4,0%', 'atencao', 'at')],
+      kpis: [kpi('SALDO EM CAIXA', 'R$ 1,86 mi', '▲ 4,2% vs {ant3}'), kpi('MARGEM BRUTA', '34,2%', '▲ 1,1 p.p.'), kpi('A RECEBER', 'R$ 742 mil', '38 títulos', '', 'ne'), kpi('INADIMPLÊNCIA', '4,8%', 'limite 4,0%', 'atencao', 'at')],
       leitura: ['at', 'ATENÇÃO', 'Inadimplência em 4,8%, acima do limite de 4,0% pelo segundo mês. Doze títulos vencidos há mais de 30 dias.'],
       graf: [
-        card('A inadimplência passou do limite pelo segundo mês', '% da carteira em atraso · nov–out',
+        card('A inadimplência passou do limite pelo segundo mês', '% da carteira em atraso · {per12}',
           linhas({ series: [{ vals: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], tipo: 'meta', rot: 'limite', val: '4,0%' }, { vals: [3.1, 3.4, 3.2, 3.0, 3.3, 3.5, 3.4, 3.6, 3.8, 3.9, 4.5, 4.8], tipo: 'foco', rot: 'out', val: '4,8%' }],
             min: 2.5, max: 5.5, ticks: [[3, '3%'], [4, '4%'], [5, '5%']], labels: M12, marcas: [{ i: 10, s: 1, tipo: 'at' }, { i: 11, s: 1, tipo: 'at', txt: 'acima do limite' }] })),
-        card('Serviços têm a maior margem', 'margem bruta por linha · outubro',
+        card('Serviços têm a maior margem', 'margem bruta por linha · {mes}',
           hbar([{ n: 'Serviços', txt: '52%', v: 100, tipo: 'foco' }, { n: 'Linha Premium', txt: '41%', v: 79 }, { n: 'Linha Padrão', txt: '33%', v: 63 }, { n: 'Acessórios', txt: '28%', v: 54 }]))
       ] },
-    { aba: 'Comercial', ferramenta: '', embed: '', titulo: 'Comercial', periodo: 'Empresa X · outubro/2026',
+    { aba: 'Comercial', ferramenta: '', embed: '', titulo: 'Comercial', periodo: 'Empresa X · {mes}/{ano}',
       ind: ['Vendas contra a meta', 'Conversão por etapa do funil', 'Ticket médio e recorrência'],
-      kpis: [kpi('VENDAS DO MÊS', 'R$ 1,32 mi', '▲ 8,5% vs set'), kpi('CONVERSÃO', '5,7%', 'lead → venda', '', 'ne'), kpi('TICKET MÉDIO', 'R$ 4.870', '▲ 2,1%'), kpi('RECORRÊNCIA', '42%', 'clientes que voltam', '', 'ne')],
-      leitura: ['info', 'LEITURA DO MÊS', 'Outubro fechou 1,5% acima da meta. A passagem de qualificado para proposta (41%) é a etapa mais baixa do funil.'],
+      kpis: [kpi('VENDAS DO MÊS', 'R$ 1,32 mi', '▲ 8,5% vs {ant3}'), kpi('CONVERSÃO', '5,7%', 'lead → venda', '', 'ne'), kpi('TICKET MÉDIO', 'R$ 4.870', '▲ 2,1%'), kpi('RECORRÊNCIA', '42%', 'clientes que voltam', '', 'ne')],
+      leitura: ['info', 'LEITURA DO MÊS', '{Mes} fechou 1,5% acima da meta. A passagem de qualificado para proposta (41%) é a etapa mais baixa do funil.'],
       graf: [
-        card('As vendas passaram a meta em outubro', 'vendas por mês · R$ mil · nov–out',
+        card('As vendas passaram a meta em {mes}', 'vendas por mês · R$ mil · {per12}',
           linhas({ series: [{ vals: [1000, 1000, 1000, 1050, 1050, 1100, 1100, 1150, 1150, 1200, 1250, 1300], tipo: 'meta', rot: 'meta', val: '1.300' }, { vals: [980, 1010, 930, 1050, 1090, 1120, 1080, 1150, 1190, 1210, 1218, 1320], tipo: 'foco', rot: 'realizado', val: '1.320' }],
-            min: 850, max: 1400, ticks: [[1000, '1.000'], [1200, '1.200']], labels: M12, marcas: [{ i: 10, s: 1, tipo: 'ctx', txt: 'abaixo em setembro', abaixo: 1 }, { i: 11, s: 1, tipo: 'foco' }] })),
-        card('A maior perda está antes da proposta', 'funil de vendas · outubro',
+            min: 850, max: 1400, ticks: [[1000, '1.000'], [1200, '1.200']], labels: M12, marcas: [{ i: 11, s: 1, tipo: 'foco', txt: 'acima da meta' }] })),
+        card('A maior perda está antes da proposta', 'funil de vendas · {mes}',
           funil([{ n: 'Leads', v: 1240, txt: '1.240' }, { n: 'Qualificados', v: 612, txt: '612 · 49%' }, { n: 'Propostas', v: 248, txt: '248 · 41%', tipo: 'at' }, { n: 'Negociação', v: 131, txt: '131 · 53%' }, { n: 'Fechados', v: 71, txt: '71 · 54%', tipo: 'foco' }]))
       ] },
     { aba: 'Operação', ferramenta: '', embed: '', titulo: 'Operação', periodo: 'Empresa X · hoje, 08:00',
       ind: ['Pedidos atrasados contra o limite', 'Atrasos por região', 'Exceções do dia'],
-      kpis: [kpi('EM ANDAMENTO', '286', 'pedidos abertos', '', 'ne'), kpi('TEMPO MÉDIO', '2,4 dias', '▼ 0,3 vs set'), kpi('ATRASADOS', '37', 'limite 20', 'critico', 'cr'), kpi('EXCEÇÕES DO DIA', '5', '2 resolvidas', '', 'ne')],
+      kpis: [kpi('EM ANDAMENTO', '286', 'pedidos abertos', '', 'ne'), kpi('TEMPO MÉDIO', '2,4 dias', '▼ 0,3 vs {ant3}'), kpi('ATRASADOS', '37', 'limite 20', 'critico', 'cr'), kpi('EXCEÇÕES DO DIA', '5', '2 resolvidas', '', 'ne')],
       leitura: ['cr', 'CRÍTICO', '37 pedidos atrasados, acima do limite de 20. A região Sul concentra 21.'],
       graf: [
         card('Os atrasos dobraram em uma semana', 'pedidos atrasados por dia · últimos 14 dias',
@@ -1720,7 +1739,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       ] },
     { aba: 'Logística', ferramenta: '', embed: '', titulo: 'Logística', periodo: 'Empresa X · últimas 12 semanas',
       ind: ['Entregas no prazo contra a meta', 'Custo por entrega e por rota', 'Ocupação da frota'],
-      kpis: [kpi('NO PRAZO (OTD)', '93,1%', 'meta 95,0%', 'atencao', 'at'), kpi('CUSTO POR ENTREGA', 'R$ 38,40', '▼ 1,8% vs set'), kpi('OCUPAÇÃO DA FROTA', '81%', '▲ 3 p.p.'), kpi('ENTREGAS', '4.912', 'nas 12 semanas', '', 'ne')],
+      kpis: [kpi('NO PRAZO (OTD)', '93,1%', 'meta 95,0%', 'atencao', 'at'), kpi('CUSTO POR ENTREGA', 'R$ 38,40', '▼ 1,8% vs {ant3}'), kpi('OCUPAÇÃO DA FROTA', '81%', '▲ 3 p.p.'), kpi('ENTREGAS', '4.912', 'nas 12 semanas', '', 'ne')],
       leitura: ['at', 'ATENÇÃO', 'Entregas no prazo em 93,1%, abaixo da meta de 95% pela quinta semana seguida. A rota Sorocaba tem o maior custo.'],
       graf: [
         card('No prazo abaixo da meta há cinco semanas', '% de entregas no prazo · 12 semanas',
@@ -1729,15 +1748,15 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         card('Sorocaba tem o maior custo', 'custo por entrega, por rota',
           hbar([{ n: 'SP – Sorocaba', txt: 'R$ 44,10', v: 100, tipo: 'at' }, { n: 'SP – Baixada', txt: 'R$ 41,50', v: 94 }, { n: 'SP – Vale do Paraíba', txt: 'R$ 36,80', v: 83 }, { n: 'SP – Campinas', txt: 'R$ 31,20', v: 71 }], { v: 87, txt: 'média R$ 38,40' }))
       ] },
-    { aba: 'Marketing', ferramenta: '', embed: '', titulo: 'Marketing', periodo: 'Empresa X · outubro/2026',
+    { aba: 'Marketing', ferramenta: '', embed: '', titulo: 'Marketing', periodo: 'Empresa X · {mes}/{ano}',
       ind: ['Custo por lead ao longo do ano', 'Retorno por canal', 'Investimento por canal'],
-      kpis: [kpi('INVESTIMENTO', 'R$ 86,4 mil', '▲ 5,0% vs set', '', 'ne'), kpi('CUSTO POR LEAD', 'R$ 69,70', '▼ 7,4%'), kpi('CUSTO POR VENDA', 'R$ 1.217', '▼ 3,2%'), kpi('RETORNO', '5,8×', 'receita / investimento', '', 'ne')],
+      kpis: [kpi('INVESTIMENTO', 'R$ 86,4 mil', '▲ 5,0% vs {ant3}', '', 'ne'), kpi('CUSTO POR LEAD', 'R$ 69,70', '▼ 7,4%'), kpi('CUSTO POR VENDA', 'R$ 1.217', '▼ 3,2%'), kpi('RETORNO', '5,8×', 'receita / investimento', '', 'ne')],
       leitura: ['info', 'LEITURA DO MÊS', 'O custo por lead caiu pelo terceiro mês e chegou ao menor valor do ano. O e-mail rende 9,8× com o menor orçamento.'],
       graf: [
-        card('O custo por lead chegou ao menor valor do ano', 'custo por lead · R$ · nov–out',
+        card('O custo por lead chegou ao menor valor do ano', 'custo por lead · R$ · {per12}',
           linhas({ series: [{ vals: [92, 88, 95, 90, 86, 84, 88, 83, 80, 78, 75.3, 69.7], tipo: 'foco', rot: 'out', val: 'R$ 69,70' }],
             min: 60, max: 100, ticks: [[70, '70'], [80, '80'], [90, '90']], labels: M12, marcas: [{ i: 2, tipo: 'ctx', txt: 'maior: R$ 95', abaixo: 0 }, { i: 11, tipo: 'foco', txt: 'menor do ano', abaixo: 1 }] })),
-        card('O e-mail traz o maior retorno', 'receita por real investido · outubro',
+        card('O e-mail traz o maior retorno', 'receita por real investido · {mes}',
           hbar([{ n: 'E-mail · R$ 4,6 mil', txt: '9,8×', v: 100, tipo: 'foco' }, { n: 'Google Ads · R$ 34,1 mil', txt: '6,4×', v: 65 }, { n: 'Meta Ads · R$ 25,8 mil', txt: '4,9×', v: 50 }, { n: 'LinkedIn · R$ 14,2 mil', txt: '3,1×', v: 32 }]))
       ] },
     { aba: 'Relatório automático', ferramenta: '', embed: '', relatorio: true,
@@ -1756,8 +1775,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         '<div class="bolha" style="transition-delay:1.6s"><div class="anexo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>relatório.pdf</div><span class="hora">07:00</span></div>' +
         '</div></div></div>' +
         '<div class="dpeca email so-tela" style="transition-delay:1s"><p class="rotulo">E-MAIL · SEGUNDA, 07:00</p><p class="email-assunto">Relatório semanal · Comercial e Financeiro</p><p class="email-para">Para: Cláudio Moreira · Empresa X</p>' +
-        '<div class="kpis" style="--n:3">' + kpi('FATURAMENTO DA SEMANA', 'R$ 184 mil', '▲ 3,1% vs anterior') + kpi('META DO MÊS', '72%', 'faltam 8 dias', '', 'ne') + kpi('PEDIDOS PARADOS', '3', 'há mais de 2 dias', 'atencao', 'at') + '</div>' +
-        '<p class="ch-tit">O mês caminha para fechar na meta</p><p class="ch-sub">% da meta acumulada · outubro</p>' +
+        '<div class="kpis" style="--n:3">' + kpi('FATURAMENTO DA SEMANA', 'R$ 184 mil', '▲ 3,1% vs anterior') + kpi('META DO MÊS', '72%', 'faltam {faltam} dias', '', 'ne') + kpi('PEDIDOS PARADOS', '3', 'há mais de 2 dias', 'atencao', 'at') + '</div>' +
+        '<p class="ch-tit">O mês caminha para fechar na meta</p><p class="ch-sub">% da meta acumulada · {mes}</p>' +
         hbar([{ n: 'Realizado até hoje', txt: '72%', v: 72, tipo: 'foco' }, { n: 'Esperado para a data', txt: '74%', v: 74 }]) +
         '<p class="email-link">Abrir o painel completo →</p></div></div>' + pe + '</div>';
     }
@@ -1782,7 +1801,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     med.style.cssText = 'position:absolute;left:0;top:0;width:' + painelEl.clientWidth + 'px;visibility:hidden;pointer-events:none';
     painelEl.parentNode.appendChild(med);
     var max = 0;
-    EXEMPLOS.forEach(function (e) { med.innerHTML = htmlPainel(e); max = Math.max(max, med.offsetHeight); });
+    EXEMPLOS.forEach(function (e) { med.innerHTML = datas(htmlPainel(e)); max = Math.max(max, med.offsetHeight); });
     med.remove();
     painelEl.style.minHeight = Math.ceil(max) + 'px';
   }
@@ -1810,7 +1829,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (foco) abasEl.children[i].focus();
     if (celular.matches) abasEl.scrollTo({ left: abasEl.children[i].offsetLeft - 40, behavior: movOn() ? 'smooth' : 'auto' });
     var aplicar = function () {
-      painelEl.innerHTML = htmlPainel(EXEMPLOS[i]); ladoEl.innerHTML = htmlLado(EXEMPLOS[i]);
+      painelEl.innerHTML = datas(htmlPainel(EXEMPLOS[i])); ladoEl.innerHTML = htmlLado(EXEMPLOS[i]);
       painelEl.classList.remove('saindo');
       if (movOn()) {
         painelEl.classList.add('desenhar'); void painelEl.offsetWidth;
@@ -1844,7 +1863,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   var demoVisto = false;
   atual = Math.min(EXEMPLOS.length - 1, +params.get('aba') || 0); // ?aba=N abre outra aba nas capturas
   [].forEach.call(abasEl.children, function (b, j) { b.setAttribute('aria-selected', String(j === atual)); b.tabIndex = j === atual ? 0 : -1; });
-  painelEl.innerHTML = htmlPainel(EXEMPLOS[atual]); ladoEl.innerHTML = htmlLado(EXEMPLOS[atual]);
+  painelEl.innerHTML = datas(htmlPainel(EXEMPLOS[atual])); ladoEl.innerHTML = htmlLado(EXEMPLOS[atual]);
   if (movOn()) painelEl.classList.add('desenhar');
   new IntersectionObserver(function (es, ob) {
     if (es[0].isIntersecting) { ob.disconnect(); mostrar(atual); demoVisto = true; }
@@ -2002,8 +2021,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (id.length < 2) return;
     var alvo = document.querySelector(id); if (!alvo) return;
     var off = -document.querySelector('.cab').offsetHeight;
-    // Na tela larga, a chamada final enquadra pelo formulário, que é o bloco mais alto, com uma folga acima.
-    if (id === '#avaliar' && !celular.matches) { alvo = document.getElementById('form'); off -= 32; }
+    // Na tela larga, a chamada final centraliza o formulário (o bloco mais alto) na área abaixo do cabeçalho.
+    if (id === '#avaliar' && !celular.matches) { alvo = document.getElementById('form'); off -= Math.max(16, (innerHeight + off - alvo.offsetHeight) / 2); }
     if (lenis) lenis.scrollTo(alvo, { offset: off }); else window.scrollTo({ top: alvo.getBoundingClientRect().top + scrollY + off, behavior: movOn() ? 'smooth' : 'auto' });
   });
 
