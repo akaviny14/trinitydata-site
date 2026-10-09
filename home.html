@@ -214,7 +214,7 @@ a:hover { color: var(--link-hover); }
 .cab { position: sticky; top: 0; z-index: 30; background: var(--fundo); border-bottom: 1px solid var(--divisa); transition: background-color .35s ease, border-color .35s ease; }
 .cab-in { position: relative; max-width: 1440px; margin: 0 auto; height: 76px; display: flex; align-items: center; gap: 32px; padding: 0 80px; }
 .cab-in > a:first-child { display: flex; align-items: center; height: 100%; }
-.cab .logo { display: block; width: 150px; height: auto; }
+.cab .logo { display: block; width: 150px; height: auto; transform: translateY(2px); } /* correção óptica: o ponto de cima do símbolo puxa o peso para cima */
 .logo-escuro { display: none; }
 [data-tema="escuro"] .logo-claro { display: none; }
 [data-tema="escuro"] .logo-escuro { display: block; }
@@ -319,8 +319,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .numero cite { font-style: normal; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 2.8em; align-content: flex-end; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); line-height: 1.4; }
 
 /* ===== 3. Dores ===== */
-.dores-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 72px; align-items: start; }
-.dores-grid > div:first-child { position: sticky; top: 116px; }
+.dores-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 72px; align-items: center; }
 .sintomas { list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-direction: column; }
 .sintomas li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 8px; padding: 18px 0; border-top: 1px solid var(--divisa); font-size: 17px; line-height: 1.5; color: var(--texto); }
 .sintomas li span { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); padding-top: 4px; }
@@ -346,8 +345,32 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 [data-tema="escuro"] .il-centro { fill: var(--td-azul-600); }
 .il-barra { fill: var(--barra); }
 .il-at { fill: none; stroke: var(--td-semantica-atencao); stroke-width: 1.5; }
-.depois-svg .il-liga { stroke-dasharray: 400; stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s var(--suave) .3s; }
-.depois-svg:not(.visto) .il-liga { stroke-dashoffset: 400; }
+/* HOJE: as peças flutuam fora de compasso, as setas correm, o "≠" pulsa e os números trocam. */
+.hoje-svg .flut { transform-box: fill-box; transform-origin: center; animation: flutua 6.4s ease-in-out infinite; }
+.hoje-svg .f2 { animation-duration: 7.3s; animation-delay: -2.1s; }
+.hoje-svg .f3 { animation-duration: 5.6s; animation-delay: -3.4s; animation-direction: reverse; }
+.hoje-svg .f4 { animation-duration: 8.1s; animation-delay: -1.2s; }
+@keyframes flutua { 0%, 100% { transform: translate(0, 0) rotate(0); } 30% { transform: translate(3px, -5px) rotate(-1.4deg); } 65% { transform: translate(-4px, 3px) rotate(1.2deg); } }
+.hoje-svg .il-seta { animation: corre 1.4s linear infinite; }
+@keyframes corre { to { stroke-dashoffset: -18; } }
+.il-dif { transform-box: fill-box; transform-origin: center; animation: pulsa 1.8s ease-in-out infinite; }
+@keyframes pulsa { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
+.il-num { transition: opacity .25s ease; }
+.il-num.troca { opacity: 0; }
+/* DEPOIS: as ligações se desenham com a rolagem; completas, os dados correm em fluxo contínuo e as barras respiram. */
+.depois-svg .il-liga { stroke-dasharray: 400; stroke-dashoffset: 0; }
+.il-pulso { fill: var(--td-azul-600); }
+[data-tema="escuro"] .il-pulso { fill: var(--td-azul-200); }
+.pulsos { opacity: 0; transition: opacity .5s ease; }
+.depois-svg.fluindo .pulsos { opacity: 1; }
+.sem-mov .pulsos { display: none; }
+.depois-svg .il-barra { transform-box: fill-box; transform-origin: 50% 100%; }
+.depois-svg:not(.fluindo) .il-barra { transform: scaleY(0); }
+.depois-svg.fluindo .il-barra { animation: cresce .7s var(--suave) both, respira 3.4s ease-in-out .9s infinite; }
+.depois-svg.fluindo .il-barra:nth-child(2n) { animation-delay: .05s, 1.3s; }
+.depois-svg.fluindo .il-barra:nth-child(3n) { animation-delay: .1s, 1.7s; }
+@keyframes cresce { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes respira { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.86); } }
 
 /* Passagem das Dores para as Soluções (barras) */
 .passagem { position: relative; background: var(--fundo); height: 210px; transition: background-color .35s ease; }
@@ -362,13 +385,16 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 /* ===== 4. Soluções ===== */
 .solucoes { padding-top: 48px; }
 .cartoes4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin-top: 48px; }
-.sol { background: var(--cartao); border: 1px solid var(--cartao-borda); border-top: 3px solid var(--filete); border-radius: 8px; padding: 24px 22px 22px; display: flex; flex-direction: column; gap: 16px; transition: transform .35s var(--suave), opacity .7s ease, background-color .35s ease, box-shadow .35s ease; }
+/* Subgrade: ícone, título, ANTES, DEPOIS e rodapé na mesma linha em todos os cartões. */
+.sol { background: var(--cartao); border: 1px solid var(--cartao-borda); border-top: 3px solid var(--filete); border-radius: 8px; padding: 24px 22px 22px; display: grid; grid-row: span 5; grid-template-rows: subgrid; row-gap: 16px; transition: transform .35s var(--suave), opacity .7s ease, background-color .35s ease, box-shadow .35s ease; }
 .sol.visto:hover { transform: translateY(-3px); box-shadow: var(--peca-sombra); }
 .sol svg.ic { width: 32px; height: 32px; color: var(--sobretitulo); }
 .sol { --dep-fundo: var(--td-azul-50); }
 [data-tema="escuro"] .sol { --dep-fundo: var(--td-azul-800); background: var(--td-azul-900); border-color: var(--td-azul-800); border-top-color: var(--filete); }
 .sol h3 { font-size: 20px; line-height: 1.28; font-weight: 700; color: var(--titulo); margin: 0; }
-.ad { display: flex; flex-direction: column; gap: 14px; margin: 0; }
+.ad { display: contents; margin: 0; }
+.ad > div { align-self: start; }
+.ad > .dep { align-self: stretch; }
 .ad div { display: flex; flex-direction: column; gap: 4px; line-height: 1.45; }
 .ad dt { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--texto-suave); }
 .ad dd { margin: 0; font-size: 14px; color: var(--texto-suave); }
@@ -376,7 +402,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .ad .dep dt { color: var(--sobretitulo); }
 .ad .dep dd { font-size: 16px; color: var(--titulo); font-weight: 600; }
 .sol .rodape-sol .etiqueta { border: 0; padding: 0; color: var(--texto-suave); letter-spacing: .04em; }
-.sol .rodape-sol { margin-top: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding-top: 4px; }
+.sol .rodape-sol { align-self: end; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding-top: 4px; }
 
 /* ===== 5. Ferramentas ===== */
 .ferramentas { background: var(--fundo); padding: 56px 0; border-top: 1px solid var(--divisa); }
@@ -407,7 +433,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .demo { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 48px; margin-top: 24px; align-items: start; }
 .demo-palco { position: relative; }
 .demo-palco .mm { left: -56px; top: 0; width: calc(100% + 112px); height: calc(100% + 56px); }
-.painel-troca { position: relative; transition: opacity .25s ease, transform .35s var(--suave); }
+.painel-troca { position: relative; display: flex; flex-direction: column; justify-content: center; transition: opacity .25s ease, transform .35s var(--suave); }
 .painel-troca.saindo { opacity: 0; transform: translateY(10px); }
 .lado h3 { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; font-weight: 500; color: var(--texto-suave); margin: 8px 0 14px; }
 .lado ul { list-style: none; margin: 0 0 28px; padding: 0; }
@@ -417,16 +443,21 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .lado .feito { font-size: 13px; color: var(--texto-suave); margin-top: 20px; line-height: 1.5; }
 
 /* Painel de exemplo: peças soltas sobre o milimetrado, na linguagem da abertura.
-   Tema claro: peças claras. Tema escuro: Azul 900 com borda Azul 600. */
+   Tema claro: peças claras. Tema escuro: Azul 900 com borda Azul 600.
+   Storytelling com dados: --foco-c no que importa, --ctx-c (cinza) no contexto, --meta-c tracejado nas referências. */
 .dash {
   --dp-fundo: var(--td-neutro-0); --dp-borda: var(--td-neutro-100); --dp-sombra: 0 18px 40px -24px rgba(14, 20, 23, .6);
-  --trilho: var(--td-neutro-50); --marca-meta: var(--td-neutro-900); --g-linha: var(--td-neutro-100); --g-base: var(--td-neutro-500);
+  --trilho: var(--td-neutro-50); --g-linha: var(--td-neutro-100); --g-base: var(--td-neutro-300);
+  --foco-c: var(--td-azul-800); --ctx-c: var(--td-neutro-300); --meta-c: var(--td-neutro-500);
+  --foco-txt: var(--td-azul-800); --at-txt: var(--td-semantica-atencao-texto); --cr-txt: var(--td-semantica-critico-texto);
   --crit-rotulo: var(--td-semantica-critico-texto);
   position: relative; display: flex; flex-direction: column; gap: 12px; color: var(--texto);
 }
 [data-tema="escuro"] .dash {
   --dp-fundo: var(--td-azul-900); --dp-borda: var(--td-azul-600); --dp-sombra: 0 16px 36px -20px rgba(14, 20, 23, .7);
-  --trilho: var(--td-azul-800); --marca-meta: var(--td-neutro-0); --g-linha: var(--td-azul-800); --g-base: var(--td-azul-200);
+  --trilho: var(--td-azul-800); --g-linha: var(--td-azul-800); --g-base: var(--td-azul-600);
+  --foco-c: var(--td-azul-200); --ctx-c: var(--td-azul-600); --meta-c: var(--td-azul-400);
+  --foco-txt: var(--td-neutro-0); --at-txt: var(--td-neutro-0); --cr-txt: var(--td-neutro-0);
   --crit-rotulo: var(--td-neutro-0);
 }
 .dpeca {
@@ -438,74 +469,89 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .dash .kpi { border-color: var(--dp-borda); border-top-color: var(--filete); }
 .dash .kpi.atencao { border-top-color: var(--td-semantica-atencao); }
 .dash .kpi.critico { border-top-color: var(--td-semantica-critico); }
-.dash-alerta { border-top: 3px solid var(--td-semantica-critico); padding: 12px 16px; }
-.dash-alerta .aviso-l { color: var(--crit-rotulo); }
-.dash-alerta .aviso-l i { background: var(--td-semantica-critico); }
+/* Leitura do período: uma frase que resume o painel (crítico, atenção ou neutra). */
+.dash-alerta { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 16px; align-items: baseline; border-left: 3px solid var(--filete); padding: 11px 16px; }
+.dash-alerta .aviso-l { margin: 0; color: var(--texto-suave); }
+.dash-alerta .aviso-l i { background: var(--filete); }
+.dash-alerta.at { border-left-color: var(--td-semantica-atencao); }
+.dash-alerta.at .aviso-l { color: var(--at-txt); }
+.dash-alerta.at .aviso-l i { background: var(--td-semantica-atencao); }
+.dash-alerta.cr { border-left-color: var(--td-semantica-critico); }
+.dash-alerta.cr .aviso-l { color: var(--crit-rotulo); }
+.dash-alerta.cr .aviso-l i { background: var(--td-semantica-critico); }
 .dash-alerta.acende { animation: acende 1.2s ease 1; }
 @keyframes acende { 0% { box-shadow: 0 0 0 0 rgba(176, 63, 51, .55); } 100% { box-shadow: 0 0 0 12px rgba(176, 63, 51, 0); } }
-.dash-graf { display: grid; grid-template-columns: repeat(var(--g, 2), minmax(0, 1fr)); gap: 14px; align-items: start; }
-.ch-card.largo { grid-column: 1 / -1; }
-.ch-tit { font-size: 14px; font-weight: 600; color: var(--titulo); margin: 0 0 12px; display: flex; justify-content: space-between; gap: 8px; }
-.ch-tit small { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; font-weight: 400; color: var(--texto-suave); }
-.ch { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 6px; }
-.ch-y { display: flex; flex-direction: column; justify-content: space-between; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--eixo); text-align: right; height: calc(var(--h, 120px) + 14px); margin-top: -7px; }
-.ch svg { width: 100%; height: var(--h, 120px); display: block; overflow: visible; }
-.ch-x { display: grid; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--eixo); text-align: center; margin-top: 4px; }
-.ch-leg { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--texto-suave); margin-top: 10px; }
-.ch-leg span { display: inline-flex; align-items: center; gap: 6px; }
-.ch-leg i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; background: var(--c); }
-.ch-leg i.tr { height: 0; width: 14px; border-top: 2px dashed var(--c); border-radius: 0; background: none; }
-.ch-leg .meta-l i { width: 2px; height: 12px; border-radius: 0; background: var(--marca-meta); }
-.s1 { --c: var(--td-viz-1); } .s2 { --c: var(--td-viz-2); } .s3 { --c: var(--td-viz-3); } .s4 { --c: var(--td-viz-4); } .s5 { --c: var(--td-viz-5); }
-/* No escuro, as duas primeiras séries clareiam como na abertura (barra Azul 400, meta Azul 200). */
-[data-tema="escuro"] .dash .s1 { --c: var(--td-azul-400); }
-[data-tema="escuro"] .dash .s2 { --c: var(--td-azul-200); }
+.dash-graf { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 14px; align-items: stretch; }
+.ch-tit { font-size: 15px; line-height: 1.3; font-weight: 700; color: var(--titulo); margin: 0; }
+.ch-sub { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); margin: 4px 0 16px; }
+/* Gráfico de linhas: eixo à esquerda, área, rótulos diretos à direita (sem legenda). */
+.ch { display: grid; grid-template-columns: 40px minmax(0, 1fr) 88px; gap: 8px; }
+.ch-y { position: relative; height: var(--h, 150px); font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--eixo); }
+.ch-y span { position: absolute; right: 0; transform: translateY(-50%); line-height: 1; }
+.ln-area { position: relative; height: var(--h, 150px); }
+.ln-area svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+.ch-x { display: grid; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--eixo); margin-top: 6px; }
+.ch-x span { text-align: center; white-space: nowrap; margin: 0 -12px; }
+.ch-x span:first-child { text-align: left; margin-left: 0; }
+.ch-x span:last-child { text-align: right; margin-right: 0; }
+.ln-fim { position: relative; height: var(--h, 150px); }
+.ln-fim span { position: absolute; left: 0; transform: translateY(-50%); display: flex; flex-direction: column; font-size: 13px; line-height: 1.2; color: var(--texto-suave); white-space: nowrap; }
+.ln-fim b { font-family: "DM Mono", ui-monospace, monospace; font-weight: 500; font-size: 14px; }
+.ln-fim .foco { color: var(--foco-txt); }
+.ln-fim .foco b { color: var(--foco-txt); }
 .g-grade { stroke: var(--g-linha); }
 .g-eixo { stroke: var(--g-base); }
-.b { fill: var(--c); transform-box: fill-box; transform-origin: 50% 100%; transition: transform .5s var(--suave); }
-.ln { fill: none; stroke: var(--c); stroke-width: 2; clip-path: inset(0 0 0 0); transition: clip-path .8s var(--suave) .15s; }
-.ln.tr { stroke-width: 1.5; stroke-dasharray: 4 3; }
-.desenhar .b { transform: scaleY(0); }
+.ln { fill: none; stroke: var(--ctx-c); stroke-width: 1.5; clip-path: inset(0 0 0 0); transition: clip-path .9s var(--suave) .15s; }
+.ln.foco { stroke: var(--foco-c); stroke-width: 2.5; }
+.ln.meta { stroke: var(--meta-c); stroke-dasharray: 5 4; }
 .desenhar .ln { clip-path: inset(0 100% 0 0); }
-.hb { display: flex; flex-direction: column; gap: 10px; }
-.hb-l { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--texto); margin-bottom: 4px; }
-.hb-l b { font-family: "DM Mono", ui-monospace, monospace; font-weight: 400; white-space: nowrap; }
-.hb-t { position: relative; height: 8px; background: var(--trilho); border-radius: 2px; }
+.ln-pt { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--foco-c); border: 2px solid var(--dp-fundo); transition: transform .35s var(--suave); }
+.ln-pt.ctx { background: var(--meta-c); }
+.ln-pt.at { background: var(--td-semantica-atencao); }
+.ln-pt.cr { background: var(--td-semantica-critico); }
+.desenhar .ln-pt { transform: scale(0); }
+.ln-nota { position: absolute; transform: translate(-100%, -100%); margin: -8px 0 0 -8px; font-size: 13px; font-weight: 600; line-height: 1.2; white-space: nowrap; color: var(--texto-suave); transition: opacity .4s ease .9s; }
+.ln-nota.abaixo { transform: translate(-100%, 0); margin-top: 8px; }
+.ln-nota.foco { color: var(--foco-txt); }
+.ln-nota.at { color: var(--at-txt); }
+.ln-nota.cr { color: var(--cr-txt); }
+.desenhar .ln-nota { opacity: 0; }
+/* Barras horizontais e funil: cinza no contexto, cor só no destaque. */
+.t-ctx { --c: var(--ctx-c); --tc: var(--texto); }
+.t-foco { --c: var(--foco-c); --tc: var(--foco-txt); }
+.t-at { --c: var(--td-semantica-atencao); --tc: var(--at-txt); }
+.t-cr { --c: var(--td-semantica-critico); --tc: var(--cr-txt); }
+.t-foco .hb-l, .t-at .hb-l, .t-cr .hb-l, .funil .t-foco span, .funil .t-at span, .funil .t-cr span, .funil .t-foco b, .funil .t-at b, .funil .t-cr b { color: var(--tc); font-weight: 600; }
+.hb { display: flex; flex-direction: column; gap: 12px; }
+.hb-l { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--texto); margin-bottom: 5px; }
+.hb-l b { font-family: "DM Mono", ui-monospace, monospace; font-weight: 500; white-space: nowrap; }
+.hb-t { position: relative; height: 10px; background: var(--trilho); border-radius: 2px; }
 .hb-t i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--c); border-radius: 2px; transform-origin: 0 50%; transition: transform .55s var(--suave); }
-.hb-t em { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--marca-meta); }
+.hb-t em { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 1.5px dashed var(--meta-c); }
+.hb-ref { display: flex; align-items: center; gap: 8px; margin: 2px 0 0; font-size: 13px; color: var(--texto-suave); }
+.hb-ref i { width: 0; height: 12px; border-left: 1.5px dashed var(--meta-c); }
 .desenhar .hb-t i { transform: scaleX(0); }
-.funil { display: flex; flex-direction: column; gap: 6px; }
+.funil { display: flex; flex-direction: column; gap: 7px; }
 .funil div { display: grid; grid-template-columns: 92px minmax(0, 1fr) 84px; gap: 10px; align-items: center; font-size: 13px; }
 .funil span { color: var(--texto); }
 .funil i { height: 22px; background: var(--c); border-radius: 2px; transform-origin: 0 50%; transition: transform .55s var(--suave); }
 .funil b { font-family: "DM Mono", ui-monospace, monospace; font-weight: 400; color: var(--texto); text-align: right; white-space: nowrap; }
 .desenhar .funil i { transform: scaleX(0); }
-.tab { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tab th { text-align: left; font-family: "DM Mono", ui-monospace, monospace; font-weight: 400; letter-spacing: .04em; color: var(--texto-suave); padding: 0 6px 6px 0; border-bottom: 1px solid var(--g-linha); }
-.tab td { padding: 7px 6px 7px 0; border-bottom: 1px solid var(--g-linha); color: var(--texto); }
-.tab td.n { font-family: "DM Mono", ui-monospace, monospace; text-align: right; white-space: nowrap; }
-.tab th.n { text-align: right; }
-.tab tr.tot td { font-weight: 600; color: var(--titulo); }
 .chip { display: inline-block; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; padding: 1px 7px; border-radius: 3px; color: var(--td-neutro-0); white-space: nowrap; }
-.chip.cr { background: var(--td-semantica-critico); }
-.chip.at { background: var(--td-semantica-atencao-texto); }
-.donut { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; align-items: center; }
-.donut svg { width: 120px; height: 120px; transform: rotate(-90deg); }
-.donut circle { fill: none; stroke: var(--c); stroke-width: 16; }
-.donut .hb-l span i { width: 10px; height: 10px; border-radius: 2px; background: var(--c); display: inline-block; margin-right: 6px; }
 .dash-pe { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .dash-embed { padding: 0; overflow: hidden; }
 .dash-embed iframe { display: block; width: 100%; aspect-ratio: 16 / 10; border: 0; }
 
-/* Celular com o relatório */
-.rel { display: flex; justify-content: center; padding: 8px 0; }
-.fone { width: 300px; border-radius: 34px; border: 2px solid var(--td-azul-600); background: var(--td-neutro-900); padding: 10px; box-shadow: 0 24px 48px -28px rgba(14, 20, 23, .6); }
+/* Relatório automático: a mensagem no celular e o mesmo relatório por e-mail, na mesma altura dos painéis. */
+.rel { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: center; }
+.fone { width: 300px; border-radius: 34px; border: 2px solid var(--td-azul-600); background: var(--td-neutro-900); padding: 10px; box-shadow: 0 24px 48px -28px rgba(14, 20, 23, .6); transition: transform .5s var(--suave), opacity .4s ease; }
+.desenhar .fone { opacity: 0; transform: translateY(14px); }
 .fone-tela { border-radius: 26px; overflow: hidden; background: var(--td-neutro-50); }
-.fone-cab { display: flex; align-items: center; gap: 10px; background: var(--td-azul-800); color: var(--td-neutro-0); padding: 22px 14px 12px; }
+.fone-cab { display: flex; align-items: center; gap: 10px; background: var(--td-azul-800); color: var(--td-neutro-0); padding: 20px 14px 12px; }
 .fone-cab i { width: 32px; height: 32px; border-radius: 50%; background: var(--td-azul-600); display: inline-block; flex: none; }
 .fone-cab b { font-size: 14px; display: block; }
 .fone-cab span { font-size: 13px; color: var(--td-azul-200); }
-.fone-chat { padding: 16px 12px 22px; min-height: 380px; display: flex; flex-direction: column; gap: 8px; }
+.fone-chat { padding: 14px 12px 18px; min-height: 340px; display: flex; flex-direction: column; gap: 8px; }
 .fone-dia { align-self: center; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--td-neutro-500); background: var(--td-neutro-0); border-radius: 4px; padding: 2px 8px; }
 .bolha { align-self: flex-start; max-width: 92%; background: var(--td-neutro-0); color: var(--td-neutro-900); border-radius: 4px 12px 12px 12px; padding: 10px 12px 6px; font-size: 14px; line-height: 1.5; border: 1px solid var(--td-neutro-100); transition: opacity .35s ease, transform .42s var(--suave); }
 .bolha p { margin: 0 0 6px; }
@@ -515,6 +561,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .anexo { display: flex; align-items: center; gap: 8px; border: 1px solid var(--td-neutro-100); border-radius: 6px; padding: 8px 10px; margin: 4px 0 6px; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--td-neutro-700); }
 .anexo svg { width: 18px; height: 18px; color: var(--td-semantica-critico); }
 .desenhar .bolha { opacity: 0; transform: translateY(12px); }
+.email { padding: 20px 22px; }
+.email .rotulo { display: block; margin: 0 0 10px; }
+.email-assunto { font-size: 17px; font-weight: 700; color: var(--titulo); margin: 0; }
+.email-para { font-size: 13px; color: var(--texto-suave); margin: 4px 0 18px; padding-bottom: 14px; border-bottom: 1px solid var(--g-linha); }
+.email .kpis { margin-bottom: 20px; }
+.email-link { font-size: 14px; font-weight: 500; color: var(--link); margin: 18px 0 0; }
 
 /* ===== 7. Como funciona (ondas) ===== */
 .como { overflow: hidden; }
@@ -684,7 +736,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .numero cite { min-height: 0; }
   .numero p { font-size: 14px; }
   .dores-grid, .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-  .dores-grid > div:first-child { position: static; }
   .sintomas li { font-size: 16px; }
   .passagem { height: 170px; }
   .passagem svg { height: 110px; top: 44px; }
@@ -709,6 +760,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .dpeca { padding: 12px 12px 14px; }
   .dash-graf { grid-template-columns: minmax(0, 1fr); }
   .dash-graf .ch-card:not(:first-child) { display: none; }
+  .dash-alerta { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .ch { grid-template-columns: 32px minmax(0, 1fr) 64px; }
+  .rel { grid-template-columns: minmax(0, 1fr); justify-items: center; }
   .dash-pe { flex-direction: column; gap: 2px; }
   .funil div { grid-template-columns: 84px minmax(0, 1fr) 76px; }
   .fone { width: 280px; }
@@ -874,17 +928,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       <div class="ilustra">
         <figure class="quadro surge">
           <span class="rotulo">HOJE</span>
-          <svg viewBox="0 0 560 300" role="img" aria-label="Hoje: sistemas, planilhas e cadernos soltos, ligados por setas cruzadas, cada um com um número diferente">
+          <svg class="hoje-svg" viewBox="0 0 560 300" role="img" aria-label="Hoje: sistemas, planilhas e cadernos soltos, ligados por setas cruzadas, cada um com um número diferente">
             <defs><marker id="pta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="il-ponta" d="M0 0L10 5L0 10z"/></marker></defs>
             <path class="il-seta" d="M178 72 C 300 60, 330 210, 392 228" marker-end="url(#pta)"/>
             <path class="il-seta" d="M400 92 C 300 110, 250 200, 190 214" marker-end="url(#pta)"/>
             <path class="il-seta" d="M106 128 C 128 160, 104 172, 110 194" marker-end="url(#pta)"/>
             <path class="il-seta" d="M454 168 C 474 150, 470 140, 462 120" marker-end="url(#pta)"/>
-            <g transform="translate(36 30)"><rect class="il-caixa" width="142" height="96" rx="6"/><rect class="il-cab" x="0.75" y="0.75" width="140.5" height="22" rx="5"/><text class="il-txt forte" x="12" y="16">ERP</text><text class="il-txt" x="12" y="50">Faturamento</text><text class="il-txt forte" x="12" y="76">R$ 2,31 mi</text></g>
-            <g transform="translate(392 22)"><rect class="il-caixa" width="142" height="96" rx="6"/><rect class="il-cab" x="0.75" y="0.75" width="140.5" height="22" rx="5"/><text class="il-txt forte" x="12" y="16">CRM</text><text class="il-txt" x="12" y="50">Vendas</text><text class="il-txt forte" x="12" y="76">R$ 2,64 mi</text></g>
-            <g transform="translate(40 196) rotate(-4)"><rect class="il-caixa" width="150" height="88" rx="4"/><path class="il-fina" d="M0 22H150M0 44H150M0 66H150M50 22V88M100 22V88"/><text class="il-txt" x="8" y="15">vendas_v3.xlsx</text><text class="il-txt forte" x="56" y="60">2,48</text></g>
-            <g transform="translate(386 168) rotate(5)"><rect class="il-caixa" width="128" height="112" rx="4"/><path class="il-linha" d="M16 0V112"/><path class="il-fina" d="M26 40H112M26 60H112M26 80H96M26 100H104"/><circle class="il-caixa" cx="16" cy="18" r="4"/><circle class="il-caixa" cx="16" cy="46" r="4"/><circle class="il-caixa" cx="16" cy="74" r="4"/><circle class="il-caixa" cx="16" cy="100" r="4"/><text class="il-txt" x="30" y="24">caderno</text></g>
-            <circle class="il-at" cx="282" cy="150" r="18"/><text class="il-txt at" x="282" y="156" text-anchor="middle">≠</text>
+            <g class="esp" data-d="-1,-0.6"><g class="flut f1"><g transform="translate(36 30)"><rect class="il-caixa" width="142" height="96" rx="6"/><rect class="il-cab" x="0.75" y="0.75" width="140.5" height="22" rx="5"/><text class="il-txt forte" x="12" y="16">ERP</text><text class="il-txt" x="12" y="50">Faturamento</text><text class="il-txt forte il-num" x="12" y="76" data-v="R$ 2,31 mi|R$ 2,27 mi|R$ 2,36 mi">R$ 2,31 mi</text></g></g></g>
+            <g class="esp" data-d="1,-0.7"><g class="flut f2"><g transform="translate(392 22)"><rect class="il-caixa" width="142" height="96" rx="6"/><rect class="il-cab" x="0.75" y="0.75" width="140.5" height="22" rx="5"/><text class="il-txt forte" x="12" y="16">CRM</text><text class="il-txt" x="12" y="50">Vendas</text><text class="il-txt forte il-num" x="12" y="76" data-v="R$ 2,64 mi|R$ 2,71 mi|R$ 2,58 mi">R$ 2,64 mi</text></g></g></g>
+            <g class="esp" data-d="-1,0.6"><g class="flut f3"><g transform="translate(40 196) rotate(-4)"><rect class="il-caixa" width="150" height="88" rx="4"/><path class="il-fina" d="M0 22H150M0 44H150M0 66H150M50 22V88M100 22V88"/><text class="il-txt" x="8" y="15">vendas_v3.xlsx</text><text class="il-txt forte il-num" x="56" y="60" data-v="2,48|2,52|2,44">2,48</text></g></g></g>
+            <g class="esp" data-d="1,0.7"><g class="flut f4"><g transform="translate(386 168) rotate(5)"><rect class="il-caixa" width="128" height="112" rx="4"/><path class="il-linha" d="M16 0V112"/><path class="il-fina" d="M26 40H112M26 60H112M26 80H96M26 100H104"/><circle class="il-caixa" cx="16" cy="18" r="4"/><circle class="il-caixa" cx="16" cy="46" r="4"/><circle class="il-caixa" cx="16" cy="74" r="4"/><circle class="il-caixa" cx="16" cy="100" r="4"/><text class="il-txt" x="30" y="24">caderno</text></g></g></g>
+            <g class="il-dif"><circle class="il-at" cx="282" cy="150" r="18"/><text class="il-txt at" x="282" y="156" text-anchor="middle">≠</text></g>
           </svg>
         </figure>
         <figure class="quadro surge">
@@ -894,13 +948,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
             <g transform="translate(20 92)"><rect class="il-caixa" width="96" height="34" rx="5"/><text class="il-txt" x="12" y="22">CRM</text></g>
             <g transform="translate(20 154)"><rect class="il-caixa" width="96" height="34" rx="5"/><text class="il-txt" x="12" y="22">Planilhas</text></g>
             <g transform="translate(20 216)"><rect class="il-caixa" width="96" height="34" rx="5"/><text class="il-txt" x="12" y="22">Campo</text></g>
-            <path class="il-liga" d="M116 47 C 170 47, 170 140, 214 140"/>
-            <path class="il-liga" d="M116 109 C 160 109, 170 140, 214 140"/>
-            <path class="il-liga" d="M116 171 C 160 171, 170 140, 214 140"/>
-            <path class="il-liga" d="M116 233 C 170 233, 170 140, 214 140"/>
+            <path class="il-liga" id="lg1" d="M116 47 C 170 47, 170 140, 214 140"/>
+            <path class="il-liga" id="lg2" d="M116 109 C 160 109, 170 140, 214 140"/>
+            <path class="il-liga" id="lg3" d="M116 171 C 160 171, 170 140, 214 140"/>
+            <path class="il-liga" id="lg4" d="M116 233 C 170 233, 170 140, 214 140"/>
             <g transform="translate(214 104)"><path class="il-centro" d="M0 12 C0 -4 96 -4 96 12 V60 C96 76 0 76 0 60 Z"/><text class="il-txt branco" x="48" y="44" text-anchor="middle">Um só lugar</text></g>
-            <path class="il-liga" d="M310 128 C 340 128, 340 74, 366 74"/>
-            <path class="il-liga" d="M310 152 C 340 152, 340 220, 366 220"/>
+            <path class="il-liga" id="lg5" d="M310 128 C 340 128, 340 74, 366 74"/>
+            <path class="il-liga" id="lg6" d="M310 152 C 340 152, 340 220, 366 220"/>
+            <g class="pulsos" aria-hidden="true"><circle class="il-pulso" r="3.5"><animateMotion dur="2.4s" begin="0s" repeatCount="indefinite"><mpath href="#lg1"/></animateMotion></circle><circle class="il-pulso" r="3.5"><animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite"><mpath href="#lg2"/></animateMotion></circle><circle class="il-pulso" r="3.5"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#lg3"/></animateMotion></circle><circle class="il-pulso" r="3.5"><animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite"><mpath href="#lg4"/></animateMotion></circle><circle class="il-pulso" r="3.5"><animateMotion dur="1.6s" begin="0.3s" repeatCount="indefinite"><mpath href="#lg5"/></animateMotion></circle><circle class="il-pulso" r="3.5"><animateMotion dur="1.6s" begin="1.1s" repeatCount="indefinite"><mpath href="#lg6"/></animateMotion></circle></g>
             <g transform="translate(366 22)"><rect class="il-caixa" width="176" height="110" rx="6"/><text class="il-txt" x="12" y="22">Painel</text><text class="il-txt forte" x="12" y="44">R$ 2,48 mi</text><rect class="il-barra" x="14" y="80" width="14" height="20"/><rect class="il-barra" x="34" y="72" width="14" height="28"/><rect class="il-barra" x="54" y="76" width="14" height="24"/><rect class="il-barra" x="74" y="66" width="14" height="34"/><rect class="il-barra" x="94" y="62" width="14" height="38"/><rect class="il-barra" x="114" y="56" width="14" height="44"/><rect class="il-barra" x="134" y="58" width="14" height="42"/><rect class="il-barra" x="154" y="50" width="14" height="50"/></g>
             <g transform="translate(366 182)"><rect class="il-caixa" width="176" height="78" rx="6"/><text class="il-txt" x="12" y="24">Relatório pronto</text><text class="il-txt forte" x="12" y="48">segunda, 07:00</text><path class="il-fina" d="M12 62H150"/></g>
           </svg>
@@ -941,8 +996,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         </article>
         <article class="sol surge">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12.5h5"/></svg>
-          <h3>Relatório pronto no WhatsApp toda segunda</h3>
-          <dl class="ad"><div><dt>ANTES</dt><dd>Copiar e colar toda semana.</dd></div><div class="dep"><dt>DEPOIS</dt><dd>Relatório automático, com o seu nome, no WhatsApp ou no e-mail.</dd></div></dl>
+          <h3>Relatório pronto toda segunda</h3>
+          <dl class="ad"><div><dt>ANTES</dt><dd>Copiar e colar toda semana.</dd></div><div class="dep"><dt>DEPOIS</dt><dd>Relatório automático, com o seu nome, no e-mail ou no app de mensagens da equipe.</dd></div></dl>
           <div class="rodape-sol"><span class="etiqueta">Automação de relatórios</span><a class="seta" href="#">Ver o serviço →</a></div>
         </article>
       </div>
@@ -961,7 +1016,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   <section class="secao destaque exemplos" id="exemplos">
     <div class="wrap">
       <h2 class="secao-tit surge">Um painel mostra em segundos o que hoje leva dias para montar</h2>
-      <p class="secao-sub surge">Exemplos construídos com dados fictícios, para cenários comuns em empresas médias.</p>
+      <p class="secao-sub surge">Exemplos construídos com dados fictícios, para cenários comuns de gestão.</p>
       <div class="abas-caixa" id="abas-caixa"><div class="abas" role="tablist" id="abas" aria-label="Exemplos de painel"></div><button class="abas-seta abas-ant" type="button" tabindex="-1" aria-label="Exemplos anteriores">←</button><button class="abas-seta abas-mais" type="button" tabindex="-1" aria-label="Mais exemplos">→</button></div>
       <div class="demo">
         <div class="demo-palco">
@@ -1078,7 +1133,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <div class="rod-grid">
           <div>
             <img class="logo-rod" src="assets/td-lockup-mono-negativo.svg" alt="Trinity Data" width="240">
-            <p>Consultoria de dados e BI para empresas médias. Atendemos empresas em todo o Brasil.</p>
+            <p>Consultoria de dados e BI para empresas que querem decidir com base nos próprios dados.</p>
+            <p>Atendemos empresas no Brasil e no exterior.</p>
             <p><span data-cfg="cidade">Cidade · UF</span><span class="prov">PROVISÓRIO</span></p>
           </div>
           <div><h4>SERVIÇOS</h4><ul><li><a href="#servicos">Dashboards e integração</a></li><li><a href="#servicos">Qualidade de dados</a></li><li><a href="#servicos">Monitoramento e alertas</a></li><li><a href="#servicos">Automação de relatórios</a></li></ul></div>
@@ -1116,6 +1172,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <h4>MILIMETRADO · PAINÉIS</h4>
     <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="mmInt"><output></output></label>
     <label>Rastro <input type="range" min="0" max="2" step="0.1" data-k="mmRastro"><output></output></label>
+    <label>Respiro <input type="range" min="0" max="2" step="0.1" data-k="mmResp"><output></output></label>
+    <label>Vel. respiro <input type="range" min="0" max="3" step="0.1" data-k="mmRespVel"><output></output></label>
     <label>Aviso após <input type="range" min="0" max="3" step="0.1" data-k="avisoAtraso"><output></output></label>
     <h4>RETÍCULA · MERCADO</h4>
     <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="retInt"><output></output></label>
@@ -1150,13 +1208,15 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   if (params.get('tela') === 'dentro') document.getElementById('ajustes').remove();
 
   var raiz = document.documentElement;
+  // ?ir=<id>: esconde o que vem antes da seção, para capturas (o Chrome headless sai em branco com âncora).
+  if (params.get('ir')) { var alvoIr = document.getElementById(params.get('ir')); if (alvoIr) { var ant = alvoIr; while ((ant = ant.previousElementSibling)) ant.style.display = 'none'; } }
   var CFG = window.TD_CONFIG || {};
 
   // ---------- Ajustes ----------
   var PADRAO = {
     movimento: true, suave: true, caso: false, prov: true,
     redeInt: 1.3, redeDens: 1, redeVel: 1, redeAlc: 230,
-    mmInt: 1, mmRastro: 1, avisoAtraso: 0.8,
+    mmInt: 1, mmRastro: 1, mmResp: 1, mmRespVel: 1, avisoAtraso: 0.8,
     retInt: 1, retDens: 1, barInt: 1, barDes: 1, ondInt: 1, serInt: 1, serVel: 1
   };
   var S = Object.assign({}, PADRAO);
@@ -1329,9 +1389,10 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     padroes.push({ construir: construir, quadro: quadro, ativo: function () { return visivel(abertura); } });
   })();
 
-  // Milimetrado: chão dos painéis; a célula sob o cursor se acende.
+  // Milimetrado: chão dos painéis. Os blocos de 5×5 células respiram numa onda lenta, e a célula sob o cursor se acende.
   function criarMilimetrado(cv, sangriaTela) {
-    var C, base, passo = 16, rastro = [], ultima = '', sangria = sangriaTela, K = {};
+    var C, base, passo = 16, rastro = [], ultima = '', sangria = sangriaTela, K = {}, ruido = [], escuroMm = false, t0 = performance.now();
+    function a(x, y) { var dx = Math.max(sangria - x, x - (C.w - sangria), 0), dy = Math.max(sangria - y, y - (C.h - sangria), 0); return 1 - liso(0, sangria, Math.hypot(dx, dy)); }
     function construir() {
       C = prepCanvas(cv);
       ['--mm-linha', '--mm-celula', '--mm-celula-borda'].forEach(function (k) { K[k] = cor(cv, k); });
@@ -1339,8 +1400,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       base = document.createElement('canvas'); base.width = cv.width; base.height = cv.height;
       var b = base.getContext('2d'); b.setTransform(C.dpr, 0, 0, C.dpr, 0, 0);
       var w = C.w, h = C.h, I = S.mmInt, escuro = cor(cv, '--escuro') === '1';
+      escuroMm = escuro; var rnd = aleat(13); ruido = []; for (var q = 0; q < 400; q++) ruido.push(rnd());
       var forteA = (escuro ? 0.32 : 1) * I, fracaA = (escuro ? 0.13 : 0.42) * I, seg = 8;
-      function a(x, y) { var dx = Math.max(sangria - x, x - (w - sangria), 0), dy = Math.max(sangria - y, y - (h - sangria), 0); return 1 - liso(0, sangria, Math.hypot(dx, dy)); }
       b.strokeStyle = K['--mm-linha']; b.lineWidth = 1;
       for (var x = 0; x <= w; x += passo) {
         var forte = Math.round(x / passo) % 5 === 0;
@@ -1354,10 +1415,24 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     }
     function quadro(agora) {
       if (!C) return false;
-      var ctx = C.ctx;
-      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.drawImage(base, 0, 0);
+      var ctx = C.ctx, mov = movOn();
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height);
       ctx.setTransform(C.dpr, 0, 0, C.dpr, 0, 0);
-      if (!((movOn() || simulado) && !semCursor.matches)) return false;
+      // Respiro: cada bloco de 5×5 acende e apaga devagar; a fase corre na diagonal, com um desvio fixo por bloco.
+      var B = passo * 5, resp = S.mmResp * (escuroMm ? 0.5 : 0.85), respira = mov && S.mmResp > 0 && S.mmRespVel > 0;
+      if (resp > 0) {
+        var t = mov ? (agora - t0) / 1000 * S.mmRespVel : 4, nb = Math.ceil(C.w / B);
+        ctx.fillStyle = K['--mm-celula'];
+        for (var by = 0; by * B < C.h; by++) for (var bx = 0; bx < nb; bx++) {
+          var r0 = ruido[(by * nb + bx) % ruido.length], f = Math.sin(t * 0.8 - bx * 0.55 - by * 0.4 + r0 * 2.4);
+          var v = Math.pow(Math.max(0, f), 3) * (0.35 + 0.65 * r0) * resp * a(bx * B + B / 2, by * B + B / 2);
+          if (v < 0.01) continue;
+          ctx.globalAlpha = Math.min(1, v); ctx.fillRect(bx * B + 1, by * B + 1, B - 1, B - 1);
+        }
+        ctx.globalAlpha = 1;
+      }
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(base, 0, 0); ctx.setTransform(C.dpr, 0, 0, C.dpr, 0, 0);
+      if (!((mov || simulado) && !semCursor.matches)) return respira;
       var r = cv.getBoundingClientRect(), px = ptr.x, py = ptr.y, on = ptr.on;
       if (simulado && cv.id === 'mm-abertura') { var s = simulado.split(','), ar = abertura.getBoundingClientRect(); px = +s[0] + ar.left; py = +s[1] + ar.top; on = true; }
       var lx = px - r.left, ly = py - r.top;
@@ -1376,7 +1451,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         if (atual) { ctx.strokeStyle = K['--mm-celula-borda']; ctx.lineWidth = 1; ctx.strokeRect(c.cx * passo + 0.5, c.cy * passo + 0.5, passo, passo); }
       }
       ctx.globalAlpha = 1;
-      return rastro.length > 1 || (rastro.length === 1 && ultima === '');
+      return respira || rastro.length > 1 || (rastro.length === 1 && ultima === '');
     }
     var api = { construir: construir, quadro: quadro, ativo: function () { return visivel(cv); } };
     padroes.push(api); return api;
@@ -1405,6 +1480,34 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       ctx.globalAlpha = 1; return false;
     }
     padroes.push({ construir: construir, quadro: quadro, ativo: function () { return visivel(mercado); } });
+  })();
+
+  // ================= 3. Ilustrações das Dores =================
+  // HOJE: as peças se afastam conforme a seção sobe. DEPOIS: as ligações se desenham com a rolagem e, completas, o fluxo começa.
+  var dores = document.getElementById('dores');
+  (function () {
+    var hoje = document.querySelector('.hoje-svg'), depois = document.querySelector('.depois-svg');
+    var esp = [].map.call(hoje.querySelectorAll('.esp'), function (g) { var d = g.dataset.d.split(','); return { g: g, dx: +d[0], dy: +d[1] }; });
+    var ligas = depois.querySelectorAll('.il-liga'), u1 = -1, u2 = -1;
+    function construir() { u1 = u2 = -1; if (depois.pauseAnimations) { if (movOn()) depois.unpauseAnimations(); else depois.pauseAnimations(); } }
+    function quadro() {
+      var p1 = movOn() ? progresso(hoje, 0.5) : 0, p2 = progresso(depois, 0.55);
+      if (Math.abs(p1 - u1) > 0.002) { u1 = p1; esp.forEach(function (e) { e.g.setAttribute('transform', 'translate(' + (e.dx * 14 * p1).toFixed(1) + ' ' + (e.dy * 14 * p1).toFixed(1) + ')'); }); }
+      if (Math.abs(p2 - u2) > 0.002) {
+        u2 = p2; var q = lim(p2 * 1.25);
+        ligas.forEach(function (l, i) { l.style.strokeDashoffset = (400 * (1 - lim(q * 1.3 - (i > 3 ? 0.3 : 0)))).toFixed(1); });
+        depois.classList.toggle('fluindo', q >= 0.98 || !movOn());
+      }
+      return false;
+    }
+    // Os números do HOJE trocam entre valores que não batem.
+    var nums = [].map.call(hoje.querySelectorAll('.il-num'), function (t) { return { t: t, v: t.dataset.v.split('|'), i: 0 }; }), vez = 0;
+    setInterval(function () {
+      if (!movOn() || !visivel(hoje)) return;
+      var n = nums[vez++ % nums.length]; n.t.classList.add('troca');
+      setTimeout(function () { n.i = (n.i + 1) % n.v.length; n.t.textContent = n.v[n.i]; n.t.classList.remove('troca'); }, 260);
+    }, 1400);
+    padroes.push({ construir: construir, quadro: quadro, ativo: function () { return visivel(dores); } });
   })();
 
   // ================= Passagem: barras desencontradas que se alinham =================
@@ -1452,104 +1555,146 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   })();
 
   // ================= 6. Demonstração =================
-  function eixoY(ticks) { return '<div class="ch-y">' + ticks.slice().reverse().map(function (t) { return '<span>' + t + '</span>'; }).join('') + '</div>'; }
-  function eixoX(labels) { return '<div class="ch-x" style="grid-template-columns:repeat(' + labels.length + ',1fr)">' + labels.map(function (l) { return '<span>' + l + '</span>'; }).join('') + '</div>'; }
-  function grade(W, n) {
-    var s = '';
-    for (var i = 0; i < n; i++) { var y = (i * 100 / n + 0.5).toFixed(1); s += '<line class="g-grade" x1="0" x2="' + W + '" y1="' + y + '" y2="' + y + '" vector-effect="non-scaling-stroke"/>'; }
-    return s + '<line class="g-eixo" x1="0" x2="' + W + '" y1="100" y2="100" vector-effect="non-scaling-stroke"/>';
+  // Painéis no padrão "Storytelling com dados" (Cole Nussbaumer Knaflic): o título de cada gráfico diz a conclusão,
+  // o contexto fica em cinza, a cor vai só no que pede atenção, e o rótulo direto substitui a legenda.
+  // Todos os painéis têm a mesma estrutura: indicadores, leitura do período, gráfico principal e gráfico de apoio.
+  // o: {series:[{vals, tipo:'foco'|'ctx'|'meta', rot, val}], min, max, ticks:[valor, texto][], labels, marcas:[{i, s, txt, tipo}]}
+  function linhas(o) {
+    var n = o.labels.length, W = (n - 1) * 10, H = 150;
+    var y = function (v) { return 100 - (v - o.min) / (o.max - o.min) * 100; };
+    var s = o.ticks.map(function (t) { return '<line class="g-grade" x1="0" x2="' + W + '" y1="' + y(t[0]).toFixed(2) + '" y2="' + y(t[0]).toFixed(2) + '" vector-effect="non-scaling-stroke"/>'; }).join('');
+    s += '<line class="g-eixo" x1="0" x2="' + W + '" y1="100" y2="100" vector-effect="non-scaling-stroke"/>';
+    o.series.forEach(function (se) { s += '<polyline class="ln ' + se.tipo + '" vector-effect="non-scaling-stroke" points="' + se.vals.map(function (v, i) { return (i * 10) + ',' + y(v).toFixed(2); }).join(' ') + '"/>'; });
+    var eixo = '<div class="ch-y">' + o.ticks.map(function (t) { return '<span style="top:' + y(t[0]).toFixed(2) + '%">' + t[1] + '</span>'; }).join('') + '</div>';
+    // Rótulos no fim das linhas, afastados quando ficam muito perto.
+    var fins = o.series.filter(function (se) { return se.rot; }).map(function (se) { return { se: se, p: y(se.vals[n - 1]) }; }).sort(function (a, b) { return a.p - b.p; });
+    var folga = 30 / H * 100;
+    for (var k = 1; k < fins.length; k++) if (fins[k].p - fins[k - 1].p < folga) fins[k].p = fins[k - 1].p + folga;
+    var fim = '<div class="ln-fim">' + fins.map(function (f) { return '<span class="' + f.se.tipo + '" style="top:' + f.p.toFixed(2) + '%"><b>' + f.se.val + '</b>' + f.se.rot + '</span>'; }).join('') + '</div>';
+    var marcas = (o.marcas || []).map(function (m, j) {
+      var mx = m.i / (n - 1) * 100, my = y(o.series[m.s || 0].vals[m.i]);
+      return '<i class="ln-pt ' + m.tipo + '" style="left:' + mx.toFixed(2) + '%;top:' + my.toFixed(2) + '%;transition-delay:' + (0.7 + j * 0.1) + 's"></i>' +
+        (m.txt ? '<span class="ln-nota ' + m.tipo + (m.abaixo ? ' abaixo' : '') + '" style="left:' + mx.toFixed(2) + '%;top:' + my.toFixed(2) + '%">' + m.txt + '</span>' : '');
+    }).join('');
+    var xs = '<div class="ch-x" style="grid-template-columns:repeat(' + n + ',1fr)">' + o.labels.map(function (l) { return '<span>' + l + '</span>'; }).join('') + '</div>';
+    return '<div class="ch" style="--h:' + H + 'px">' + eixo + '<div><div class="ln-area"><svg viewBox="0 0 ' + W + ' 100" preserveAspectRatio="none">' + s + '</svg>' + marcas + '</div>' + xs + '</div>' + fim + '</div>';
   }
-  function legenda(itens) { return '<div class="ch-leg">' + itens.map(function (i) { return '<span class="' + i[0] + '"><i' + (i[2] ? ' class="tr"' : '') + '></i>' + i[1] + '</span>'; }).join('') + '</div>'; }
-  function linhas(o) { // {series:[{vals, cls, tr}], min, max, ticks, labels, h, leg}
-    var n = o.labels.length, W = (n - 1) * 10, y = function (v) { return 100 - (v - o.min) / (o.max - o.min) * 100; }, s = grade(W, o.ticks.length - 1);
-    o.series.forEach(function (se) { s += '<polyline class="ln ' + se.cls + (se.tr ? ' tr' : '') + '" vector-effect="non-scaling-stroke" points="' + se.vals.map(function (v, i) { return (i * 10) + ',' + y(v).toFixed(2); }).join(' ') + '"/>'; });
-    return '<div class="ch" style="--h:' + (o.h || 120) + 'px">' + eixoY(o.ticks) + '<div><svg viewBox="0 0 ' + W + ' 100" preserveAspectRatio="none">' + s + '</svg>' + eixoX(o.labels) + '</div></div>' + (o.leg ? legenda(o.leg) : '');
+  function hbar(ls, ref) { // [{n, txt, v (0–100), tipo}], ref: {v, txt} linha de referência comum
+    return '<div class="hb">' + ls.map(function (l, i) {
+      return '<div class="t-' + (l.tipo || 'ctx') + '"><div class="hb-l"><span>' + l.n + '</span><b>' + l.txt + '</b></div><div class="hb-t"><i style="width:' + l.v + '%;transition-delay:' + (i * 0.06) + 's"></i>' + (ref ? '<em style="left:' + ref.v + '%"></em>' : '') + '</div></div>';
+    }).join('') + (ref ? '<p class="hb-ref"><i></i>' + ref.txt + '</p>' : '') + '</div>';
   }
-  function hbar(ls) { // [{n, txt, v (0–100), cls, meta}]
-    return '<div class="hb">' + ls.map(function (l, i) { return '<div class="' + (l.cls || 's1') + '"><div class="hb-l"><span>' + l.n + '</span><b>' + l.txt + '</b></div><div class="hb-t"><i style="width:' + l.v + '%;transition-delay:' + (i * 0.06) + 's"></i>' + (l.meta != null ? '<em style="left:' + l.meta + '%"></em>' : '') + '</div></div>'; }).join('') + '</div>';
-  }
-  function funil(rows) { var max = rows[0].v; return '<div class="funil s1">' + rows.map(function (r, i) { return '<div><span>' + r.n + '</span><i style="width:' + (r.v / max * 100).toFixed(1) + '%;transition-delay:' + (i * 0.07) + 's"></i><b>' + r.txt + '</b></div>'; }).join('') + '</div>'; }
-  function tabela(cols, rows, num) { return '<table class="tab"><thead><tr>' + cols.map(function (c, i) { return '<th' + (num[i] ? ' class="n"' : '') + '>' + c + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr' + (r.tot ? ' class="tot"' : '') + '>' + r.c.map(function (c, i) { return '<td' + (num[i] ? ' class="n"' : '') + '>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table>'; }
-  function donut(parts) {
-    var C = 2 * Math.PI * 40, acc = 0, s = '';
-    parts.forEach(function (p) { var l = p.v / 100 * C; s += '<circle class="' + p.cls + '" cx="60" cy="60" r="40" stroke-dasharray="' + l.toFixed(1) + ' ' + C.toFixed(1) + '" stroke-dashoffset="' + (-acc).toFixed(1) + '"/>'; acc += l; });
-    return '<div class="donut"><svg viewBox="0 0 120 120" aria-hidden="true">' + s + '</svg><div class="hb">' + parts.map(function (p) { return '<div class="' + p.cls + '"><div class="hb-l"><span><i></i>' + p.n + '</span><b>' + String(p.v).replace('.', ',') + '%</b></div></div>'; }).join('') + '</div></div>';
-  }
+  function funil(rows) { var max = rows[0].v; return '<div class="funil">' + rows.map(function (r, i) { return '<div class="t-' + (r.tipo || 'ctx') + '"><span>' + r.n + '</span><i style="width:' + (r.v / max * 100).toFixed(1) + '%;transition-delay:' + (i * 0.07) + 's"></i><b>' + r.txt + '</b></div>'; }).join('') + '</div>'; }
   function kpi(r, v, d, est, dcls) { return '<div class="kpi ' + (est || '') + '"><span class="r">' + r + '</span><span class="v">' + v + '</span><span class="d ' + (dcls || '') + '">' + d + '</span></div>'; }
-  function card(tit, corpo, extra, cls) { return '<div class="ch-card dpeca ' + (cls || '') + '"><p class="ch-tit">' + tit + (extra ? '<small>' + extra + '</small>' : '') + '</p>' + corpo + '</div>'; }
+  function card(tit, sub, corpo, cls) { return '<div class="ch-card dpeca ' + (cls || '') + '"><p class="ch-tit">' + tit + '</p><p class="ch-sub">' + sub + '</p>' + corpo + '</div>'; }
   var M12 = ['N', 'D', 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O'];
+  var S12 = ['S1', '', 'S3', '', 'S5', '', 'S7', '', 'S9', '', 'S11', ''];
+  var D14 = ['24/9', '', '', '', '', '', '', '1/10', '', '', '', '', '', '7/10'];
 
-  // ferramenta: quando preenchida, aparece como rótulo no painel e na legenda.
+  // ferramenta: quando preenchida, aparece como rótulo no painel e na lateral.
   // embed: endereço de um painel público real (Power BI, Metabase); quando preenchido, substitui o painel desenhado.
+  // leitura: [tipo (cr, at, info), rótulo, texto], a frase que resume o período.
   var EXEMPLOS = [
     { aba: 'Financeiro', ferramenta: '', embed: '', titulo: 'Financeiro', periodo: 'Empresa X · outubro/2026',
-      ind: ['Fluxo de caixa projetado e realizado', 'Margem por produto', 'Inadimplência'],
-      kpis: [kpi('SALDO EM CAIXA', 'R$ 1,86 mi', '▲ 4,2% vs set'), kpi('MARGEM BRUTA', '34,2%', '▲ 1,1 p.p.'), kpi('A RECEBER', 'R$ 742 mil', '38 títulos', '', 'ne'), kpi('INADIMPLÊNCIA', '4,8%', '▲ limite 4,0%', 'atencao', 'at')],
+      ind: ['Inadimplência contra o limite', 'Margem por linha de produto', 'Saldo em caixa e contas a receber'],
+      kpis: [kpi('SALDO EM CAIXA', 'R$ 1,86 mi', '▲ 4,2% vs set'), kpi('MARGEM BRUTA', '34,2%', '▲ 1,1 p.p.'), kpi('A RECEBER', 'R$ 742 mil', '38 títulos', '', 'ne'), kpi('INADIMPLÊNCIA', '4,8%', 'limite 4,0%', 'atencao', 'at')],
+      leitura: ['at', 'ATENÇÃO', 'Inadimplência em 4,8%, acima do limite de 4,0% pelo segundo mês. Doze títulos vencidos há mais de 30 dias.'],
       graf: [
-        card('Fluxo de caixa · R$ mil', linhas({ series: [{ vals: [410, 380, 455, 430, 470, 520, 498, 540, 515, 560, 548, 590], cls: 's1' }, { vals: [400, 400, 440, 440, 480, 500, 500, 530, 530, 560, 570, 600], cls: 's2', tr: true }], min: 300, max: 650, ticks: ['300', '417', '533', '650'], labels: M12, h: 96, leg: [['s1', 'Realizado'], ['s2', 'Projetado', true]] }), 'nov–out'),
-        card('Margem por produto', hbar([{ n: 'Serviços', txt: '52%', v: 100 }, { n: 'Linha Premium', txt: '41%', v: 79 }, { n: 'Linha Padrão', txt: '33%', v: 63 }, { n: 'Acessórios', txt: '28%', v: 54 }])),
-        card('DRE resumida · R$ mil', tabela(['Conta', 'Out', 'Set'], [{ c: ['Receita líquida', '2.170', '2.046'] }, { c: ['CMV', '−1.428', '−1.362'] }, { c: ['Lucro bruto', '742', '684'], tot: 1 }, { c: ['Despesas operacionais', '−455', '−441'] }, { c: ['EBITDA', '287', '243'], tot: 1 }], [0, 1, 1]))
+        card('A inadimplência passou do limite pelo segundo mês', '% da carteira em atraso · nov–out',
+          linhas({ series: [{ vals: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], tipo: 'meta', rot: 'limite', val: '4,0%' }, { vals: [3.1, 3.4, 3.2, 3.0, 3.3, 3.5, 3.4, 3.6, 3.8, 3.9, 4.5, 4.8], tipo: 'foco', rot: 'out', val: '4,8%' }],
+            min: 2.5, max: 5.5, ticks: [[3, '3%'], [4, '4%'], [5, '5%']], labels: M12, marcas: [{ i: 10, s: 1, tipo: 'at' }, { i: 11, s: 1, tipo: 'at', txt: 'acima do limite' }] })),
+        card('Serviços têm a maior margem', 'margem bruta por linha · outubro',
+          hbar([{ n: 'Serviços', txt: '52%', v: 100, tipo: 'foco' }, { n: 'Linha Premium', txt: '41%', v: 79 }, { n: 'Linha Padrão', txt: '33%', v: 63 }, { n: 'Acessórios', txt: '28%', v: 54 }]))
       ] },
     { aba: 'Comercial', ferramenta: '', embed: '', titulo: 'Comercial', periodo: 'Empresa X · outubro/2026',
-      ind: ['Conversão por etapa do funil', 'Meta e realizado por vendedor', 'Ticket médio e recorrência'],
+      ind: ['Vendas contra a meta', 'Conversão por etapa do funil', 'Ticket médio e recorrência'],
       kpis: [kpi('VENDAS DO MÊS', 'R$ 1,32 mi', '▲ 8,5% vs set'), kpi('CONVERSÃO', '5,7%', 'lead → venda', '', 'ne'), kpi('TICKET MÉDIO', 'R$ 4.870', '▲ 2,1%'), kpi('RECORRÊNCIA', '42%', 'clientes que voltam', '', 'ne')],
+      leitura: ['info', 'LEITURA DO MÊS', 'Outubro fechou 1,5% acima da meta. A passagem de qualificado para proposta (41%) é a etapa mais baixa do funil.'],
       graf: [
-        card('Vendas por mês · R$ mil', linhas({ series: [{ vals: [980, 1010, 930, 1050, 1090, 1120, 1080, 1150, 1190, 1210, 1218, 1320], cls: 's1' }, { vals: [1000, 1000, 1000, 1050, 1050, 1100, 1100, 1150, 1150, 1200, 1250, 1300], cls: 's2', tr: true }], min: 800, max: 1400, ticks: ['800', '1.000', '1.200', '1.400'], labels: M12, h: 96, leg: [['s1', 'Realizado'], ['s2', 'Meta', true]] }), 'nov–out'),
-        card('Funil de vendas', funil([{ n: 'Leads', v: 1240, txt: '1.240' }, { n: 'Qualificados', v: 612, txt: '612 · 49%' }, { n: 'Propostas', v: 248, txt: '248 · 41%' }, { n: 'Negociação', v: 131, txt: '131 · 53%' }, { n: 'Fechados', v: 71, txt: '71 · 54%' }]), 'outubro'),
-        card('Meta e realizado por vendedor', hbar([{ n: 'Ana Ribeiro', txt: '112%', v: 93, meta: 83 }, { n: 'Carlos Mendes', txt: '96%', v: 80, meta: 83 }, { n: 'Juliana Prado', txt: '88%', v: 73, meta: 83 }, { n: 'Rafael Souza', txt: '74%', v: 61, meta: 83 }]) + legenda([['s1', 'Realizado'], ['meta-l', 'Meta (100%)']]))
+        card('As vendas passaram a meta em outubro', 'vendas por mês · R$ mil · nov–out',
+          linhas({ series: [{ vals: [1000, 1000, 1000, 1050, 1050, 1100, 1100, 1150, 1150, 1200, 1250, 1300], tipo: 'meta', rot: 'meta', val: '1.300' }, { vals: [980, 1010, 930, 1050, 1090, 1120, 1080, 1150, 1190, 1210, 1218, 1320], tipo: 'foco', rot: 'realizado', val: '1.320' }],
+            min: 850, max: 1400, ticks: [[1000, '1.000'], [1200, '1.200']], labels: M12, marcas: [{ i: 10, s: 1, tipo: 'ctx', txt: 'abaixo em setembro', abaixo: 1 }, { i: 11, s: 1, tipo: 'foco' }] })),
+        card('A maior perda está antes da proposta', 'funil de vendas · outubro',
+          funil([{ n: 'Leads', v: 1240, txt: '1.240' }, { n: 'Qualificados', v: 612, txt: '612 · 49%' }, { n: 'Propostas', v: 248, txt: '248 · 41%', tipo: 'at' }, { n: 'Negociação', v: 131, txt: '131 · 53%' }, { n: 'Fechados', v: 71, txt: '71 · 54%', tipo: 'foco' }]))
       ] },
     { aba: 'Operação', ferramenta: '', embed: '', titulo: 'Operação', periodo: 'Empresa X · hoje, 08:00',
-      alerta: '37 pedidos atrasados, acima do limite de 20. Sul concentra 21.',
-      ind: ['Pedidos por status', 'Tempo médio de atendimento', 'Exceções do dia'],
+      ind: ['Pedidos atrasados contra o limite', 'Atrasos por região', 'Exceções do dia'],
       kpis: [kpi('EM ANDAMENTO', '286', 'pedidos abertos', '', 'ne'), kpi('TEMPO MÉDIO', '2,4 dias', '▼ 0,3 vs set'), kpi('ATRASADOS', '37', 'limite 20', 'critico', 'cr'), kpi('EXCEÇÕES DO DIA', '5', '2 resolvidas', '', 'ne')],
+      leitura: ['cr', 'CRÍTICO', '37 pedidos atrasados, acima do limite de 20. A região Sul concentra 21.'],
       graf: [
-        card('Tempo médio · dias', linhas({ series: [{ vals: [2.9, 2.8, 2.9, 2.7, 2.8, 2.6, 2.7, 2.5, 2.6, 2.4, 2.5, 2.4], cls: 's1' }, { vals: [2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5], cls: 's2', tr: true }], min: 2, max: 3.2, ticks: ['2,0', '2,4', '2,8', '3,2'], labels: ['S1', '', 'S3', '', 'S5', '', 'S7', '', 'S9', '', 'S11', ''], h: 96, leg: [['s1', 'Tempo médio'], ['s2', 'Meta', true]] }), '12 semanas'),
-        card('Pedidos por status', hbar([{ n: 'Em separação', txt: '94', v: 100 }, { n: 'Em transporte', txt: '84', v: 89 }, { n: 'Faturado', txt: '71', v: 76 }, { n: 'Aguardando estoque', txt: '37', v: 39 }])),
-        card('Exceções do dia', tabela(['Pedido', 'Motivo', 'Há'], [{ c: ['48.213', 'Atraso na entrega · Sul', '<span class="chip cr">4 dias</span>'] }, { c: ['48.190', 'Sem estoque', '<span class="chip at">2 dias</span>'] }, { c: ['48.177', 'Endereço incompleto', '1 dia'] }, { c: ['48.152', 'Pagamento pendente', '1 dia'] }], [0, 0, 1]))
+        card('Os atrasos dobraram em uma semana', 'pedidos atrasados por dia · últimos 14 dias',
+          linhas({ series: [{ vals: [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20], tipo: 'meta', rot: 'limite', val: '20' }, { vals: [12, 14, 11, 15, 13, 16, 17, 15, 18, 22, 25, 29, 33, 37], tipo: 'foco', rot: 'hoje', val: '37' }],
+            min: 0, max: 42, ticks: [[10, '10'], [20, '20'], [30, '30']], labels: D14, marcas: [{ i: 9, s: 1, tipo: 'cr', txt: 'passa do limite' }, { i: 13, s: 1, tipo: 'cr' }] })),
+        card('O Sul concentra 21 dos 37 atrasos', 'pedidos atrasados por região · hoje',
+          hbar([{ n: 'Sul', txt: '21', v: 100, tipo: 'cr' }, { n: 'Sudeste', txt: '8', v: 38 }, { n: 'Centro-Oeste', txt: '5', v: 24 }, { n: 'Nordeste', txt: '3', v: 14 }]))
       ] },
     { aba: 'Logística', ferramenta: '', embed: '', titulo: 'Logística', periodo: 'Empresa X · últimas 12 semanas',
-      ind: ['Entregas no prazo (OTD)', 'Custo por entrega e por rota', 'Ocupação da frota'],
-      kpis: [kpi('NO PRAZO (OTD)', '93,1%', 'meta 95,0%', 'atencao', 'at'), kpi('CUSTO POR ENTREGA', 'R$ 38,40', '▼ 1,8% vs set'), kpi('OCUPAÇÃO DA FROTA', '81%', '▲ 3 p.p.')],
+      ind: ['Entregas no prazo contra a meta', 'Custo por entrega e por rota', 'Ocupação da frota'],
+      kpis: [kpi('NO PRAZO (OTD)', '93,1%', 'meta 95,0%', 'atencao', 'at'), kpi('CUSTO POR ENTREGA', 'R$ 38,40', '▼ 1,8% vs set'), kpi('OCUPAÇÃO DA FROTA', '81%', '▲ 3 p.p.'), kpi('ENTREGAS', '4.912', 'nas 12 semanas', '', 'ne')],
+      leitura: ['at', 'ATENÇÃO', 'Entregas no prazo em 93,1%, abaixo da meta de 95% pela quinta semana seguida. A rota Sorocaba tem o maior custo.'],
       graf: [
-        card('Entregas no prazo · %', linhas({ series: [{ vals: [94.2, 95.1, 94.6, 93.8, 95.4, 96.0, 94.9, 93.5, 92.8, 93.9, 92.6, 93.1], cls: 's1' }, { vals: [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95], cls: 's2', tr: true }], min: 90, max: 98, ticks: ['90', '92,7', '95,3', '98'], labels: ['S1', '', 'S3', '', 'S5', '', 'S7', '', 'S9', '', 'S11', ''], h: 96, leg: [['s1', 'No prazo'], ['s2', 'Meta', true]] })),
-        card('Custo por entrega, por rota', hbar([{ n: 'SP – Sorocaba', txt: 'R$ 44,10', v: 100 }, { n: 'SP – Baixada', txt: 'R$ 41,50', v: 94 }, { n: 'SP – Vale do Paraíba', txt: 'R$ 36,80', v: 83 }, { n: 'SP – Campinas', txt: 'R$ 31,20', v: 71 }])),
-        card('Ocupação da frota por região', hbar([{ n: 'Capital', txt: '88%', v: 88, meta: 85 }, { n: 'Campinas', txt: '84%', v: 84, meta: 85 }, { n: 'Vale do Paraíba', txt: '77%', v: 77, meta: 85 }, { n: 'Baixada', txt: '71%', v: 71, meta: 85 }]) + legenda([['s1', 'Ocupação'], ['meta-l', 'Meta (85%)']]))
+        card('No prazo abaixo da meta há cinco semanas', '% de entregas no prazo · 12 semanas',
+          linhas({ series: [{ vals: [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95], tipo: 'meta', rot: 'meta', val: '95%' }, { vals: [94.6, 95.4, 95.1, 95.8, 95.4, 96.0, 95.2, 93.5, 92.8, 93.9, 92.6, 93.1], tipo: 'foco', rot: 'S12', val: '93,1%' }],
+            min: 91, max: 97, ticks: [[92, '92'], [94, '94'], [96, '96']], labels: S12, marcas: [{ i: 7, s: 1, tipo: 'at', txt: 'cai abaixo da meta', abaixo: 1 }, { i: 11, s: 1, tipo: 'at' }] })),
+        card('Sorocaba tem o maior custo', 'custo por entrega, por rota',
+          hbar([{ n: 'SP – Sorocaba', txt: 'R$ 44,10', v: 100, tipo: 'at' }, { n: 'SP – Baixada', txt: 'R$ 41,50', v: 94 }, { n: 'SP – Vale do Paraíba', txt: 'R$ 36,80', v: 83 }, { n: 'SP – Campinas', txt: 'R$ 31,20', v: 71 }], { v: 87, txt: 'média R$ 38,40' }))
       ] },
     { aba: 'Marketing', ferramenta: '', embed: '', titulo: 'Marketing', periodo: 'Empresa X · outubro/2026',
-      ind: ['Custo por lead e por venda', 'Retorno por canal', 'Origem das vendas'],
+      ind: ['Custo por lead ao longo do ano', 'Retorno por canal', 'Investimento por canal'],
       kpis: [kpi('INVESTIMENTO', 'R$ 86,4 mil', '▲ 5,0% vs set', '', 'ne'), kpi('CUSTO POR LEAD', 'R$ 69,70', '▼ 7,4%'), kpi('CUSTO POR VENDA', 'R$ 1.217', '▼ 3,2%'), kpi('RETORNO', '5,8×', 'receita / investimento', '', 'ne')],
+      leitura: ['info', 'LEITURA DO MÊS', 'O custo por lead caiu pelo terceiro mês e chegou ao menor valor do ano. O e-mail rende 9,8× com o menor orçamento.'],
       graf: [
-        card('Retorno por canal', hbar([{ n: 'E-mail · R$ 4,6 mil', txt: '9,8×', v: 100, cls: 's1' }, { n: 'Google Ads · R$ 34,1 mil', txt: '6,4×', v: 65, cls: 's2' }, { n: 'Meta Ads · R$ 25,8 mil', txt: '4,9×', v: 50, cls: 's3' }, { n: 'LinkedIn · R$ 14,2 mil', txt: '3,1×', v: 32, cls: 's4' }]), 'investimento · retorno'),
-        card('Origem das vendas', donut([{ n: 'Google Ads', v: 38, cls: 's1' }, { n: 'Meta Ads', v: 24, cls: 's2' }, { n: 'Indicação', v: 17, cls: 's3' }, { n: 'E-mail', v: 12, cls: 's4' }, { n: 'LinkedIn', v: 9, cls: 's5' }]))
+        card('O custo por lead chegou ao menor valor do ano', 'custo por lead · R$ · nov–out',
+          linhas({ series: [{ vals: [92, 88, 95, 90, 86, 84, 88, 83, 80, 78, 75.3, 69.7], tipo: 'foco', rot: 'out', val: 'R$ 69,70' }],
+            min: 60, max: 100, ticks: [[70, '70'], [80, '80'], [90, '90']], labels: M12, marcas: [{ i: 2, tipo: 'ctx', txt: 'maior: R$ 95', abaixo: 0 }, { i: 11, tipo: 'foco', txt: 'menor do ano', abaixo: 1 }] })),
+        card('O e-mail traz o maior retorno', 'receita por real investido · outubro',
+          hbar([{ n: 'E-mail · R$ 4,6 mil', txt: '9,8×', v: 100, tipo: 'foco' }, { n: 'Google Ads · R$ 34,1 mil', txt: '6,4×', v: 65 }, { n: 'Meta Ads · R$ 25,8 mil', txt: '4,9×', v: 50 }, { n: 'LinkedIn · R$ 14,2 mil', txt: '3,1×', v: 32 }]))
       ] },
     { aba: 'Relatório automático', ferramenta: '', embed: '', relatorio: true,
-      ind: ['Mensagem com o nome do gestor e os números da semana', 'Alertas do que precisa de atenção', 'PDF ou link do painel completo'] }
+      ind: ['Mensagem com o nome do gestor e os números da semana', 'O que precisa de atenção, em destaque', 'Por e-mail ou no app de mensagens da equipe'] }
   ];
 
   var abasEl = document.getElementById('abas'), painelEl = document.getElementById('painel'), ladoEl = document.getElementById('lado'), atual = 0;
   abasEl.innerHTML = EXEMPLOS.map(function (e, i) { return '<button class="aba" type="button" role="tab" id="aba-' + i + '" aria-selected="' + (i === 0) + '" aria-controls="painel" tabindex="' + (i === 0 ? 0 : -1) + '">' + e.aba + '</button>'; }).join('');
 
   function htmlPainel(e) {
+    var pe = '<div class="dash-pe rotulo"><span>EXEMPLO · DADOS FICTÍCIOS</span>' + (e.ferramenta ? '<span>' + e.ferramenta.toUpperCase() + '</span>' : '') + '</div>';
     if (e.relatorio) {
-      return '<div class="rel"><div class="fone"><div class="fone-tela"><div class="fone-cab"><i></i><div><b>Relatório semanal</b><span>Empresa X</span></div></div><div class="fone-chat">' +
-        '<span class="fone-dia">WhatsApp · segunda, 07:00</span>' +
+      return '<div class="dash"><div class="rel"><div class="fone"><div class="fone-tela"><div class="fone-cab"><i></i><div><b>Relatório semanal</b><span>Empresa X</span></div></div><div class="fone-chat">' +
+        '<span class="fone-dia">segunda, 07:00</span>' +
         '<div class="bolha" style="transition-delay:.15s"><p>Olá, Cláudio, bom dia! Aqui está o relatório semanal das áreas Comercial e Financeiro da Empresa X.</p><p>Faturamento da semana: <span class="num">R$ 184.320</span><br>Meta do mês: <span class="num">72%</span> atingida</p><p><span class="at">Atenção:</span> 3 pedidos parados há mais de 2 dias.</p><span class="hora">07:00</span></div>' +
         '<div class="bolha" style="transition-delay:.5s"><div class="anexo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>relatório.pdf</div><span class="hora">07:00</span></div>' +
-        '</div></div></div></div>';
+        '</div></div></div>' +
+        '<div class="dpeca email so-tela" style="transition-delay:.3s"><p class="rotulo">E-MAIL · SEGUNDA, 07:00</p><p class="email-assunto">Relatório semanal · Comercial e Financeiro</p><p class="email-para">Para: Cláudio Moreira · Empresa X</p>' +
+        '<div class="kpis" style="--n:3">' + kpi('FATURAMENTO DA SEMANA', 'R$ 184 mil', '▲ 3,1% vs anterior') + kpi('META DO MÊS', '72%', 'faltam 8 dias', '', 'ne') + kpi('PEDIDOS PARADOS', '3', 'há mais de 2 dias', 'atencao', 'at') + '</div>' +
+        '<p class="ch-tit">O mês caminha para fechar na meta</p><p class="ch-sub">% da meta acumulada · outubro</p>' +
+        hbar([{ n: 'Realizado até hoje', txt: '72%', v: 72, tipo: 'foco' }, { n: 'Esperado para a data', txt: '74%', v: 74 }]) +
+        '<p class="email-link">Abrir o painel completo →</p></div></div>' + pe + '</div>';
     }
-    var pe = '<div class="dash-pe rotulo"><span>EXEMPLO · DADOS FICTÍCIOS</span>' + (e.ferramenta ? '<span>' + e.ferramenta.toUpperCase() + '</span>' : '') + '</div>';
     if (e.embed) return '<div class="dash"><div class="dpeca dash-embed"><iframe src="' + e.embed + '" title="Painel ' + e.titulo + '" loading="lazy" allowfullscreen></iframe></div>' + pe + '</div>';
     var k = 0, atraso = function () { return ' style="transition-delay:' + (k++ * 0.06).toFixed(2) + 's"'; };
+    var l = e.leitura;
     return '<div class="dash"><div class="dpeca"' + atraso() + '><div class="ind-cab"><span><b>' + e.titulo + '</b> · ' + e.periodo + '</span><span class="mono">atualizado hoje, 08:00</span></div>' +
       '<div class="kpis" style="--n:' + e.kpis.length + '">' + e.kpis.join('') + '</div></div>' +
-      (e.alerta ? '<div class="dpeca dash-alerta" role="status"' + atraso() + '><div class="aviso-l"><i></i>CRÍTICO</div><div class="aviso-t">' + e.alerta + '</div></div>' : '') +
-      '<div class="dash-graf" style="--g:' + e.graf.length + '">' + e.graf.map(function (g) { return g.replace('<div class="ch-card', '<div' + atraso() + ' class="ch-card'); }).join('') + '</div>' + pe + '</div>';
+      '<div class="dpeca dash-alerta ' + l[0] + '"' + (l[0] === 'cr' ? ' role="status"' : '') + atraso() + '><div class="aviso-l"><i></i>' + l[1] + '</div><div class="aviso-t">' + l[2] + '</div></div>' +
+      '<div class="dash-graf">' + e.graf.map(function (g) { return g.replace('<div class="ch-card', '<div' + atraso() + ' class="ch-card'); }).join('') + '</div>' + pe + '</div>';
   }
   function htmlLado(e) {
     var topo = e.relatorio ? '<p class="tit-rel">O que chega sem ninguém montar</p>' : '';
     var link = e.relatorio ? 'Quero receber assim →' : 'Quero algo assim para a minha empresa →';
     return topo + '<h3>PRINCIPAIS INDICADORES</h3><ul>' + e.ind.map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ul>' +
       '<a class="seta" href="#avaliar">' + link + '</a><p class="feito">' + (e.ferramenta ? e.ferramenta + ' · ' : '') + 'dados fictícios · exemplo de demonstração</p>';
+  }
+  // Altura única para as abas: mede todas na largura atual e fixa a maior, para a seção não mudar de tamanho na troca.
+  function igualarPainel() {
+    var med = document.createElement('div');
+    med.className = 'painel-troca'; med.setAttribute('aria-hidden', 'true');
+    med.style.cssText = 'position:absolute;left:0;top:0;width:' + painelEl.clientWidth + 'px;visibility:hidden;pointer-events:none';
+    painelEl.parentNode.appendChild(med);
+    var max = 0;
+    EXEMPLOS.forEach(function (e) { med.innerHTML = htmlPainel(e); max = Math.max(max, med.offsetHeight); });
+    med.remove();
+    painelEl.style.minHeight = Math.ceil(max) + 'px';
   }
   var trocaT;
   function mostrar(i, foco) {
@@ -1565,7 +1710,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         painelEl.classList.add('desenhar'); void painelEl.offsetWidth;
         requestAnimationFrame(function () { requestAnimationFrame(function () {
           painelEl.classList.remove('desenhar');
-          var al = painelEl.querySelector('.dash-alerta'); if (al) setTimeout(function () { al.classList.add('acende'); }, 500);
+          var al = painelEl.querySelector('.dash-alerta.cr'); if (al) setTimeout(function () { al.classList.add('acende'); }, 500);
         }); });
       } else painelEl.classList.remove('desenhar');
       mmDemo.construir(); pedirTudo();
@@ -1717,7 +1862,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   var surgir = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visto'); surgir.unobserve(e.target); } });
   }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-  function observarSurge() { document.querySelectorAll('.surge:not(.visto), .depois-svg:not(.visto)').forEach(function (el) { if (movOn()) surgir.observe(el); else el.classList.add('visto'); }); }
+  function observarSurge() { document.querySelectorAll('.surge:not(.visto)').forEach(function (el) { if (movOn()) surgir.observe(el); else el.classList.add('visto'); }); }
 
   var barraCel = document.getElementById('barra-cel'), aberturaFora = false, finalDentro = false;
   function atualizarBarra() { var on = aberturaFora && !finalDentro; barraCel.classList.toggle('mostra', on); document.body.classList.toggle('barra-on', on); }
@@ -1733,6 +1878,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       lenis.on('scroll', pedirTudo);
     } else if (!quer && lenis) { lenis.destroy(); lenis = null; }
   }
+  // Ímã da demonstração: quando a rolagem para perto da seção, a página desliza até enquadrá-la logo abaixo do cabeçalho.
+  var exemplosEl = document.getElementById('exemplos'), imaT = 0, imaAte = 0;
+  function enquadrarExemplos() {
+    if (!movOn() || semCursor.matches || celular.matches || performance.now() < imaAte) return;
+    var cab = document.querySelector('.cab').offsetHeight, d = exemplosEl.getBoundingClientRect().top - cab;
+    if (Math.abs(d) < 2 || Math.abs(d) > innerHeight * 0.3) return;
+    imaAte = performance.now() + 900;
+    if (lenis) lenis.scrollTo(exemplosEl, { offset: -cab, duration: 0.7 });
+    else window.scrollTo({ top: scrollY + d, behavior: 'smooth' });
+  }
+  addEventListener('scroll', function () { clearTimeout(imaT); imaT = setTimeout(enquadrarExemplos, 160); }, { passive: true });
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#"]'); if (!a) return;
     var id = a.getAttribute('href');
@@ -1745,6 +1901,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 
   // ================= Início =================
   function reconstruir() {
+    igualarPainel();
     raiz.classList.toggle('sem-mov', !movOn());
     raiz.classList.toggle('marcar-prov', !!S.prov);
     document.getElementById('caso').hidden = !S.caso;
