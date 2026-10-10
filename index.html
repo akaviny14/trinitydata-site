@@ -646,6 +646,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .post .img { aspect-ratio: 16 / 10; border-radius: 6px; border: 1px solid var(--cartao-borda); background: var(--cartao); overflow: hidden; position: relative; transition: border-color .25s ease; }
 .post .img svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .post:hover .img { border-color: var(--botao2-borda); }
+/* Colunas da arte do blog: no escuro, --pad-a coincide com o fundo do cartão (azul-800). */
+.post .col { fill: var(--pad-a); }
+.post .col-foco { fill: var(--barra); }
+[data-tema="escuro"] .post .col { fill: var(--td-azul-600); }
+[data-tema="escuro"] .post .col-foco { fill: var(--td-azul-200); }
+.post .arco { stroke: var(--grade-graf); }
+.post .arco-foco { stroke: var(--pad-c); }
+[data-tema="escuro"] .post .arco-foco { stroke: var(--td-azul-200); }
 .post h3 { font-size: 19px; line-height: 1.35; font-weight: 600; color: var(--titulo); margin: 0; }
 .post:hover h3 { text-decoration: underline; }
 .post .etiqueta { align-self: flex-start; }
@@ -1991,8 +1999,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     for (i = 0; i <= 20; i++) linhasG += '<path d="M' + i * 16 + ' 0V200"/>';
     for (i = 0; i <= 12; i++) linhasG += '<path d="M0 ' + i * 16 + 'H320"/>';
     var arcos = '';
-    for (i = 0; i < 7; i++) arcos += '<circle cx="320" cy="200" r="' + (50 + i * 34) + '" style="fill:none;stroke-width:1.5;stroke:' + (i === 3 ? 'var(--pad-c)' : 'var(--grade-graf)') + '"/>';
-    var colunas = [44, 70, 58, 92, 80, 118, 104, 136].map(function (h, i) { return '<rect x="' + (40 + i * 32) + '" y="' + (170 - h) + '" width="18" height="' + h + '" style="fill:' + (i === 7 ? 'var(--barra)' : 'var(--pad-a)') + '"/>'; }).join('');
+    for (i = 0; i < 7; i++) arcos += '<circle cx="320" cy="200" r="' + (50 + i * 34) + '" style="fill:none;stroke-width:1.5"' + (i === 3 ? ' class="arco-foco"' : ' class="arco"') + '/>';
+    var colunas = [44, 70, 58, 92, 80, 118, 104, 136].map(function (h, i) { return '<rect x="' + (40 + i * 32) + '" y="' + (170 - h) + '" width="18" height="' + h + '" class="' + (i === 7 ? 'col-foco' : 'col') + '"/>'; }).join('');
     var arte = [
       '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g style="stroke:var(--grade-graf);stroke-width:1">' + linhasG + '</g><polyline points="32,150 80,128 128,136 176,96 224,104 272,64" style="fill:none;stroke:var(--barra);stroke-width:2.5"/></svg>',
       '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + arcos + '</svg>',
