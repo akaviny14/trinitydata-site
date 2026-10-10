@@ -910,9 +910,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     background: var(--fundo); border-top: 1px solid var(--divisa); transform: translateY(110%); transition: transform .4s var(--suave), background-color .35s ease;
   }
   .barra-cel.mostra { transform: none; }
-  .ajustes { left: 12px; bottom: 12px; transition: bottom .4s var(--suave); }
-  .ajustes > button { padding: 6px 9px; opacity: .9; }
-  .barra-on .ajustes { bottom: 84px; }
   .barra-cel .btn { flex: 1; min-height: 48px; }
   .barra-cel .btn-zap { flex: none; width: 48px; padding: 0; }
   .barra-cel .btn-zap svg { width: 22px; height: 22px; }
@@ -922,23 +919,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .sem-mov *, .sem-mov *::before, .sem-mov *::after { transition: none !important; animation: none !important; }
 .sem-mov .surge { opacity: 1; transform: none; }
 
-/* ===== Ajustes do protótipo (sai na versão final) ===== */
-.ajustes { position: fixed; left: 16px; bottom: 16px; z-index: 60; font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-size: 13px; }
-.ajustes > button { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; cursor: pointer; background: var(--td-neutro-900); color: var(--td-neutro-0); border: 1px solid var(--td-neutro-700); border-radius: 6px; padding: 10px 14px; }
-.ajustes-caixa { position: absolute; left: 0; bottom: 48px; width: 310px; max-height: 76vh; overflow: auto; background: var(--td-neutro-0); color: var(--td-neutro-900); border: 1px solid var(--td-neutro-100); border-radius: 8px; padding: 14px 16px; box-shadow: 0 16px 40px -16px rgba(14, 20, 23, .35); }
-.ajustes-caixa[hidden] { display: none; }
-.ajustes-caixa h4 { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; font-weight: 500; color: var(--td-neutro-500); margin: 14px 0 6px; }
-.ajustes-caixa h4:first-child { margin-top: 0; }
-.ajustes-caixa label { display: grid; grid-template-columns: 96px 1fr 34px; align-items: center; gap: 8px; margin: 6px 0; color: var(--td-neutro-700); }
-.ajustes-caixa label.chk { grid-template-columns: auto 1fr; }
-.ajustes-caixa output { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; text-align: right; color: var(--td-neutro-700); }
-.ajustes-caixa input[type=range] { width: 100%; accent-color: var(--td-azul-800); }
-.ajustes-caixa .linha-btn { display: flex; gap: 8px; margin-top: 12px; }
-.ajustes-caixa .linha-btn button { flex: 1; font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-size: 13px; cursor: pointer; padding: 8px; border-radius: 6px; border: 1.5px solid var(--td-azul-800); background: var(--td-neutro-0); color: var(--td-azul-800); }
-
-/* Moldura de celular (?tela=celular) */
-.moldura { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--td-neutro-100); }
-.moldura iframe { width: 390px; height: 844px; border: 0; border-radius: 28px; background: var(--td-neutro-0); box-shadow: 0 24px 60px -24px rgba(14, 20, 23, .45); }
 </style>
 </head>
 <body>
@@ -1044,7 +1024,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <div class="numero surge"><b>US$ 6,20</b><p>de retorno para cada dólar investido em analytics e BI</p><cite>Nucleus Research, 2023</cite></div>
         <div class="numero surge"><b>US$ 12,9 mi</b><p>por ano é o custo médio de dados de má qualidade nas organizações</p><cite>Gartner</cite></div>
         <div class="numero surge"><b>125 h</b><p>por ano poupadas por usuário com relatórios em autoatendimento</p><cite>Forrester TEI, encomendado pela Microsoft</cite></div>
-        <div class="numero surge"><b>23×</b><p>mais chance de conquistar clientes em empresas orientadas por dados</p><cite>McKinsey Global Institute <span class="prov">CONFERIR</span></cite></div>
+        <div class="numero surge"><b>23×</b><p>mais chance de conquistar clientes em empresas orientadas por dados</p><cite>McKinsey Global Institute </cite></div>
       </div>
     </div>
   </section>
@@ -1267,7 +1247,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
             <p class="form-pos">Prefere conversar agora? <a data-zap href="#">Falar no WhatsApp</a></p>
             <p class="form-legal">Usamos seus dados só para responder ao contato. <a href="#">Política de privacidade</a>.</p>
           </div>
-          <div class="form-ok" role="status"><b>Contato recebido.</b>Retornaremos pelo e-mail ou WhatsApp informado. <span class="prov">PROTÓTIPO: NADA FOI ENVIADO</span></div>
+          <div class="form-ok" role="status"><b>Contato recebido.</b>Retornaremos pelo e-mail ou WhatsApp informado. </div>
         </form>
       </div>
     </section>
@@ -1278,13 +1258,13 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
             <img class="logo-rod" src="assets/td-lockup-mono-negativo.svg" alt="Trinity Data" width="240">
             <p>Consultoria de dados e BI para empresas que querem decidir com base nos próprios dados.</p>
             <p>Atendemos empresas no Brasil e no exterior.</p>
-            <p><span data-cfg="cidade">Cidade · UF</span><span class="prov">PROVISÓRIO</span></p>
+            <p><span data-cfg="cidade">Cidade · UF</span></p>
           </div>
           <div><h4>SERVIÇOS</h4><ul><li><a href="#servicos">Dashboards e integração</a></li><li><a href="#servicos">Qualidade de dados</a></li><li><a href="#servicos">Monitoramento e alertas</a></li><li><a href="#servicos">Automação de relatórios</a></li></ul></div>
           <div><h4>EMPRESA</h4><ul><li><a href="#sobre">Sobre</a></li><li><a href="#blog">Blog</a></li><li><a href="#avaliar">Contato</a></li></ul></div>
           <div><h4>CONTATO</h4><ul><li><a data-zap href="#">WhatsApp</a></li><li><a data-email href="#">E-mail</a></li><li><a data-linkedin href="#">LinkedIn</a></li></ul></div>
         </div>
-        <div class="rod-base"><span>Trinity Data · CNPJ <span data-cfg="cnpj">00.000.000/0001-00</span><span class="prov">PROVISÓRIO</span></span><a href="#">Política de privacidade</a></div>
+        <div class="rod-base"><span>Trinity Data · CNPJ <span data-cfg="cnpj">00.000.000/0001-00</span></span><a href="#">Política de privacidade</a></div>
       </div>
     </footer>
   </div>
@@ -1300,57 +1280,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   </a>
 </div>
 
-<div class="ajustes" id="ajustes">
-  <div class="ajustes-caixa" id="ajustes-caixa" hidden>
-    <h4>PÁGINA</h4>
-    <label class="chk"><input type="checkbox" data-k="movimento"> Movimento ligado</label>
-    <label class="chk"><input type="checkbox" data-k="suave"> Rolagem com inércia</label>
-    <label class="chk"><input type="checkbox" data-k="caso"> Mostrar a seção Caso</label>
-    <label class="chk"><input type="checkbox" data-k="prov"> Marcar textos provisórios</label>
-    <h4>REDE · ABERTURA</h4>
-    <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="redeInt"><output></output></label>
-    <label>Densidade <input type="range" min="0.5" max="1.8" step="0.1" data-k="redeDens"><output></output></label>
-    <label>Velocidade <input type="range" min="0" max="3" step="0.1" data-k="redeVel"><output></output></label>
-    <label>Alcance <input type="range" min="80" max="320" step="10" data-k="redeAlc"><output></output></label>
-    <h4>MILIMETRADO · PAINÉIS</h4>
-    <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="mmInt"><output></output></label>
-    <label>Rastro <input type="range" min="0" max="2" step="0.1" data-k="mmRastro"><output></output></label>
-    <label>Respiro <input type="range" min="0" max="2" step="0.1" data-k="mmResp"><output></output></label>
-    <label>Vel. respiro <input type="range" min="0" max="3" step="0.1" data-k="mmRespVel"><output></output></label>
-    <label>Aviso após <input type="range" min="0" max="3" step="0.1" data-k="avisoAtraso"><output></output></label>
-    <label>Cenário (s) <input type="range" min="0" max="20" step="1" data-k="cenaSeg"><output></output></label>
-    <h4>RETÍCULA · MERCADO</h4>
-    <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="retInt"><output></output></label>
-    <label>Densidade <input type="range" min="0.6" max="1.6" step="0.1" data-k="retDens"><output></output></label>
-    <label>Ondas <input type="range" min="0" max="2" step="0.1" data-k="retOnda"><output></output></label>
-    <h4>BARRAS · PASSAGEM</h4>
-    <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="barInt"><output></output></label>
-    <label>Desencontro <input type="range" min="0" max="2" step="0.1" data-k="barDes"><output></output></label>
-    <h4>ONDAS · COMO FUNCIONA</h4>
-    <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="ondInt"><output></output></label>
-    <h4>SÉRIES · FINAL E RODAPÉ</h4>
-    <label>Intensidade <input type="range" min="0" max="2" step="0.1" data-k="serInt"><output></output></label>
-    <label>Velocidade <input type="range" min="0" max="3" step="0.1" data-k="serVel"><output></output></label>
-    <div class="linha-btn">
-      <button type="button" id="remontar">Remontar painel</button>
-      <button type="button" id="padrao">Valores padrão</button>
-    </div>
-  </div>
-  <button type="button" id="ajustes-btn" aria-expanded="false">AJUSTES</button>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" integrity="sha384-B2WBjDzEjJpYvhmi2UyEn7rektqkf5suS6sNoyyrf0EBAwBHdkiXxIlU0V5Ru2ed" crossorigin="anonymous"></script>
 <script>
 (function () {
-  var params = new URLSearchParams(location.search);
+  // A versão publicada troca para true (ferramentas/publicar.mjs): sem parâmetros de captura, sem ajustes guardados.
+  var PUBLICO = true;
+  var params = new URLSearchParams(PUBLICO ? '' : location.search);
 
-  // ?tela=celular: mostra a página numa moldura de 390 px.
-  if (params.get('tela') === 'celular') {
-    params.set('tela', 'dentro');
-    document.body.innerHTML = '<div class="moldura"><iframe title="Celular" src="?' + params.toString() + location.hash + '"></iframe></div>';
-    return;
-  }
-  if (params.get('tela') === 'dentro') document.getElementById('ajustes').remove();
 
   var raiz = document.documentElement;
   // ?ir=<id>: esconde o que vem antes da seção, para capturas (o Chrome headless sai em branco com âncora).
@@ -1359,13 +1296,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 
   // ---------- Ajustes ----------
   var PADRAO = {
-    movimento: true, suave: true, caso: false, prov: true,
+    movimento: true, suave: true, caso: false, prov: !PUBLICO,
     redeInt: 1.3, redeDens: 1, redeVel: 1, redeAlc: 230,
     mmInt: 1, mmRastro: 1, mmResp: 1, mmRespVel: 1, avisoAtraso: 0.8, cenaSeg: 6,
     retInt: 1, retDens: 1, retOnda: 1, barInt: 1, barDes: 1, ondInt: 1, serInt: 1, serVel: 1
   };
   var S = Object.assign({}, PADRAO);
-  try { Object.assign(S, JSON.parse(localStorage.getItem('td-ajustes-2') || '{}')); } catch (e) {}
   if (params.has('parado')) S.movimento = false; // capturas do estado final
   if (params.has('caso')) S.caso = true;
   var simulado = params.get('cursor'); // ?cursor=x,y simula o cursor na abertura
@@ -1373,7 +1309,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   var semCursor = matchMedia('(hover: none)');
   var celular = matchMedia('(max-width: 900px)');
   function movOn() { return S.movimento && !reduzido.matches; }
-  function guardar() { try { localStorage.setItem('td-ajustes-2', JSON.stringify(S)); } catch (e) {} }
 
   // ---------- Configuração (dados fictícios num só arquivo) ----------
   var zapUrl = 'https://wa.me/' + (CFG.whatsapp || '');
@@ -2063,7 +1998,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + arcos + '</svg>',
       '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + colunas + '<path d="M28 170.5H300" style="stroke:var(--eixo)"/></svg>'
     ];
-    document.getElementById('posts').innerHTML = posts.map(function (p, i) { return '<a class="post surge" href="#"><span class="img">' + arte[i] + '</span><span class="etiqueta">' + p[0] + '</span><h3>' + p[1] + '<span class="prov">PROVISÓRIO</span></h3></a>'; }).join('');
+    document.getElementById('posts').innerHTML = posts.map(function (p, i) { return '<a class="post surge" href="#"><span class="img">' + arte[i] + '</span><span class="etiqueta">' + p[0] + '</span><h3>' + p[1] + '</h3></a>'; }).join('');
   })();
 
   // ================= 11. Perguntas frequentes =================
@@ -2079,7 +2014,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       ['Vocês trabalham com a ferramenta que já usamos?', 'Partimos do que a empresa já usa e só sugerimos outra ferramenta quando ela resolve melhor o problema.', true]
     ];
     document.getElementById('faq').innerHTML = faq.map(function (f, i) {
-      return '<details' + (i === 0 ? ' open' : '') + '><summary>' + f[0] + '<i aria-hidden="true"></i></summary><div class="resp"><p>' + f[1] + (f[2] ? '<span class="prov">PROVISÓRIA</span>' : '') + '</p><a class="seta" href="#">Resposta completa no blog →</a></div></details>';
+      return '<details' + (i === 0 ? ' open' : '') + '><summary>' + f[0] + '<i aria-hidden="true"></i></summary><div class="resp"><p>' + f[1] + (f[2] ? '' : '') + '</p><a class="seta" href="#">Resposta completa no blog →</a></div></details>';
     }).join('');
   })();
 
@@ -2190,30 +2125,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (location.hash && document.querySelector(location.hash)) { var el = document.querySelector(location.hash); window.scrollTo(0, el.getBoundingClientRect().top + scrollY - document.querySelector('.cab').offsetHeight); pedirTudo(); }
   });
 
-  // ================= Painel de ajustes =================
-  var caixa = document.getElementById('ajustes-caixa');
-  if (caixa) {
-    var abrir = document.getElementById('ajustes-btn');
-    abrir.addEventListener('click', function () { caixa.hidden = !caixa.hidden; abrir.setAttribute('aria-expanded', String(!caixa.hidden)); });
-    var sincronizar = function () {
-      caixa.querySelectorAll('input').forEach(function (inp) {
-        var k = inp.dataset.k;
-        if (inp.type === 'checkbox') inp.checked = !!S[k];
-        else { inp.value = S[k]; inp.nextElementSibling.textContent = S[k]; }
-      });
-    };
-    caixa.addEventListener('input', function (e) {
-      var inp = e.target, k = inp.dataset.k; if (!k) return;
-      S[k] = inp.type === 'checkbox' ? inp.checked : parseFloat(inp.value);
-      if (inp.nextElementSibling) inp.nextElementSibling.textContent = S[k];
-      guardar(); reconstruir();
-      if (k === 'movimento') { montar(); mostrar(atual); }
-      if (k === 'cenaSeg') agendarCena();
-    });
-    document.getElementById('remontar').addEventListener('click', montar);
-    document.getElementById('padrao').addEventListener('click', function () { S = Object.assign({}, PADRAO); guardar(); sincronizar(); reconstruir(); montar(); });
-    sincronizar();
-  }
 })();
 </script>
 </body>
