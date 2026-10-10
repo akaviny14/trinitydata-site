@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
-  "rewrites": [{ "source": "/", "destination": "/home.html" }],
+  "rewrites": [{ "source": "/", "destination": "/home" }],
   "headers": [
     {
       "source": "/(.*)",
