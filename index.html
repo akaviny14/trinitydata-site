@@ -1449,7 +1449,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     setTimeout(function () { textosCena(c); palco.classList.remove('trocando'); }, 320);
     var deV = geo.v.slice(), deM = geo.m.slice(), t0 = performance.now();
     (function passo(t) {
-      var k = Math.min(1, (t - t0) / 950); k = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      var k = Math.max(0, Math.min(1, (t - t0) / 950)); k = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
       geo.v = deV.map(function (a, j) { return a + (alvoV[j] - a) * k; }); geo.m = deM.map(function (a, j) { return a + (alvoM[j] - a) * k; });
       desenharGeo(); if (k < 1) requestAnimationFrame(passo);
     })(t0);
