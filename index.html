@@ -631,28 +631,48 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .depo p { font-size: 21px; line-height: 1.45; color: var(--titulo); margin: 0 0 12px; }
 .depo footer { font-size: 14px; color: var(--texto-suave); }
 
-/* ===== 6. IA ===== */
-.ia-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 72px; align-items: center; }
-.ia-passos { list-style: none; margin: 48px 0 0; padding: 0; }
-.ia-passos li { display: grid; grid-template-columns: 136px minmax(0, 1fr); column-gap: 20px; padding: 20px 0; border-top: 1px solid var(--divisa); }
-.ia-passos li:last-child { border-bottom: 1px solid var(--divisa); }
-.ia-passos .n { grid-row: span 2; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--texto-suave); padding-top: 4px; }
-.ia-passos h3 { font-size: 19px; font-weight: 700; color: var(--titulo); margin: 0 0 6px; }
-.ia-passos p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--texto); max-width: 52ch; }
-.ia-passos .foco { border-top: 2px solid var(--filete); }
-.ia-passos .foco .n { color: var(--sobretitulo); }
-.ia-lado { display: flex; flex-direction: column; gap: 12px; }
-.ia-chat { background: var(--fundo); color: var(--texto); border: 1px solid var(--peca-borda); border-radius: 10px; padding: 20px 22px 18px; box-shadow: var(--peca-sombra); transition: opacity .5s ease, transform .65s var(--suave); }
-.ia-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; color: var(--titulo); padding-bottom: 12px; border-bottom: 1px solid var(--divisa); }
-.ia-cab .mono { font-size: 13px; color: var(--texto-suave); }
-.ia-perg { margin: 16px 0 14px auto; max-width: 86%; width: fit-content; padding: 10px 14px; border-radius: 10px 10px 2px 10px; background: var(--td-azul-50); color: var(--td-azul-800); font-size: 15px; line-height: 1.5; }
-[data-tema="escuro"] .ia-perg { background: var(--td-azul-800); color: var(--td-neutro-0); }
-.ia-resp p { margin: 0; font-size: 15px; line-height: 1.6; }
-.ia-resp b { font-weight: 500; color: var(--kpi-valor); }
-.ia-fonte { display: block; margin-top: 12px; font-size: 12px; color: var(--texto-suave); }
-.ia-leg { align-self: flex-end; }
-.ia-num { margin-top: 12px; }
-.ia-num cite { min-height: 0; }
+/* ===== 6. IA =====
+   Três etapas do mesmo tamanho, cada uma com a sua imagem: as fontes convergem, as áreas mostram o mesmo número,
+   o painel responde. No desktop as imagens se montam quando o bloco aparece; no celular fica só a conversa. */
+.ia { --ia-vis: var(--td-neutro-50); }
+[data-tema="escuro"] .ia { --ia-vis: var(--td-azul-900); }
+.ia-topo { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 64px; align-items: end; }
+.ia-dado { border-left: 3px solid var(--filete); padding: 4px 0 4px 24px; }
+.ia-dado b { display: block; font-family: "DM Mono", ui-monospace, monospace; font-size: 44px; font-weight: 500; letter-spacing: -.02em; line-height: 1; color: var(--kpi-valor); margin-bottom: 12px; }
+.ia-dado p { margin: 0 0 10px; font-size: 16px; line-height: 1.5; color: var(--texto); }
+.ia-dado cite { font-style: normal; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); }
+.ia-trilha { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.ia-etapa { position: relative; display: flex; flex-direction: column; background: var(--cartao); border: 1px solid var(--cartao-borda); border-top: 3px solid var(--filete); border-radius: 8px; box-shadow: var(--peca-sombra); }
+/* a ligação entre as etapas se desenha da esquerda para a direita */
+.ia-etapa:not(:last-child)::after { content: ""; position: absolute; top: 90px; right: -41px; width: 40px; height: 2px; background: var(--filete); transform-origin: 0 50%; transition: transform .5s var(--suave) .9s; }
+.ia-etapa.surge:not(.visto)::after { transform: scaleX(0); }
+.ia-vis { height: 176px; display: flex; align-items: center; justify-content: center; padding: 18px 22px; background: var(--ia-vis); border-bottom: 1px solid var(--cartao-borda); border-radius: 5px 5px 0 0; }
+.ia-svg { width: 100%; height: 100%; overflow: visible; }
+.ia-liga { stroke-dasharray: 140; stroke-dashoffset: 0; transition: stroke-dashoffset .8s var(--suave) calc(.3s + var(--i) * .12s); }
+.ia-etapa.surge:not(.visto) .ia-liga { stroke-dashoffset: 140; }
+.ia-hub { transform-box: fill-box; transform-origin: center; transition: transform .5s var(--suave) .9s; }
+.ia-etapa.surge:not(.visto) .ia-hub { transform: scale(.6); }
+.ia-areas { flex-direction: column; align-items: stretch; gap: 10px; }
+.ia-area { display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; align-items: center; gap: 14px; background: var(--cartao); border: 1px solid var(--cartao-borda); border-radius: 6px; padding: 9px 14px; font-size: 14px; color: var(--texto); transition: opacity .45s ease calc(.3s + var(--i) * .18s), transform .55s var(--suave) calc(.3s + var(--i) * .18s); }
+.ia-area b { font-size: 15px; font-weight: 500; color: var(--kpi-valor); }
+.ia-area i { position: relative; width: 20px; height: 20px; border-radius: 50%; background: var(--td-semantica-positivo); transition: transform .35s var(--suave) calc(.9s + var(--i) * .18s); }
+.ia-area i::after { content: ""; position: absolute; left: 7px; top: 4px; width: 5px; height: 9px; border: solid var(--td-neutro-0); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.ia-etapa.surge:not(.visto) .ia-area { opacity: 0; transform: translateX(-12px); }
+.ia-etapa.surge:not(.visto) .ia-area i { transform: scale(0); }
+.ia-conversa { flex-direction: column; align-items: stretch; gap: 10px; background: var(--fundo); }
+.ia-perg, .ia-resp { margin: 0; padding: 9px 13px; font-size: 14px; line-height: 1.5; max-width: 90%; transition: opacity .45s ease, transform .55s var(--suave); }
+.ia-perg { align-self: flex-end; background: var(--td-azul-50); color: var(--td-azul-800); border-radius: 10px 10px 2px 10px; transition-delay: .3s; }
+.ia-resp { align-self: flex-start; background: var(--cartao); color: var(--texto); border-radius: 10px 10px 10px 2px; transition-delay: 1s; }
+.ia-resp b { font-weight: 500; color: var(--td-neutro-0); }
+.ia-fonte { font-size: 12px; color: var(--texto-suave); transition: opacity .45s ease 1.4s; }
+.ia-etapa.surge:not(.visto) :is(.ia-perg, .ia-resp) { opacity: 0; transform: translateY(8px); }
+.ia-etapa.surge:not(.visto) .ia-fonte { opacity: 0; }
+.ia-txt { padding: 20px 24px 24px; }
+.ia-txt .n { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--texto-suave); }
+.ia-etapa.foco .ia-txt .n { color: var(--sobretitulo); }
+.ia-txt h3 { font-size: 20px; font-weight: 700; color: var(--titulo); margin: 10px 0 8px; }
+.ia-txt p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--texto); }
+.ia-leg { margin: 12px 0 0; text-align: right; }
 
 /* ===== Degradê entre seções (pedido do Mateus, 13/10) =====
    Onde uma seção branca encosta numa cinza, a de baixo começa na cor da de cima e passa para a sua.
@@ -665,7 +685,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 :is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + [hidden] + .alt::before,
 .alt + :is(.passagem, .secao:not(.alt):not(.destaque))::before,
 .alt + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque))::before {
-  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 120px; z-index: -1; pointer-events: none;
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 104px; z-index: -1; pointer-events: none;
   background: linear-gradient(to bottom, var(--td-neutro-0), transparent);
 }
 .alt + :is(.passagem, .secao:not(.alt):not(.destaque))::before,
@@ -674,11 +694,25 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 @media (max-width: 900px) {
   .alt + .passagem + .secao:not(.alt):not(.destaque) { position: relative; isolation: isolate; }
   .alt + .passagem + .secao:not(.alt):not(.destaque)::before {
-    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 120px; z-index: -1; pointer-events: none;
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 104px; z-index: -1; pointer-events: none;
     background: linear-gradient(to bottom, var(--td-neutro-50), transparent);
   }
 }
 [data-tema="escuro"] :is(.alt, .passagem, .secao)::before { display: none; }
+/* Sem a borda de cor, o vão de 240 px parecia vazio: nas trocas com degradê ele cai para 200 px,
+   e Dores e Números, na mesma cor, ficam juntos como um capítulo só. */
+@media (min-width: 901px) {
+  .abertura-in { padding-bottom: 64px; min-height: min(760px, calc(100vh - 76px)); }
+  :is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + .secao.alt,
+  :is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + [hidden] + .secao.alt,
+  .alt + .secao:not(.alt):not(.destaque),
+  .alt + [hidden] + .secao:not(.alt):not(.destaque) { padding-top: 100px; }
+  .secao:not(.alt):not(.destaque):has(+ .alt, + [hidden] + .alt),
+  .secao.alt:has(+ .secao:not(.alt):not(.destaque), + [hidden] + .secao:not(.alt):not(.destaque)) { padding-bottom: 100px; }
+  .faq-sec { padding-bottom: 88px; }
+}
+.dores { padding-bottom: 48px; }
+.dores + .mercado { padding-top: 56px; }
 /* Os padrões em movimento somem nas bordas, em vez de terminar cortados na troca de seção. */
 .rede, .padrao-cv {
   -webkit-mask-image: linear-gradient(to bottom, transparent, var(--td-neutro-0) 96px, var(--td-neutro-0) calc(100% - 96px), transparent);
@@ -860,11 +894,26 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .numero b { grid-row: 1 / span 2; font-size: 19px; padding: 2px 0 0; border: 0; }
   .numero p { font-size: 15px; line-height: 1.45; }
   .numero cite { min-height: 0; }
-  .dores-grid, .faq-grid, .ia-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-  .ia-passos { margin-top: 32px; }
-  .ia-passos li { grid-template-columns: minmax(0, 1fr); padding: 16px 0; }
-  .ia-passos .n { grid-row: auto; padding-top: 0; margin-bottom: 6px; }
-  .ia-chat { padding: 16px 16px 14px; }
+  .dores-grid, .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .ia-topo { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .ia-dado { padding-left: 16px; }
+  .ia-dado b { font-size: 32px; margin-bottom: 8px; }
+  /* IA no celular: as três etapas completas num trilho que desliza, uma por vez, com a próxima aparecendo na borda */
+  .ia-trilha { display: flex; gap: 12px; margin: 28px -16px 0; padding: 0 16px 4px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .ia-trilha::-webkit-scrollbar { display: none; }
+  .ia-etapa { flex: 0 0 84%; scroll-snap-align: start; }
+  .ia-pontos { margin-top: 8px; }
+  .ia-leg { text-align: left; margin-top: 2px; }
+  .ia-area { padding: 7px 10px; gap: 10px; font-size: 13px; }
+  .ia-area b { font-size: 13px; }
+  .ia-areas { gap: 8px; }
+  .ia-perg, .ia-resp { font-size: 13px; padding: 7px 11px; }
+  .ia-conversa { gap: 8px; }
+  .ia-etapa { box-shadow: none; }
+  .ia-etapa::after { display: none; }
+  .ia-vis { height: 176px; padding: 14px 16px; }
+  .ia-txt { padding: 16px 18px 18px; }
+  .ia-txt h3 { font-size: 18px; margin: 6px 0 4px; }
   .dores-grid { gap: 28px; }
   .sintomas { margin-top: 24px; }
   .sintomas li { font-size: 16px; padding: 12px 0; grid-template-columns: 32px minmax(0, 1fr); }
@@ -993,6 +1042,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .p-aviso { margin: 12px 0 0; }
   /* Dores: três sintomas bastam para o leitor se reconhecer */
   .sintomas li:nth-child(4) { display: none; }
+  .dores { padding-bottom: 24px; }
   /* Números: os três que medem o custo da dor; sem o pontilhado atrás do texto */
   .numero:nth-child(2), .numero:nth-child(4) { display: none; }
   .mercado .padrao-cv { display: none; }
@@ -1004,10 +1054,18 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .ad .dep dt { display: none; }
   .ad .dep dd { font-size: 16px; font-weight: 400; color: var(--texto); }
   .sol .rodape-sol { justify-content: flex-start; }
-  /* IA: os dois primeiros passos só com o título; o terceiro, que é o assunto, fica completo */
-  .ia-passos li:not(.foco) p { display: none; }
-  .ia-num { display: block; padding: 16px 0 0; }
-  .ia-num b { display: block; margin-bottom: 6px; }
+  /* Demonstração: abas e painel cabem juntos numa tela (o ímã enquadra a partir das abas).
+     Dois indicadores (o primeiro e o que está em alerta), alerta numa frase, gráfico mais baixo, sem o horário. */
+  .dash { --h: 104px; gap: 8px; }
+  .dash .ind-cab .mono { display: none; }
+  .dash .ind-cab { margin-bottom: 8px; }
+  .dash .kpis > .kpi:not(:first-child):not(.atencao):not(.critico) { display: none; }
+  .dash .kpis:not(:has(> .kpi:not(:first-child):is(.atencao, .critico))) > .kpi:nth-child(2) { display: flex; }
+  .aviso-mais { display: none; }
+  .dash-alerta { padding: 9px 12px; }
+  .ch-sub { margin: 2px 0 10px; }
+  .dash-pe { display: none; } /* o subtítulo da seção já diz que os dados são fictícios */
+  .graf-pontos button { height: 28px; }
   /* FAQ: as 4 primeiras perguntas; as outras com um toque */
   .faq:not(.todas) details:nth-of-type(n+5) { display: none; }
   .faq:not(.todas) .faq-mais { display: block; }
@@ -1246,28 +1304,34 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 
   <!-- 6. IA: o passo seguinte de uma base confiável -->
   <section class="secao ia" id="ia">
-    <div class="wrap ia-grid">
-      <div>
-        <h2 class="secao-tit surge">A IA da sua empresa só acerta se os dados estiverem certos</h2>
-        <p class="secao-sub surge">Com os dados centralizados e conferidos, a IA passa a trabalhar sobre os números certos.</p>
-        <ol class="ia-passos">
-          <li class="surge"><span class="n">01 · PRESENTE</span><h3>Dados num só lugar</h3><p>Sistemas, planilhas e plataformas ligados e sempre atualizados.</p></li>
-          <li class="surge"><span class="n">02 · MEDIÇÃO</span><h3>O mesmo número para todos</h3><p>Regras de negócio e qualidade conferidas, sem versões diferentes entre as áreas.</p></li>
-          <li class="surge foco"><span class="n">03 · IA</span><h3>IA sobre a base certa</h3><p>Perguntar ao painel em linguagem comum, receber o relatório da semana já resumido, ser avisado com a explicação do que mudou.</p></li>
-        </ol>
-      </div>
-      <div class="ia-lado">
-        <div class="ia-chat superficie surge" role="img" aria-label="Exemplo de pergunta feita ao painel financeiro, com dados fictícios">
-          <div class="ia-cab"><b>Pergunte ao painel</b><span class="mono">financeiro · set</span></div>
-          <p class="ia-perg">Por que a margem ficou abaixo da meta em setembro?</p>
-          <div class="ia-resp">
-            <p>A margem fechou em <b class="mono">18,4%</b>, contra a meta de <b class="mono">20,0%</b>. O frete da região Sul subiu <b class="mono">12%</b> e explica <b class="mono">1,2 p.p.</b> da diferença; o desconto médio do comercial explica <b class="mono">0,4 p.p.</b></p>
-            <span class="ia-fonte mono">fonte: painel Financeiro · 4 sistemas conciliados</span>
-          </div>
+    <div class="wrap">
+      <div class="ia-topo">
+        <div>
+          <h2 class="secao-tit surge">A IA da sua empresa só acerta se os dados estiverem certos</h2>
+          <p class="secao-sub surge">Com os dados centralizados e conferidos, a IA passa a trabalhar sobre os números certos.</p>
         </div>
-        <span class="rotulo ia-leg">EXEMPLO · DADOS FICTÍCIOS</span>
-        <div class="numero surge ia-num"><b>60%</b><p>dos projetos de IA sem dados preparados tendem a ser abandonados</p><cite>Gartner, previsão de 2025</cite></div>
+        <div class="ia-dado surge"><b>60%</b><p>dos projetos de IA sem dados preparados tendem a ser abandonados</p><cite>Gartner, previsão de 2025</cite></div>
       </div>
+      <ol class="ia-trilha">
+        <li class="ia-etapa surge">
+          <div class="ia-vis" aria-hidden="true"><svg class="ia-svg" viewBox="0 0 320 168"><path class="il-liga ia-liga" style="--i:0" d="M104 28 C150 28 150 84 196 84"/><path class="il-liga ia-liga" style="--i:1" d="M104 66 C150 66 150 84 196 84"/><path class="il-liga ia-liga" style="--i:2" d="M104 104 C150 104 150 84 196 84"/><path class="il-liga ia-liga" style="--i:3" d="M104 142 C150 142 150 84 196 84"/><rect class="il-caixa" x="16" y="14" width="88" height="28" rx="4"/><text class="il-txt forte" x="28" y="33">ERP</text><rect class="il-caixa" x="16" y="52" width="88" height="28" rx="4"/><text class="il-txt forte" x="28" y="71">CRM</text><rect class="il-caixa" x="16" y="90" width="88" height="28" rx="4"/><text class="il-txt forte" x="28" y="109">Planilhas</text><rect class="il-caixa" x="16" y="128" width="88" height="28" rx="4"/><text class="il-txt forte" x="28" y="147">Campo</text><rect class="il-centro ia-hub" x="196" y="64" width="112" height="40" rx="20"/><text class="il-txt branco" x="252" y="89" text-anchor="middle">Um só lugar</text></svg></div>
+          <div class="ia-txt"><span class="n">01 · PRESENTE</span><h3>Dados num só lugar</h3><p>Sistemas, planilhas e plataformas ligados e sempre atualizados.</p></div>
+        </li>
+        <li class="ia-etapa surge">
+          <div class="ia-vis ia-areas" aria-hidden="true"><div class="ia-area" style="--i:0"><span>Comercial</span><b class="mono">R$ 2,48 mi</b><i></i></div><div class="ia-area" style="--i:1"><span>Financeiro</span><b class="mono">R$ 2,48 mi</b><i></i></div><div class="ia-area" style="--i:2"><span>Diretoria</span><b class="mono">R$ 2,48 mi</b><i></i></div></div>
+          <div class="ia-txt"><span class="n">02 · MEDIÇÃO</span><h3>O mesmo número para todos</h3><p>Regras de negócio e qualidade conferidas, sem versões diferentes entre as áreas.</p></div>
+        </li>
+        <li class="ia-etapa foco surge">
+          <div class="ia-vis ia-conversa destaque" role="img" aria-label="Exemplo de pergunta feita ao painel financeiro, com dados fictícios">
+            <p class="ia-perg">Por que a margem ficou abaixo da meta em setembro?</p>
+            <p class="ia-resp">O frete do Sul subiu <b class="mono">12%</b> e responde por <b class="mono">1,2</b> dos <b class="mono">1,6 p.p.</b> abaixo da meta.</p>
+            <span class="ia-fonte mono">fonte: painel Financeiro · 4 sistemas</span>
+          </div>
+          <div class="ia-txt"><span class="n">03 · IA</span><h3>IA sobre a base certa</h3><p>Perguntar ao painel em linguagem comum, receber o relatório da semana já resumido, ser avisado com a explicação do que mudou.</p></div>
+        </li>
+      </ol>
+      <div class="graf-pontos ia-pontos"><span>1 / 3 · deslize</span><div><button type="button" aria-label="Etapa 1" aria-current="true"><i></i></button><button type="button" aria-label="Etapa 2"><i></i></button><button type="button" aria-label="Etapa 3"><i></i></button></div></div>
+      <p class="rotulo ia-leg">EXEMPLO · DADOS FICTÍCIOS</p>
     </div>
   </section>
 
@@ -1650,9 +1714,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         n.a = fade(n);
         n.k = interagir ? Math.pow(Math.max(0, 1 - Math.hypot(n.x - cur.sx, n.y - cur.sy) / R), 1.6) * cur.ativo : 0;
       }
-      // Traço fino (pedido do Mateus, 13/10); no celular as acesas pesam menos, porque o cursor virtual acende muitas de uma vez.
-      var acesa = semCursor.matches ? 0.55 : 0.85;
-      ctx.lineWidth = 0.6; ctx.strokeStyle = K['--rede-linha'];
+      // Desktop: traço marcado. Celular (pedido do Mateus, 13/10): traço fino e acesas mais leves, porque o cursor virtual acende muitas de uma vez.
+      var fino = celular.matches, acesa = fino ? 0.55 : 0.85;
+      ctx.lineWidth = fino ? 0.6 : 1; ctx.strokeStyle = K['--rede-linha'];
       for (var e = 0; e < arestas.length; e++) {
         if (!arestas[e][2]) continue;
         var A = nos[arestas[e][0]], B = nos[arestas[e][1]], al = Math.min(A.a, B.a) * Math.min(1, 0.55 * I);
@@ -1660,7 +1724,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         ctx.globalAlpha = al; ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
       }
       if (interagir) {
-        ctx.strokeStyle = K['--rede-ativo']; ctx.lineWidth = 0.8;
+        ctx.strokeStyle = K['--rede-ativo']; ctx.lineWidth = fino ? 0.8 : 1.2;
         for (e = 0; e < arestas.length; e++) {
           A = nos[arestas[e][0]]; B = nos[arestas[e][1]];
           var kk = Math.min(A.k, B.k) * Math.min(A.a, B.a);
@@ -1670,7 +1734,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       }
       for (i = 0; i < nos.length; i++) {
         n = nos[i]; if (n.a < 0.01) continue;
-        var r0 = n.d ? 2.2 : 1.4;
+        var r0 = fino ? (n.d ? 2.2 : 1.4) : (n.d ? 2.6 : 1.7);
         ctx.globalAlpha = n.a * Math.min(1, 0.75 * I); ctx.fillStyle = K['--rede-no'];
         ctx.beginPath(); ctx.arc(n.x, n.y, r0, 0, 6.2832); ctx.fill();
         if (n.k > 0.02) { ctx.globalAlpha = Math.min(1, n.k * n.a * I); ctx.fillStyle = K['--rede-ativo']; ctx.beginPath(); ctx.arc(n.x, n.y, r0 + n.k * 1.4, 0, 6.2832); ctx.fill(); }
@@ -1981,10 +2045,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     }
     if (e.embed) return '<div class="dash"><div class="dpeca dash-embed"><iframe src="' + e.embed + '" title="Painel ' + e.titulo + '" loading="lazy" allowfullscreen></iframe></div>' + pe + '</div>';
     var k = 0, atraso = function () { var d = (k++ * 0.22).toFixed(2); return ' style="--d:' + d + 's;transition-delay:' + d + 's"'; };
-    var l = e.leitura;
+    var l = e.leitura, ponto = l[2].indexOf('. ');
+    // No celular o alerta mostra só a primeira frase; o resto fica na tela larga.
+    var leitura = ponto > 0 ? l[2].slice(0, ponto + 1) + '<span class="aviso-mais"> ' + l[2].slice(ponto + 2) + '</span>' : l[2];
     return '<div class="dash"><div class="dpeca"' + atraso() + '><div class="ind-cab"><span><b>' + e.titulo + '</b> · ' + e.periodo + '</span><span class="mono">atualizado hoje, 08:00</span></div>' +
       '<div class="kpis" style="--n:' + e.kpis.length + '">' + e.kpis.join('') + '</div></div>' +
-      '<div class="dpeca dash-alerta ' + l[0] + '"' + (l[0] === 'cr' ? ' role="status"' : '') + atraso() + '><div class="aviso-l"><i></i>' + l[1] + '</div><div class="aviso-t">' + l[2] + '</div></div>' +
+      '<div class="dpeca dash-alerta ' + l[0] + '"' + (l[0] === 'cr' ? ' role="status"' : '') + atraso() + '><div class="aviso-l"><i></i>' + l[1] + '</div><div class="aviso-t">' + leitura + '</div></div>' +
       '<div class="dash-graf">' + e.graf.map(function (g) { return g.replace('<div class="ch-card', '<div' + atraso() + ' class="ch-card'); }).join('') + '</div>' +
       '<div class="graf-pontos"><span>1 / ' + e.graf.length + ' · deslize</span><div>' + e.graf.map(function (g, j) { return '<button type="button" aria-label="Gráfico ' + (j + 1) + '"' + (j ? '' : ' aria-current="true"') + '><i></i></button>'; }).join('') + '</div></div>' + pe + '</div>';
   }
@@ -2155,6 +2221,18 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     });
   })();
 
+  // IA no celular: o indicador acompanha o deslize do trilho; tocar num traço leva à etapa.
+  (function () {
+    var tr = document.querySelector('.ia-trilha'), pts = document.querySelectorAll('.ia-pontos button'), sp = document.querySelector('.ia-pontos span');
+    function passo() { return (tr.children[1].offsetLeft - tr.children[0].offsetLeft) || 1; }
+    tr.addEventListener('scroll', function () {
+      var i = Math.min(pts.length - 1, Math.round(tr.scrollLeft / passo()));
+      pts.forEach(function (b, j) { b.setAttribute('aria-current', String(j === i)); });
+      sp.textContent = (i + 1) + ' / ' + pts.length + ' · deslize';
+    }, { passive: true });
+    pts.forEach(function (b, j) { b.addEventListener('click', function () { tr.scrollTo({ left: j * passo(), behavior: 'smooth' }); }); });
+  })();
+
   // ================= 12. Formulário =================
   (function () {
     var form = document.getElementById('form');
@@ -2222,17 +2300,30 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       lenis.on('scroll', pedirTudo);
     } else if (!quer && lenis) { lenis.destroy(); lenis = null; }
   }
-  // Ímã da demonstração: quando a rolagem para perto da seção, a página desliza até enquadrá-la logo abaixo do cabeçalho.
+  // Ímãs de rolagem: quando a rolagem para perto de um bloco, a página desliza até enquadrá-lo inteiro.
+  // Tela larga: a demonstração logo abaixo do cabeçalho e o bloco de IA centrado na área útil.
+  // Celular: as abas e o painel da demonstração, a partir das abas.
   var exemplosEl = document.getElementById('exemplos'), imaT = 0, imaAte = 0;
-  function enquadrarExemplos() {
-    if (!movOn() || semCursor.matches || celular.matches || performance.now() < imaAte) return;
-    var cab = document.querySelector('.cab').offsetHeight, d = exemplosEl.getBoundingClientRect().top - cab;
-    if (Math.abs(d) < 2 || Math.abs(d) > innerHeight * 0.3) return;
+  function alvosIma(cab) {
+    if (celular.matches) return [{ el: document.getElementById('abas-caixa'), d: function (r) { return r.top - cab - 12; } }];
+    return [
+      { el: exemplosEl, d: function (r) { return r.top - cab; } },
+      { el: document.querySelector('#ia .wrap'), d: function (r) { return r.top - cab - Math.max(0, (innerHeight - cab - r.height) / 2); } }
+    ];
+  }
+  function enquadrar() {
+    if (!movOn() || performance.now() < imaAte) return;
+    var cab = document.querySelector('.cab').offsetHeight, d = null;
+    alvosIma(cab).forEach(function (a) {
+      var x = a.d(a.el.getBoundingClientRect());
+      if (Math.abs(x) >= 2 && Math.abs(x) <= innerHeight * 0.3 && (d === null || Math.abs(x) < Math.abs(d))) d = x;
+    });
+    if (d === null) return;
     imaAte = performance.now() + 900;
-    if (lenis) lenis.scrollTo(exemplosEl, { offset: -cab, duration: 0.7 });
+    if (lenis) lenis.scrollTo(scrollY + d, { duration: 0.7 });
     else window.scrollTo({ top: scrollY + d, behavior: 'smooth' });
   }
-  addEventListener('scroll', function () { clearTimeout(imaT); imaT = setTimeout(enquadrarExemplos, 160); }, { passive: true });
+  addEventListener('scroll', function () { clearTimeout(imaT); imaT = setTimeout(enquadrar, celular.matches ? 220 : 160); }, { passive: true });
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#"]'); if (!a) return;
     var id = a.getAttribute('href');
