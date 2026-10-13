@@ -786,7 +786,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .campo textarea::placeholder { color: var(--texto-suave); opacity: 1; }
 .campo input:focus, .campo textarea:focus { outline: none; border-color: var(--foco); box-shadow: 0 0 0 3px rgba(47, 110, 135, .22); }
 .campo .msg { display: none; font-size: 13px; color: var(--erro-texto); }
-.campo.erro input { border-color: var(--erro-borda); }
+.campo.erro input, .campo.erro textarea { border-color: var(--erro-borda); }
 .campo.erro .msg { display: block; }
 .form .btn { width: 100%; margin-top: 6px; }
 .form-pos { font-size: 14px; color: var(--texto); margin: 16px 0 0; text-align: center; }
@@ -1266,7 +1266,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         </article>
         <article class="sol surge">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 6h10M10 12h10M10 18h10M3.5 6l1.5 1.5L7.5 5M3.5 12l1.5 1.5L7.5 11M3.5 18l1.5 1.5L7.5 17"/></svg>
-          <h3>Dados confiáveis, do cadastro ao relatório</h3>
+          <h3>Dados conferidos antes de chegar ao relatório</h3>
           <dl class="ad"><div><dt>ANTES</dt><dd>Cadastro incompleto e números que não batem.</dd></div><div class="dep"><dt>DEPOIS</dt><dd>Indicadores de qualidade e processo claro.</dd></div></dl>
           <div class="rodape-sol"><span class="etiqueta">Qualidade de dados e processos</span><a class="seta" href="#">Ver o serviço →</a></div>
         </article>
@@ -1342,7 +1342,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       <div class="porque-grid">
         <div class="dif surge"><span class="n">01</span><h3>Fala direto com quem constrói.</h3><p>Sem intermediário entre a conversa e a entrega.</p></div>
         <div class="dif surge"><span class="n">02</span><h3>Seu time aprende a manter.</h3><p>O que é construído fica documentado e com a sua equipe.</p></div>
-        <div class="dif surge"><span class="n">03</span><h3>Dados de qualidade, processos claros.</h3><p>Além do painel, arrumamos a origem: cadastro, processo e regra de negócio.</p></div>
+        <div class="dif surge"><span class="n">03</span><h3>Dados de qualidade, processos claros.</h3><p>Além do painel, apontamos onde os dados falham na origem e medimos a qualidade com indicadores.</p></div>
       </div>
       <a class="seta porque-link" href="#">Conheça a empresa →</a>
     </div>
@@ -1368,7 +1368,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       </div>
       <div class="medidas">
         <div class="numero"><b>— h</b><p>por mês poupadas</p></div>
-        <div class="numero"><b>— %</b><p>de cadastros corrigidos</p></div>
+        <div class="numero"><b>— %</b><p>de registros dentro das regras de qualidade</p></div>
         <div class="numero"><b>4 → 1</b><p>sistemas consultados</p></div>
       </div>
       <blockquote class="depo"><p>“Depoimento curto e específico sobre o que mudou.”</p><footer>Nome · cargo · empresa</footer></blockquote>
@@ -1435,7 +1435,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
             <div class="campo"><label for="f-email">E-mail corporativo</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="msg">Informe um e-mail válido, como nome@empresa.com.br.</span></div>
             <div class="campo"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" autocomplete="organization" required><span class="msg">Informe o nome da empresa.</span></div>
             <div class="campo"><label for="f-tel">Telefone (WhatsApp)</label><input id="f-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required><span class="msg">Informe um telefone com DDD.</span></div>
-            <div class="campo"><label for="f-desc">O que você precisa resolver? <span class="opc">(opcional)</span></label><textarea id="f-desc" name="descricao" rows="3" placeholder="Ex.: juntar vendas e financeiro num painel só."></textarea></div>
+            <div class="campo"><label for="f-desc">Qual é o maior problema com os dados hoje?</label><textarea id="f-desc" name="descricao" rows="3" required placeholder="Ex.: o relatório do mês ainda é montado à mão no Excel."></textarea><span class="msg">Conte em poucas palavras o que precisa resolver.</span></div>
             <button class="btn btn-grande" type="submit">Falar com a Trinity</button>
             <p class="form-pos">Prefere conversar agora? <a data-zap href="#">Falar no WhatsApp</a></p>
             <p class="form-legal">Usamos seus dados só para responder ao contato. <a href="/politica-de-privacidade">Política de privacidade</a>.</p>
@@ -2240,19 +2240,20 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       nome: function (v) { return v.trim().length > 1; },
       email: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); },
       empresa: function (v) { return v.trim().length > 1; },
-      telefone: function (v) { return v.replace(/\D/g, '').length >= 10; }
+      telefone: function (v) { return v.replace(/\D/g, '').length >= 10; },
+      descricao: function (v) { return v.trim().length >= 3; }
     };
     function checar(inp) { var ok = regras[inp.name](inp.value); inp.parentNode.classList.toggle('erro', !ok); inp.setAttribute('aria-invalid', String(!ok)); return ok; }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var primeiro = null;
-      form.querySelectorAll('input').forEach(function (inp) { if (!checar(inp) && !primeiro) primeiro = inp; });
+      form.querySelectorAll('input, textarea').forEach(function (inp) { if (!checar(inp) && !primeiro) primeiro = inp; });
       if (primeiro) { primeiro.focus(); return; }
       form.classList.add('enviado');
     });
     form.addEventListener('input', function (e) { if (e.target.parentNode.classList.contains('erro')) checar(e.target); });
     // ?erro mostra o estado de erro nas capturas
-    if (params.has('erro')) form.querySelectorAll('input').forEach(function (inp, i) { if (i === 0) inp.value = 'Cláudio'; if (i === 1) inp.value = 'claudio@empresa'; checar(inp); });
+    if (params.has('erro')) form.querySelectorAll('input, textarea').forEach(function (inp, i) { if (i === 0) inp.value = 'Cláudio'; if (i === 1) inp.value = 'claudio@empresa'; checar(inp); });
   })();
 
   // ================= 12–13. Séries (movimento lento, quase parado) =================
