@@ -634,19 +634,19 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 /* ===== 6. IA =====
    Três etapas do mesmo tamanho, cada uma com a sua imagem: as fontes convergem, as áreas mostram o mesmo número,
    o painel responde. No desktop as imagens se montam quando o bloco aparece; no celular fica só a conversa. */
-.ia { --ia-vis: var(--td-neutro-50); }
-[data-tema="escuro"] .ia { --ia-vis: var(--td-azul-900); }
+.ia { --ia-vis: var(--td-neutro-50); --ia-ctx: var(--td-azul-200); }
+[data-tema="escuro"] .ia { --ia-vis: var(--td-azul-900); --ia-ctx: var(--td-azul-600); }
 .ia-topo { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 64px; align-items: end; }
 .ia-dado { border-left: 3px solid var(--filete); padding: 4px 0 4px 24px; }
 .ia-dado b { display: block; font-family: "DM Mono", ui-monospace, monospace; font-size: 44px; font-weight: 500; letter-spacing: -.02em; line-height: 1; color: var(--kpi-valor); margin-bottom: 12px; }
 .ia-dado p { margin: 0 0 10px; font-size: 16px; line-height: 1.5; color: var(--texto); }
 .ia-dado cite { font-style: normal; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); }
-.ia-trilha { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.ia-trilha { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.3fr); gap: 32px; }
 .ia-etapa { position: relative; display: flex; flex-direction: column; background: var(--cartao); border: 1px solid var(--cartao-borda); border-top: 3px solid var(--filete); border-radius: 8px; box-shadow: var(--peca-sombra); }
 /* a ligação entre as etapas se desenha da esquerda para a direita */
-.ia-etapa:not(:last-child)::after { content: ""; position: absolute; top: 96px; right: -41px; width: 40px; height: 2px; background: var(--filete); transform-origin: 0 50%; transition: transform .5s var(--suave) .9s; }
+.ia-etapa:not(:last-child)::after { content: ""; position: absolute; top: 106px; right: -33px; width: 32px; height: 2px; background: var(--filete); transform-origin: 0 50%; transition: transform .5s var(--suave) .9s; }
 .ia-etapa.surge:not(.visto)::after { transform: scaleX(0); }
-.ia-vis { height: 188px; display: flex; align-items: center; justify-content: center; padding: 18px 22px; background: var(--ia-vis); border-bottom: 1px solid var(--cartao-borda); border-radius: 5px 5px 0 0; }
+.ia-vis { height: 208px; display: flex; align-items: center; justify-content: center; padding: 18px 22px; background: var(--ia-vis); border-bottom: 1px solid var(--cartao-borda); border-radius: 5px 5px 0 0; }
 .ia-svg { width: 100%; height: 100%; overflow: visible; }
 .ia-liga { stroke-dasharray: 140; stroke-dashoffset: 0; transition: stroke-dashoffset .8s var(--suave) calc(.3s + var(--i) * .12s); }
 .ia-etapa.surge:not(.visto) .ia-liga { stroke-dashoffset: 140; }
@@ -660,17 +660,35 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .ia-area i::after { content: ""; position: absolute; left: 7px; top: 4px; width: 5px; height: 9px; border: solid var(--td-neutro-0); border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .ia-etapa.surge:not(.visto) .ia-area { opacity: 0; transform: translateX(-12px); }
 .ia-etapa.surge:not(.visto) .ia-area i { transform: scale(0); }
+/* Contexto: o número aberto nas suas partes; cinza para o resto, cor só na parte que a IA vai citar */
+.ia-abre { flex-direction: column; align-items: stretch; gap: 12px; }
+.ia-linhas { display: flex; flex-direction: column; gap: 12px; }
+.ia-linha { display: grid; grid-template-columns: minmax(0, 1fr) auto; row-gap: 5px; column-gap: 10px; align-items: baseline; font-size: 13px; color: var(--texto); }
+.ia-linha em { font-style: normal; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); }
+.ia-linha i { grid-column: 1 / -1; display: block; height: 8px; border-radius: 2px; background: var(--cartao-borda); overflow: hidden; }
+.ia-linha i b { display: block; height: 100%; width: var(--w); background: var(--ia-ctx); transform-origin: 0 50%; transition: transform .6s var(--suave) calc(.45s + var(--i) * .15s); }
+.ia-linha.foco span, .ia-linha.foco em { color: var(--titulo); font-weight: 600; }
+.ia-linha.foco i b { background: var(--barra); }
+.ia-etapa.surge:not(.visto) .ia-linha i b { transform: scaleX(0); }
 .ia-conversa { flex-direction: column; align-items: stretch; gap: 10px; background: var(--fundo); }
-.ia-perg, .ia-resp { margin: 0; padding: 9px 13px; font-size: 14px; line-height: 1.5; max-width: 90%; transition: opacity .45s ease, transform .55s var(--suave); }
-.ia-perg { align-self: flex-end; background: var(--td-azul-50); color: var(--td-azul-800); border-radius: 10px 10px 2px 10px; transition-delay: .3s; }
-.ia-resp { align-self: flex-start; background: var(--cartao); color: var(--texto); border-radius: 10px 10px 10px 2px; transition-delay: 1s; }
+.ia-perg, .ia-resp { margin: 0; padding: 9px 13px; font-size: 13.5px; line-height: 1.5; max-width: 90%; transition: opacity .45s ease, transform .55s var(--suave); }
+.ia-perg { align-self: flex-end; background: var(--td-azul-50); color: var(--td-azul-800); border-radius: 10px 10px 2px 10px; transition-delay: 1s; }
+.ia-resp { align-self: flex-start; background: var(--cartao); color: var(--texto); border-radius: 10px 10px 10px 2px; transition-delay: 1.6s; }
 .ia-resp b { font-weight: 500; color: var(--td-neutro-0); }
-.ia-fonte { font-size: 12px; color: var(--texto-suave); transition: opacity .45s ease 1.4s; }
+.ia-fonte { font-size: 12px; color: var(--texto-suave); transition: opacity .45s ease 2s; }
 .ia-etapa.surge:not(.visto) :is(.ia-perg, .ia-resp) { opacity: 0; transform: translateY(8px); }
 .ia-etapa.surge:not(.visto) .ia-fonte { opacity: 0; }
 /* Troca de cenário: tudo sai rápido; na volta, a pergunta vem antes da resposta e os valores entram um a um */
 .ia-trilha.ia-saindo :is(.ia-perg, .ia-resp, .ia-fonte, .ia-metrica, .ia-area b) { opacity: 0; transform: translateY(6px); transition: opacity .25s ease, transform .25s ease; }
-.ia-trilha.ia-saindo .ia-area i { transform: scale(0); transition: transform .2s ease; }
+.ia-trilha.ia-saindo .ia-area i, .ia-trilha.ia-saindo .ia-linha i b { transform: scale(0); transition: transform .2s ease; }
+.ia-trilha.ia-saindo .ia-linha i b { transform: scaleX(0); }
+.ia-trilha.ia-saindo .ia-linha :is(span, em) { opacity: 0; transition: opacity .2s ease; }
+.ia-linha :is(span, em) { transition: opacity .35s ease calc(.4s + var(--i) * .15s); }
+/* Telas médias: as quatro etapas em duas linhas */
+@media (max-width: 1180px) and (min-width: 901px) {
+  .ia-trilha { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ia-etapa::after { display: none; }
+}
 .ia-txt { padding: 20px 24px 24px; }
 .ia-txt .n { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--texto-suave); }
 .ia-etapa.foco .ia-txt .n { color: var(--sobretitulo); }
@@ -1325,16 +1343,20 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           <div class="ia-vis ia-areas" aria-hidden="true"><p class="ia-metrica mono" id="ia-metrica">MARGEM · SET</p><div class="ia-area" style="--i:0"><span>Comercial</span><b class="mono ia-valor">18,4%</b><i></i></div><div class="ia-area" style="--i:1"><span>Financeiro</span><b class="mono ia-valor">18,4%</b><i></i></div><div class="ia-area" style="--i:2"><span>Diretoria</span><b class="mono ia-valor">18,4%</b><i></i></div></div>
           <div class="ia-txt"><span class="n">02 · MEDIÇÃO</span><h3>O mesmo número para todos</h3><p>Regras de negócio e qualidade conferidas, sem versões diferentes entre as áreas.</p></div>
         </li>
+        <li class="ia-etapa surge">
+          <div class="ia-vis ia-abre" aria-hidden="true"><p class="ia-metrica mono" id="ia-abre-tit">ABAIXO DA META · −1,6 P.P.</p><div class="ia-linhas" id="ia-abre"></div></div>
+          <div class="ia-txt"><span class="n">03 · CONTEXTO</span><h3>O porquê de cada número</h3><p>Cada indicador se abre por região, produto e cliente, com os dados de todos os sistemas já conciliados.</p></div>
+        </li>
         <li class="ia-etapa foco surge">
           <div class="ia-vis ia-conversa destaque" role="img" aria-label="Exemplo de pergunta feita ao painel financeiro, com dados fictícios">
             <p class="ia-perg" id="ia-perg">Por que a margem ficou abaixo da meta em setembro?</p>
             <p class="ia-resp" id="ia-resp">O frete do Sul subiu <b class="mono">12%</b> e responde por <b class="mono">1,2</b> dos <b class="mono">1,6 p.p.</b> abaixo da meta.</p>
             <span class="ia-fonte mono" id="ia-fonte">fonte: painel Financeiro</span>
           </div>
-          <div class="ia-txt"><span class="n">03 · IA</span><h3>IA sobre a base certa</h3><p>Perguntar ao painel em linguagem comum, receber o relatório da semana já resumido, ser avisado com a explicação do que mudou.</p></div>
+          <div class="ia-txt"><span class="n">04 · IA</span><h3>IA sobre a base certa</h3><p>Perguntar ao painel em linguagem comum, receber o relatório da semana já resumido, ser avisado com a explicação do que mudou.</p></div>
         </li>
       </ol>
-      <div class="graf-pontos ia-pontos"><span>1 / 3 · deslize</span><div><button type="button" aria-label="Etapa 1" aria-current="true"><i></i></button><button type="button" aria-label="Etapa 2"><i></i></button><button type="button" aria-label="Etapa 3"><i></i></button></div></div>
+      <div class="graf-pontos ia-pontos"><span>1 / 4 · deslize</span><div><button type="button" aria-label="Etapa 1" aria-current="true"><i></i></button><button type="button" aria-label="Etapa 2"><i></i></button><button type="button" aria-label="Etapa 3"><i></i></button><button type="button" aria-label="Etapa 4"><i></i></button></div></div>
       <p class="rotulo ia-leg">EXEMPLO · DADOS FICTÍCIOS</p>
     </div>
   </section>
@@ -2237,17 +2259,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     pts.forEach(function (b, j) { b.addEventListener('click', function () { tr.scrollTo({ left: j * passo(), behavior: 'smooth' }); }); });
   })();
 
-  // IA: cenários que se alternam, nos mesmos temas da abertura. O cartão 2 mostra o número da pergunta, igual em todas as áreas;
-  // o cartão 3 mostra a pergunta e a resposta. Troca só com o bloco na tela, o movimento ligado e o cursor fora dos cartões.
+  // IA: cenários que se alternam, nos mesmos temas da abertura. O cartão 2 mostra o número, igual em todas as áreas;
+  // o 3 abre esse número nas suas partes e destaca a que a IA cita; o 4 mostra a pergunta e a resposta. Troca só com o bloco na tela, o movimento ligado e o cursor fora dos cartões.
   (function () {
     var IA_CENAS = [
-      { met: 'MARGEM · {ant3}', val: '18,4%', perg: 'Por que a margem ficou abaixo da meta em {mesAnt}?',
+      { met: 'MARGEM · {ant3}', val: '18,4%', abre: ['ABAIXO DA META · −1,6 P.P.', [['Frete da região Sul', '−1,2 p.p.', 75, 1], ['Desconto do comercial', '−0,4 p.p.', 25]]], perg: 'Por que a margem ficou abaixo da meta em {mesAnt}?',
         resp: 'O frete do Sul subiu <b class="mono">12%</b> e responde por <b class="mono">1,2</b> dos <b class="mono">1,6 p.p.</b> abaixo da meta.', fonte: 'fonte: painel Financeiro' },
-      { met: 'INADIMPLÊNCIA · {ant3}', val: '4,8%', perg: 'Quem puxou a inadimplência para cima do limite?',
+      { met: 'INADIMPLÊNCIA · {ant3}', val: '4,8%', abre: ['VENCIDOS · R$ 214 MIL', [['Três maiores clientes', 'R$ 131 mil', 61, 1], ['Outros nove títulos', 'R$ 83 mil', 39]]], perg: 'Quem puxou a inadimplência para cima do limite?',
         resp: 'Doze títulos vencidos há mais de 30 dias somam <b class="mono">R$ 214 mil</b>; três clientes respondem por <b class="mono">61%</b>.', fonte: 'fonte: contas a receber' },
-      { met: 'RUPTURA · {ant3}', val: '6,2%', perg: 'Onde está faltando estoque da curva A?',
+      { met: 'RUPTURA · {ant3}', val: '6,2%', abre: ['CURVA A ZERADA · 18 ITENS', [['CD Campinas', '14 itens', 78, 1], ['CD Recife', '3 itens', 17], ['CD Curitiba', '1 item', 6]]], perg: 'Onde está faltando estoque da curva A?',
         resp: 'No CD Campinas: <b class="mono">14</b> itens zerados, <b class="mono">9</b> deles com pedido de compra atrasado no fornecedor.', fonte: 'fonte: ERP e armazém' },
-      { met: 'VENDAS · {ant3}', val: 'R$ 1,32 mi', perg: 'O que levou as vendas acima da meta?',
+      { met: 'VENDAS · {ant3}', val: 'R$ 1,32 mi', abre: ['VENDAS · R$ 1,32 MI', [['Recompra de clientes', 'R$ 554 mil', 42, 1], ['Clientes novos', 'R$ 486 mil', 37], ['Contratos', 'R$ 280 mil', 21]]], perg: 'O que levou as vendas acima da meta?',
         resp: 'A recompra de clientes antigos: <b class="mono">42%</b> das vendas, com ticket médio de <b class="mono">R$ 4.870</b>.', fonte: 'fonte: CRM e ERP' }
     ];
     var tr = document.querySelector('.ia-trilha'), sec = document.getElementById('ia'), t = 0, sobre = false;
@@ -2258,6 +2280,10 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       document.getElementById('ia-perg').textContent = datas(c.perg);
       document.getElementById('ia-resp').innerHTML = c.resp;
       document.getElementById('ia-fonte').textContent = c.fonte;
+      document.getElementById('ia-abre-tit').textContent = c.abre[0];
+      document.getElementById('ia-abre').innerHTML = c.abre[1].map(function (l, j) {
+        return '<div class="ia-linha' + (l[3] ? ' foco' : '') + '" style="--i:' + j + ';--w:' + l[2] + '%"><span>' + l[0] + '</span><em>' + l[1] + '</em><i><b></b></i></div>';
+      }).join('');
     }
     function agendar() {
       clearTimeout(t);
@@ -2269,7 +2295,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           setTimeout(function () { aplicar(IA_CENAS[i]); tr.classList.remove('ia-saindo'); }, 300);
         }
         agendar();
-      }, celular.matches ? 10000 : 8000);
+      }, celular.matches ? 9000 : 7000);
     }
     tr.addEventListener('mouseenter', function () { sobre = true; });
     tr.addEventListener('mouseleave', function () { sobre = false; });
