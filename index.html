@@ -9,11 +9,11 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <script src="config.js"></script>
 <script>
-  // Tema antes da pintura: ?tema= > escolha guardada > preferência do sistema.
+  // Tema antes da pintura: ?tema= > escolha guardada > claro.
   (function () {
     var t = new URLSearchParams(location.search).get('tema');
     if (!t) { try { t = localStorage.getItem('td-tema'); } catch (e) {} }
-    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+    if (!t) t = 'claro';
     document.documentElement.dataset.tema = t;
   })();
 </script>
@@ -631,6 +631,61 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .depo p { font-size: 21px; line-height: 1.45; color: var(--titulo); margin: 0 0 12px; }
 .depo footer { font-size: 14px; color: var(--texto-suave); }
 
+/* ===== 6. IA ===== */
+.ia-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 72px; align-items: center; }
+.ia-passos { list-style: none; margin: 48px 0 0; padding: 0; }
+.ia-passos li { display: grid; grid-template-columns: 136px minmax(0, 1fr); column-gap: 20px; padding: 20px 0; border-top: 1px solid var(--divisa); }
+.ia-passos li:last-child { border-bottom: 1px solid var(--divisa); }
+.ia-passos .n { grid-row: span 2; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--texto-suave); padding-top: 4px; }
+.ia-passos h3 { font-size: 19px; font-weight: 700; color: var(--titulo); margin: 0 0 6px; }
+.ia-passos p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--texto); max-width: 52ch; }
+.ia-passos .foco { border-top: 2px solid var(--filete); }
+.ia-passos .foco .n { color: var(--sobretitulo); }
+.ia-lado { display: flex; flex-direction: column; gap: 12px; }
+.ia-chat { background: var(--fundo); color: var(--texto); border: 1px solid var(--peca-borda); border-radius: 10px; padding: 20px 22px 18px; box-shadow: var(--peca-sombra); transition: opacity .5s ease, transform .65s var(--suave); }
+.ia-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; color: var(--titulo); padding-bottom: 12px; border-bottom: 1px solid var(--divisa); }
+.ia-cab .mono { font-size: 13px; color: var(--texto-suave); }
+.ia-perg { margin: 16px 0 14px auto; max-width: 86%; width: fit-content; padding: 10px 14px; border-radius: 10px 10px 2px 10px; background: var(--td-azul-50); color: var(--td-azul-800); font-size: 15px; line-height: 1.5; }
+[data-tema="escuro"] .ia-perg { background: var(--td-azul-800); color: var(--td-neutro-0); }
+.ia-resp p { margin: 0; font-size: 15px; line-height: 1.6; }
+.ia-resp b { font-weight: 500; color: var(--kpi-valor); }
+.ia-fonte { display: block; margin-top: 12px; font-size: 12px; color: var(--texto-suave); }
+.ia-leg { align-self: flex-end; }
+.ia-num { margin-top: 12px; }
+.ia-num cite { min-height: 0; }
+
+/* ===== Degradê entre seções (pedido do Mateus, 13/10) =====
+   Onde uma seção branca encosta numa cinza, a de baixo começa na cor da de cima e passa para a sua.
+   No tema escuro as duas são Azul 900, então não há o que suavizar. As seções escuras (destaque) mantêm a borda. */
+:is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + .alt,
+:is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + [hidden] + .alt,
+.alt + :is(.passagem, .secao:not(.alt):not(.destaque)),
+.alt + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque)) { position: relative; isolation: isolate; }
+:is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + .alt::before,
+:is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + [hidden] + .alt::before,
+.alt + :is(.passagem, .secao:not(.alt):not(.destaque))::before,
+.alt + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque))::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 120px; z-index: -1; pointer-events: none;
+  background: linear-gradient(to bottom, var(--td-neutro-0), transparent);
+}
+.alt + :is(.passagem, .secao:not(.alt):not(.destaque))::before,
+.alt + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque))::before { background: linear-gradient(to bottom, var(--td-neutro-50), transparent); }
+/* No celular a passagem some, e os números encostam direto nas soluções. */
+@media (max-width: 900px) {
+  .alt + .passagem + .secao:not(.alt):not(.destaque) { position: relative; isolation: isolate; }
+  .alt + .passagem + .secao:not(.alt):not(.destaque)::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 120px; z-index: -1; pointer-events: none;
+    background: linear-gradient(to bottom, var(--td-neutro-50), transparent);
+  }
+}
+[data-tema="escuro"] :is(.alt, .passagem, .secao)::before { display: none; }
+/* Os padrões em movimento somem nas bordas, em vez de terminar cortados na troca de seção. */
+.rede, .padrao-cv {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, var(--td-neutro-0) 96px, var(--td-neutro-0) calc(100% - 96px), transparent);
+  mask-image: linear-gradient(to bottom, transparent, var(--td-neutro-0) 96px, var(--td-neutro-0) calc(100% - 96px), transparent);
+}
+.rede { -webkit-mask-image: linear-gradient(to bottom, var(--td-neutro-0) calc(100% - 140px), transparent); mask-image: linear-gradient(to bottom, var(--td-neutro-0) calc(100% - 140px), transparent); }
+
 /* ===== 9. Por que nós ===== */
 .porque-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin-top: 56px; }
 .dif { border-top: 3px solid var(--filete); padding-top: 22px; }
@@ -663,6 +718,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .faq-grid aside p { font-size: 16px; margin: 20px 0 0; color: var(--texto); }
 .faq { border-top: 1px solid var(--divisa); interpolate-size: allow-keywords; }
 .faq details { border-bottom: 1px solid var(--divisa); }
+.faq-mais { display: none; margin: 20px 0 0; padding: 12px 0; min-height: 44px; background: none; border: 0; cursor: pointer; font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-size: 16px; font-weight: 500; color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
 .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; min-height: 44px; font-size: 17px; font-weight: 600; color: var(--titulo); }
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary i { flex: none; width: 20px; height: 20px; position: relative; }
@@ -686,12 +742,15 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .form { background: var(--fundo); color: var(--texto); border-radius: 10px; padding: 28px 28px 24px; border: 1px solid var(--divisa); transition: background-color .35s ease, opacity .7s ease, transform .9s var(--suave); }
 .campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
 .campo label { font-size: 14px; font-weight: 500; color: var(--titulo); }
-.campo input {
+.campo .opc { font-weight: 400; color: var(--texto-suave); }
+.campo input, .campo textarea {
   font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-size: 16px; color: var(--titulo);
   background: var(--campo-fundo); border: 1.5px solid var(--campo-borda); border-radius: 6px; padding: 12px 14px; min-height: 48px;
   transition: border-color .2s ease, box-shadow .2s ease;
 }
-.campo input:focus { outline: none; border-color: var(--foco); box-shadow: 0 0 0 3px rgba(47, 110, 135, .22); }
+.campo textarea { resize: vertical; min-height: 88px; line-height: 1.5; }
+.campo textarea::placeholder { color: var(--texto-suave); opacity: 1; }
+.campo input:focus, .campo textarea:focus { outline: none; border-color: var(--foco); box-shadow: 0 0 0 3px rgba(47, 110, 135, .22); }
 .campo .msg { display: none; font-size: 13px; color: var(--erro-texto); }
 .campo.erro input { border-color: var(--erro-borda); }
 .campo.erro .msg { display: block; }
@@ -801,7 +860,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .numero b { grid-row: 1 / span 2; font-size: 19px; padding: 2px 0 0; border: 0; }
   .numero p { font-size: 15px; line-height: 1.45; }
   .numero cite { min-height: 0; }
-  .dores-grid, .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .dores-grid, .faq-grid, .ia-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .ia-passos { margin-top: 32px; }
+  .ia-passos li { grid-template-columns: minmax(0, 1fr); padding: 16px 0; }
+  .ia-passos .n { grid-row: auto; padding-top: 0; margin-bottom: 6px; }
+  .ia-chat { padding: 16px 16px 14px; }
   .dores-grid { gap: 28px; }
   .sintomas { margin-top: 24px; }
   .sintomas li { font-size: 16px; padding: 12px 0; grid-template-columns: 32px minmax(0, 1fr); }
@@ -923,6 +986,36 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .barra-cel .btn-zap svg { width: 22px; height: 22px; }
 }
 
+/* ===== Celular enxuto (revisão do Mateus, 13/10): menos itens por seção; o detalhe fica nas páginas internas ===== */
+@media (max-width: 900px) {
+  /* Abertura: o painel fica só com os 3 indicadores e o aviso */
+  .p-graf { display: none; }
+  .p-aviso { margin: 12px 0 0; }
+  /* Dores: três sintomas bastam para o leitor se reconhecer */
+  .sintomas li:nth-child(4) { display: none; }
+  /* Números: os três que medem o custo da dor; sem o pontilhado atrás do texto */
+  .numero:nth-child(2), .numero:nth-child(4) { display: none; }
+  .mercado .padrao-cv { display: none; }
+  .numero { grid-template-columns: minmax(0, 1fr); padding: 18px 0; }
+  .numero b { grid-row: auto; font-size: 26px; }
+  /* Soluções: título e o resultado; o ANTES já está nas Dores e a etiqueta repete o título */
+  .ad > div:not(.dep), .sol .etiqueta { display: none; }
+  .ad .dep { background: none; border-left: 0; padding: 0; }
+  .ad .dep dt { display: none; }
+  .ad .dep dd { font-size: 16px; font-weight: 400; color: var(--texto); }
+  .sol .rodape-sol { justify-content: flex-start; }
+  /* IA: os dois primeiros passos só com o título; o terceiro, que é o assunto, fica completo */
+  .ia-passos li:not(.foco) p { display: none; }
+  .ia-num { display: block; padding: 16px 0 0; }
+  .ia-num b { display: block; margin-bottom: 6px; }
+  /* FAQ: as 4 primeiras perguntas; as outras com um toque */
+  .faq:not(.todas) details:nth-of-type(n+5) { display: none; }
+  .faq:not(.todas) .faq-mais { display: block; }
+  /* Ferramentas sempre numa linha só, mesmo sem movimento */
+  .sem-mov .faixa { overflow-x: auto; scrollbar-width: none; }
+  .sem-mov .faixa-trilho { width: max-content; flex-wrap: nowrap; padding: 0 16px; }
+}
+
 /* Movimento reduzido: estado final, sem transições */
 .sem-mov *, .sem-mov *::before, .sem-mov *::after { transition: none !important; animation: none !important; }
 .sem-mov .surge { opacity: 1; transform: none; }
@@ -940,8 +1033,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <nav class="so-tela" aria-label="Seções">
       <a href="#servicos">Serviços</a>
       <a href="#exemplos">Exemplos</a>
-      <a href="#como-funciona">Como funciona</a>
       <a href="#sobre">Sobre</a>
+      <a href="#como-funciona">Como funciona</a>
     </nav>
     <div class="cab-acoes">
       <button class="tema-btn" type="button" id="tema-btn" aria-label="Alternar tema claro e escuro">
@@ -957,8 +1050,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       <nav aria-label="Seções">
         <a href="#servicos">Serviços</a>
         <a href="#exemplos">Exemplos</a>
-        <a href="#como-funciona">Como funciona</a>
         <a href="#sobre">Sobre</a>
+        <a href="#como-funciona">Como funciona</a>
         <a href="#blog">Blog</a>
         <a href="#perguntas">Perguntas frequentes</a>
       </nav>
@@ -978,7 +1071,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <canvas class="rede" id="rede" aria-hidden="true"></canvas>
     <div class="abertura-in">
       <div class="texto">
-        <p class="sobretitulo">CONSULTORIA DE DADOS E BI</p>
+        <p class="sobretitulo">CONSULTORIA DE DADOS, BI E IA</p>
         <h1>Os dados da sua empresa num só lugar, sempre atualizados</h1>
         <p class="sub">Centralizamos os dados que hoje estão espalhados em planilhas, sistemas e plataformas e entregamos visibilidade de vendas, caixa e operação, sem montagem manual.</p>
         <div class="chamada">
@@ -1022,23 +1115,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     </div>
   </section>
 
-  <!-- 2. Faixa de indicadores de mercado -->
-  <section class="secao alt mercado" id="mercado" aria-labelledby="mercado-leg">
-    <canvas class="padrao-cv" id="cv-reticula" aria-hidden="true"></canvas>
-    <div class="wrap">
-      <p class="mercado-leg" id="mercado-leg">O que os estudos de mercado medem quando uma empresa organiza os seus dados</p>
-      <div class="numeros">
-        <div class="numero surge"><b>36%</b><p>do dia de trabalho vai para procurar e consolidar informação espalhada em vários sistemas</p><cite>IDC</cite></div>
-        <div class="numero surge"><b>US$ 6,20</b><p>de retorno para cada dólar investido em analytics e BI</p><cite>Nucleus Research, 2023</cite></div>
-        <div class="numero surge"><b>US$ 12,9 mi</b><p>por ano é o custo médio de dados de má qualidade nas organizações</p><cite>Gartner</cite></div>
-        <div class="numero surge"><b>125 h</b><p>por ano poupadas por usuário com relatórios em autoatendimento</p><cite>Forrester TEI, encomendado pela Microsoft</cite></div>
-        <div class="numero surge"><b>23×</b><p>mais chance de conquistar clientes em empresas orientadas por dados</p><cite>McKinsey Global Institute </cite></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. Dores -->
-  <section class="secao dores" id="dores">
+  <!-- 2. Dores -->
+  <section class="secao alt dores" id="dores">
     <div class="wrap dores-grid">
       <div>
         <h2 class="secao-tit surge">Com os dados espalhados, a empresa decide no feeling</h2>
@@ -1095,6 +1173,21 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     </div>
   </section>
 
+  <!-- 3. Faixa de indicadores de mercado (o custo da dor) -->
+  <section class="secao alt mercado" id="mercado" aria-labelledby="mercado-leg">
+    <canvas class="padrao-cv" id="cv-reticula" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <p class="mercado-leg" id="mercado-leg">O que os estudos de mercado medem quando uma empresa organiza os seus dados</p>
+      <div class="numeros">
+        <div class="numero surge"><b>36%</b><p>do dia de trabalho vai para procurar e consolidar informação espalhada em vários sistemas</p><cite>IDC</cite></div>
+        <div class="numero surge"><b>US$ 6,20</b><p>de retorno para cada dólar investido em analytics e BI</p><cite>Nucleus Research, 2023</cite></div>
+        <div class="numero surge"><b>US$ 12,9 mi</b><p>por ano é o custo médio de dados de má qualidade nas organizações</p><cite>Gartner</cite></div>
+        <div class="numero surge"><b>125 h</b><p>por ano poupadas por usuário com relatórios em autoatendimento</p><cite>Forrester TEI, encomendado pela Microsoft</cite></div>
+        <div class="numero surge"><b>63%</b><p>das organizações não têm, ou não sabem se têm, a gestão de dados que a IA exige</p><cite>Gartner, 2025</cite></div>
+      </div>
+    </div>
+  </section>
+
   <!-- Passagem: barras desencontradas que se alinham -->
   <div class="passagem" id="passagem" aria-hidden="true">
     <span class="rotulo rot-a" id="rot-a">ANTES · DADOS ESPALHADOS</span>
@@ -1135,15 +1228,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     </div>
   </section>
 
-  <!-- 5. Faixa de ferramentas -->
-  <section class="ferramentas" aria-label="Ferramentas">
-    <div class="wrap">
-      <p class="ferr-frase">Não nos prendemos à ferramenta: escolhemos a que resolve o seu problema.</p>
-    </div>
-    <div class="faixa"><div class="faixa-trilho" id="faixa"></div></div>
-  </section>
-
-  <!-- 6. Demonstração -->
+  <!-- 5. Demonstração -->
   <section class="secao destaque exemplos" id="exemplos">
     <div class="wrap">
       <h2 class="secao-tit surge">Um painel mostra em segundos o que hoje leva dias para montar</h2>
@@ -1159,22 +1244,52 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     </div>
   </section>
 
-  <!-- 7. Como funciona -->
-  <section class="secao como" id="como-funciona">
-    <canvas class="padrao-cv" id="cv-ondas" aria-hidden="true"></canvas>
-    <div class="wrap">
-      <h2 class="secao-tit surge">Do primeiro contato ao projeto entregue, em cinco passos</h2>
-      <ol class="passos" id="passos">
-        <li class="passo"><span class="n">01</span><h3>Entendimento do cenário</h3><p>Conhecemos a sua operação e o que está travando hoje.</p></li>
-        <li class="passo"><span class="n">02</span><h3>Análise</h3><p>Com acesso aos dados, levantamos sistemas, métricas e processos e desenhamos o projeto.</p></li>
-        <li class="passo"><span class="n">03</span><h3>Proposta</h3><p>Escopo, ferramentas, prazo e investimento com base na análise. Você decide se constrói conosco ou com o seu time.</p></li>
-        <li class="passo"><span class="n">04</span><h3>Construção</h3><p>Entregas curtas, com validação da sua equipe a cada etapa.</p></li>
-        <li class="passo"><span class="n">05</span><h3>Entrega</h3><p>Treinamento do time para usar e manter o que foi construído.</p></li>
-      </ol>
-      <div class="como-acao surge">
-        <a class="btn btn-grande" href="#avaliar">Falar com a Trinity</a>
+  <!-- 6. IA: o passo seguinte de uma base confiável -->
+  <section class="secao ia" id="ia">
+    <div class="wrap ia-grid">
+      <div>
+        <h2 class="secao-tit surge">A IA da sua empresa só acerta se os dados estiverem certos</h2>
+        <p class="secao-sub surge">Com os dados centralizados e conferidos, a IA passa a trabalhar sobre os números certos.</p>
+        <ol class="ia-passos">
+          <li class="surge"><span class="n">01 · PRESENTE</span><h3>Dados num só lugar</h3><p>Sistemas, planilhas e plataformas ligados e sempre atualizados.</p></li>
+          <li class="surge"><span class="n">02 · MEDIÇÃO</span><h3>O mesmo número para todos</h3><p>Regras de negócio e qualidade conferidas, sem versões diferentes entre as áreas.</p></li>
+          <li class="surge foco"><span class="n">03 · IA</span><h3>IA sobre a base certa</h3><p>Perguntar ao painel em linguagem comum, receber o relatório da semana já resumido, ser avisado com a explicação do que mudou.</p></li>
+        </ol>
+      </div>
+      <div class="ia-lado">
+        <div class="ia-chat superficie surge" role="img" aria-label="Exemplo de pergunta feita ao painel financeiro, com dados fictícios">
+          <div class="ia-cab"><b>Pergunte ao painel</b><span class="mono">financeiro · set</span></div>
+          <p class="ia-perg">Por que a margem ficou abaixo da meta em setembro?</p>
+          <div class="ia-resp">
+            <p>A margem fechou em <b class="mono">18,4%</b>, contra a meta de <b class="mono">20,0%</b>. O frete da região Sul subiu <b class="mono">12%</b> e explica <b class="mono">1,2 p.p.</b> da diferença; o desconto médio do comercial explica <b class="mono">0,4 p.p.</b></p>
+            <span class="ia-fonte mono">fonte: painel Financeiro · 4 sistemas conciliados</span>
+          </div>
+        </div>
+        <span class="rotulo ia-leg">EXEMPLO · DADOS FICTÍCIOS</span>
+        <div class="numero surge ia-num"><b>60%</b><p>dos projetos de IA sem dados preparados tendem a ser abandonados</p><cite>Gartner, previsão de 2025</cite></div>
       </div>
     </div>
+  </section>
+
+  <!-- 7. Por que nós -->
+  <section class="secao alt porque" id="sobre">
+    <div class="wrap">
+      <h2 class="secao-tit surge">Quem atende é quem constrói, e o seu time aprende a manter</h2>
+      <div class="porque-grid">
+        <div class="dif surge"><span class="n">01</span><h3>Fala direto com quem constrói.</h3><p>Sem intermediário entre a conversa e a entrega.</p></div>
+        <div class="dif surge"><span class="n">02</span><h3>Seu time aprende a manter.</h3><p>O que é construído fica documentado e com a sua equipe.</p></div>
+        <div class="dif surge"><span class="n">03</span><h3>Dados de qualidade, processos claros.</h3><p>Além do painel, arrumamos a origem: cadastro, processo e regra de negócio.</p></div>
+      </div>
+      <a class="seta porque-link" href="#">Conheça a empresa →</a>
+    </div>
+  </section>
+
+  <!-- 7b. Faixa de ferramentas (fecha Por que nós) -->
+  <section class="ferramentas alt" aria-label="Ferramentas">
+    <div class="wrap">
+      <p class="ferr-frase">Não nos prendemos à ferramenta: escolhemos a que resolve o seu problema.</p>
+    </div>
+    <div class="faixa"><div class="faixa-trilho" id="faixa"></div></div>
   </section>
 
   <!-- 8. Caso e depoimento (pronto, desligado no lançamento) -->
@@ -1196,21 +1311,26 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     </div>
   </section>
 
-  <!-- 9. Por que nós -->
-  <section class="secao alt porque" id="sobre">
+  <!-- 9. Como funciona -->
+  <section class="secao como" id="como-funciona">
+    <canvas class="padrao-cv" id="cv-ondas" aria-hidden="true"></canvas>
     <div class="wrap">
-      <h2 class="secao-tit surge">Quem atende é quem constrói, e o seu time aprende a manter</h2>
-      <div class="porque-grid">
-        <div class="dif surge"><span class="n">01</span><h3>Fala direto com quem constrói.</h3><p>Sem intermediário entre a conversa e a entrega.</p></div>
-        <div class="dif surge"><span class="n">02</span><h3>Seu time aprende a manter.</h3><p>O que é construído fica documentado e com a sua equipe.</p></div>
-        <div class="dif surge"><span class="n">03</span><h3>Dados de qualidade, processos claros.</h3><p>Além do painel, arrumamos a origem: cadastro, processo e regra de negócio.</p></div>
+      <h2 class="secao-tit surge">Do primeiro contato ao projeto entregue, em cinco passos</h2>
+      <ol class="passos" id="passos">
+        <li class="passo"><span class="n">01</span><h3>Entendimento do cenário</h3><p>Conhecemos a sua operação e o que está travando hoje.</p></li>
+        <li class="passo"><span class="n">02</span><h3>Análise</h3><p>Com acesso aos dados, levantamos sistemas, métricas e processos e desenhamos o projeto.</p></li>
+        <li class="passo"><span class="n">03</span><h3>Proposta</h3><p>Escopo, ferramentas, prazo e investimento com base na análise. Você decide se constrói conosco ou com o seu time.</p></li>
+        <li class="passo"><span class="n">04</span><h3>Construção</h3><p>Entregas curtas, com validação da sua equipe a cada etapa.</p></li>
+        <li class="passo"><span class="n">05</span><h3>Entrega</h3><p>Treinamento do time para usar e manter o que foi construído.</p></li>
+      </ol>
+      <div class="como-acao surge">
+        <a class="btn btn-grande" href="#avaliar">Falar com a Trinity</a>
       </div>
-      <a class="seta porque-link" href="#">Conheça a empresa →</a>
     </div>
   </section>
 
   <!-- 10. Blog -->
-  <section class="secao blog" id="blog">
+  <section class="secao alt blog" id="blog">
     <div class="wrap">
       <div class="blog-cab">
         <h2 class="secao-tit surge">Boas práticas para organizar os dados da sua empresa</h2>
@@ -1221,7 +1341,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   </section>
 
   <!-- 11. Perguntas frequentes -->
-  <section class="secao alt faq-sec" id="perguntas">
+  <section class="secao faq-sec" id="perguntas">
     <div class="wrap faq-grid">
       <aside>
         <h2 class="secao-tit surge">Custo, dados, segurança e dependência: respondidos antes da conversa</h2>
@@ -1251,9 +1371,10 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
             <div class="campo"><label for="f-email">E-mail corporativo</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="msg">Informe um e-mail válido, como nome@empresa.com.br.</span></div>
             <div class="campo"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" autocomplete="organization" required><span class="msg">Informe o nome da empresa.</span></div>
             <div class="campo"><label for="f-tel">Telefone (WhatsApp)</label><input id="f-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required><span class="msg">Informe um telefone com DDD.</span></div>
+            <div class="campo"><label for="f-desc">O que você precisa resolver? <span class="opc">(opcional)</span></label><textarea id="f-desc" name="descricao" rows="3" placeholder="Ex.: juntar vendas e financeiro num painel só."></textarea></div>
             <button class="btn btn-grande" type="submit">Falar com a Trinity</button>
             <p class="form-pos">Prefere conversar agora? <a data-zap href="#">Falar no WhatsApp</a></p>
-            <p class="form-legal">Usamos seus dados só para responder ao contato. <a href="#">Política de privacidade</a>.</p>
+            <p class="form-legal">Usamos seus dados só para responder ao contato. <a href="/politica-de-privacidade">Política de privacidade</a>.</p>
           </div>
           <div class="form-ok" role="status"><b>Contato recebido.</b>Retornaremos pelo e-mail ou WhatsApp informado. </div>
         </form>
@@ -1272,7 +1393,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           <div><h4>EMPRESA</h4><ul><li><a href="#sobre">Sobre</a></li><li><a href="#blog">Blog</a></li><li><a href="#avaliar">Contato</a></li></ul></div>
           <div><h4>CONTATO</h4><ul><li><a data-zap href="#">WhatsApp</a></li><li><a data-email href="#">E-mail</a></li><li><a data-linkedin href="#">LinkedIn</a></li></ul></div>
         </div>
-        <div class="rod-base"><span>Trinity Data · CNPJ <span data-cfg="cnpj">00.000.000/0001-00</span></span><a href="#">Política de privacidade</a></div>
+        <div class="rod-base"><span>Trinity Data</span><a href="/politica-de-privacidade">Política de privacidade</a></div>
       </div>
     </footer>
   </div>
@@ -1529,7 +1650,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         n.a = fade(n);
         n.k = interagir ? Math.pow(Math.max(0, 1 - Math.hypot(n.x - cur.sx, n.y - cur.sy) / R), 1.6) * cur.ativo : 0;
       }
-      ctx.lineWidth = 1; ctx.strokeStyle = K['--rede-linha'];
+      // Traço fino (pedido do Mateus, 13/10); no celular as acesas pesam menos, porque o cursor virtual acende muitas de uma vez.
+      var acesa = semCursor.matches ? 0.55 : 0.85;
+      ctx.lineWidth = 0.6; ctx.strokeStyle = K['--rede-linha'];
       for (var e = 0; e < arestas.length; e++) {
         if (!arestas[e][2]) continue;
         var A = nos[arestas[e][0]], B = nos[arestas[e][1]], al = Math.min(A.a, B.a) * Math.min(1, 0.55 * I);
@@ -1537,17 +1660,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         ctx.globalAlpha = al; ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
       }
       if (interagir) {
-        ctx.strokeStyle = K['--rede-ativo']; ctx.lineWidth = 1.2;
+        ctx.strokeStyle = K['--rede-ativo']; ctx.lineWidth = 0.8;
         for (e = 0; e < arestas.length; e++) {
           A = nos[arestas[e][0]]; B = nos[arestas[e][1]];
           var kk = Math.min(A.k, B.k) * Math.min(A.a, B.a);
           if (kk < 0.02) continue;
-          ctx.globalAlpha = Math.min(1, kk * 0.85 * I); ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+          ctx.globalAlpha = Math.min(1, kk * acesa * I); ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
         }
       }
       for (i = 0; i < nos.length; i++) {
         n = nos[i]; if (n.a < 0.01) continue;
-        var r0 = n.d ? 2.6 : 1.7;
+        var r0 = n.d ? 2.2 : 1.4;
         ctx.globalAlpha = n.a * Math.min(1, 0.75 * I); ctx.fillStyle = K['--rede-no'];
         ctx.beginPath(); ctx.arc(n.x, n.y, r0, 0, 6.2832); ctx.fill();
         if (n.k > 0.02) { ctx.globalAlpha = Math.min(1, n.k * n.a * I); ctx.fillStyle = K['--rede-ativo']; ctx.beginPath(); ctx.arc(n.x, n.y, r0 + n.k * 1.4, 0, 6.2832); ctx.fill(); }
@@ -2019,11 +2142,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       ['Como vocês tratam a segurança dos dados e a LGPD?', 'O acesso é definido com a sua equipe, nas contas da própria empresa, e o tratamento de dados pessoais segue a LGPD.', true],
       ['Em quanto tempo vejo o primeiro resultado?', 'Depende do cenário. A análise define o prazo, e as entregas são curtas, para que cada parte possa ser usada assim que fica pronta.', true],
       ['Quem são vocês, e o que acontece se alguém da equipe sair?', 'Três profissionais de dados que já trabalhavam juntos. O que é construído fica documentado, para não depender de uma pessoa.', true],
+      ['Vocês trabalham com IA?', 'Sim, quando ela resolve um problema concreto. Antes, construímos a base que qualquer uso de IA exige: dados integrados, documentados e confiáveis.', false],
       ['Vocês trabalham com a ferramenta que já usamos?', 'Partimos do que a empresa já usa e só sugerimos outra ferramenta quando ela resolve melhor o problema.', true]
     ];
-    document.getElementById('faq').innerHTML = faq.map(function (f, i) {
+    var faqEl = document.getElementById('faq');
+    faqEl.innerHTML = faq.map(function (f, i) {
       return '<details' + (i === 0 ? ' open' : '') + '><summary>' + f[0] + '<i aria-hidden="true"></i></summary><div class="resp"><p>' + f[1] + (f[2] ? '' : '') + '</p><a class="seta" href="#">Resposta completa no blog →</a></div></details>';
-    }).join('');
+    }).join('') + '<button class="faq-mais" type="button" aria-expanded="false">Ver mais ' + (faq.length - 4) + ' perguntas</button>';
+    // No celular aparecem as 4 primeiras; o resto abre com um toque.
+    faqEl.querySelector('.faq-mais').addEventListener('click', function () {
+      faqEl.classList.add('todas'); this.setAttribute('aria-expanded', 'true');
+    });
   })();
 
   // ================= 12. Formulário =================

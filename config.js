@@ -4,6 +4,5 @@ window.TD_CONFIG = {
   whatsapp: '5511956511090', // real: +55 11 95651-1090
   email: 'contato@trinitydata.exemplo',
   linkedin: 'https://www.linkedin.com/company/trinity-data-exemplo',
-  cnpj: '00.000.000/0001-00',
   cidade: 'Cidade · UF'
 };
