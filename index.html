@@ -644,17 +644,18 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .ia-trilha { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
 .ia-etapa { position: relative; display: flex; flex-direction: column; background: var(--cartao); border: 1px solid var(--cartao-borda); border-top: 3px solid var(--filete); border-radius: 8px; box-shadow: var(--peca-sombra); }
 /* a ligação entre as etapas se desenha da esquerda para a direita */
-.ia-etapa:not(:last-child)::after { content: ""; position: absolute; top: 90px; right: -41px; width: 40px; height: 2px; background: var(--filete); transform-origin: 0 50%; transition: transform .5s var(--suave) .9s; }
+.ia-etapa:not(:last-child)::after { content: ""; position: absolute; top: 96px; right: -41px; width: 40px; height: 2px; background: var(--filete); transform-origin: 0 50%; transition: transform .5s var(--suave) .9s; }
 .ia-etapa.surge:not(.visto)::after { transform: scaleX(0); }
-.ia-vis { height: 176px; display: flex; align-items: center; justify-content: center; padding: 18px 22px; background: var(--ia-vis); border-bottom: 1px solid var(--cartao-borda); border-radius: 5px 5px 0 0; }
+.ia-vis { height: 188px; display: flex; align-items: center; justify-content: center; padding: 18px 22px; background: var(--ia-vis); border-bottom: 1px solid var(--cartao-borda); border-radius: 5px 5px 0 0; }
 .ia-svg { width: 100%; height: 100%; overflow: visible; }
 .ia-liga { stroke-dasharray: 140; stroke-dashoffset: 0; transition: stroke-dashoffset .8s var(--suave) calc(.3s + var(--i) * .12s); }
 .ia-etapa.surge:not(.visto) .ia-liga { stroke-dashoffset: 140; }
 .ia-hub { transform-box: fill-box; transform-origin: center; transition: transform .5s var(--suave) .9s; }
 .ia-etapa.surge:not(.visto) .ia-hub { transform: scale(.6); }
-.ia-areas { flex-direction: column; align-items: stretch; gap: 10px; }
-.ia-area { display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; align-items: center; gap: 14px; background: var(--cartao); border: 1px solid var(--cartao-borda); border-radius: 6px; padding: 9px 14px; font-size: 14px; color: var(--texto); transition: opacity .45s ease calc(.3s + var(--i) * .18s), transform .55s var(--suave) calc(.3s + var(--i) * .18s); }
-.ia-area b { font-size: 15px; font-weight: 500; color: var(--kpi-valor); }
+.ia-areas { flex-direction: column; align-items: stretch; gap: 8px; padding-top: 14px; padding-bottom: 14px; }
+.ia-area { display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; align-items: center; gap: 14px; background: var(--cartao); border: 1px solid var(--cartao-borda); border-radius: 6px; padding: 7px 14px; font-size: 14px; color: var(--texto); transition: opacity .45s ease calc(.3s + var(--i) * .18s), transform .55s var(--suave) calc(.3s + var(--i) * .18s); }
+.ia-metrica { margin: 0 0 2px; font-size: 12px; letter-spacing: .06em; color: var(--texto-suave); transition: opacity .35s ease .1s; }
+.ia-area b { font-size: 15px; font-weight: 500; color: var(--kpi-valor); transition: opacity .35s ease calc(.15s + var(--i) * .12s), transform .45s var(--suave) calc(.15s + var(--i) * .12s); }
 .ia-area i { position: relative; width: 20px; height: 20px; border-radius: 50%; background: var(--td-semantica-positivo); transition: transform .35s var(--suave) calc(.9s + var(--i) * .18s); }
 .ia-area i::after { content: ""; position: absolute; left: 7px; top: 4px; width: 5px; height: 9px; border: solid var(--td-neutro-0); border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .ia-etapa.surge:not(.visto) .ia-area { opacity: 0; transform: translateX(-12px); }
@@ -667,6 +668,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .ia-fonte { font-size: 12px; color: var(--texto-suave); transition: opacity .45s ease 1.4s; }
 .ia-etapa.surge:not(.visto) :is(.ia-perg, .ia-resp) { opacity: 0; transform: translateY(8px); }
 .ia-etapa.surge:not(.visto) .ia-fonte { opacity: 0; }
+/* Troca de cenário: tudo sai rápido; na volta, a pergunta vem antes da resposta e os valores entram um a um */
+.ia-trilha.ia-saindo :is(.ia-perg, .ia-resp, .ia-fonte, .ia-metrica, .ia-area b) { opacity: 0; transform: translateY(6px); transition: opacity .25s ease, transform .25s ease; }
+.ia-trilha.ia-saindo .ia-area i { transform: scale(0); transition: transform .2s ease; }
 .ia-txt { padding: 20px 24px 24px; }
 .ia-txt .n { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--texto-suave); }
 .ia-etapa.foco .ia-txt .n { color: var(--sobretitulo); }
@@ -1318,14 +1322,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           <div class="ia-txt"><span class="n">01 · PRESENTE</span><h3>Dados num só lugar</h3><p>Sistemas, planilhas e plataformas ligados e sempre atualizados.</p></div>
         </li>
         <li class="ia-etapa surge">
-          <div class="ia-vis ia-areas" aria-hidden="true"><div class="ia-area" style="--i:0"><span>Comercial</span><b class="mono">R$ 2,48 mi</b><i></i></div><div class="ia-area" style="--i:1"><span>Financeiro</span><b class="mono">R$ 2,48 mi</b><i></i></div><div class="ia-area" style="--i:2"><span>Diretoria</span><b class="mono">R$ 2,48 mi</b><i></i></div></div>
+          <div class="ia-vis ia-areas" aria-hidden="true"><p class="ia-metrica mono" id="ia-metrica">MARGEM · SET</p><div class="ia-area" style="--i:0"><span>Comercial</span><b class="mono ia-valor">18,4%</b><i></i></div><div class="ia-area" style="--i:1"><span>Financeiro</span><b class="mono ia-valor">18,4%</b><i></i></div><div class="ia-area" style="--i:2"><span>Diretoria</span><b class="mono ia-valor">18,4%</b><i></i></div></div>
           <div class="ia-txt"><span class="n">02 · MEDIÇÃO</span><h3>O mesmo número para todos</h3><p>Regras de negócio e qualidade conferidas, sem versões diferentes entre as áreas.</p></div>
         </li>
         <li class="ia-etapa foco surge">
           <div class="ia-vis ia-conversa destaque" role="img" aria-label="Exemplo de pergunta feita ao painel financeiro, com dados fictícios">
-            <p class="ia-perg">Por que a margem ficou abaixo da meta em setembro?</p>
-            <p class="ia-resp">O frete do Sul subiu <b class="mono">12%</b> e responde por <b class="mono">1,2</b> dos <b class="mono">1,6 p.p.</b> abaixo da meta.</p>
-            <span class="ia-fonte mono">fonte: painel Financeiro · 4 sistemas</span>
+            <p class="ia-perg" id="ia-perg">Por que a margem ficou abaixo da meta em setembro?</p>
+            <p class="ia-resp" id="ia-resp">O frete do Sul subiu <b class="mono">12%</b> e responde por <b class="mono">1,2</b> dos <b class="mono">1,6 p.p.</b> abaixo da meta.</p>
+            <span class="ia-fonte mono" id="ia-fonte">fonte: painel Financeiro</span>
           </div>
           <div class="ia-txt"><span class="n">03 · IA</span><h3>IA sobre a base certa</h3><p>Perguntar ao painel em linguagem comum, receber o relatório da semana já resumido, ser avisado com a explicação do que mudou.</p></div>
         </li>
@@ -2231,6 +2235,45 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       sp.textContent = (i + 1) + ' / ' + pts.length + ' · deslize';
     }, { passive: true });
     pts.forEach(function (b, j) { b.addEventListener('click', function () { tr.scrollTo({ left: j * passo(), behavior: 'smooth' }); }); });
+  })();
+
+  // IA: cenários que se alternam, nos mesmos temas da abertura. O cartão 2 mostra o número da pergunta, igual em todas as áreas;
+  // o cartão 3 mostra a pergunta e a resposta. Troca só com o bloco na tela, o movimento ligado e o cursor fora dos cartões.
+  (function () {
+    var IA_CENAS = [
+      { met: 'MARGEM · {ant3}', val: '18,4%', perg: 'Por que a margem ficou abaixo da meta em {mesAnt}?',
+        resp: 'O frete do Sul subiu <b class="mono">12%</b> e responde por <b class="mono">1,2</b> dos <b class="mono">1,6 p.p.</b> abaixo da meta.', fonte: 'fonte: painel Financeiro' },
+      { met: 'INADIMPLÊNCIA · {ant3}', val: '4,8%', perg: 'Quem puxou a inadimplência para cima do limite?',
+        resp: 'Doze títulos vencidos há mais de 30 dias somam <b class="mono">R$ 214 mil</b>; três clientes respondem por <b class="mono">61%</b>.', fonte: 'fonte: contas a receber' },
+      { met: 'RUPTURA · {ant3}', val: '6,2%', perg: 'Onde está faltando estoque da curva A?',
+        resp: 'No CD Campinas: <b class="mono">14</b> itens zerados, <b class="mono">9</b> deles com pedido de compra atrasado no fornecedor.', fonte: 'fonte: ERP e armazém' },
+      { met: 'VENDAS · {ant3}', val: 'R$ 1,32 mi', perg: 'O que levou as vendas acima da meta?',
+        resp: 'A recompra de clientes antigos: <b class="mono">42%</b> das vendas, com ticket médio de <b class="mono">R$ 4.870</b>.', fonte: 'fonte: CRM e ERP' }
+    ];
+    var tr = document.querySelector('.ia-trilha'), sec = document.getElementById('ia'), t = 0, sobre = false;
+    var i = Math.min(IA_CENAS.length - 1, +params.get('cena') || 0);
+    function aplicar(c) {
+      document.getElementById('ia-metrica').textContent = datas(c.met).toUpperCase();
+      tr.querySelectorAll('.ia-valor').forEach(function (b) { b.textContent = c.val; });
+      document.getElementById('ia-perg').textContent = datas(c.perg);
+      document.getElementById('ia-resp').innerHTML = c.resp;
+      document.getElementById('ia-fonte').textContent = c.fonte;
+    }
+    function agendar() {
+      clearTimeout(t);
+      if (params.has('cena')) return;
+      t = setTimeout(function () {
+        if (movOn() && visivel(sec) && !document.hidden && !sobre) {
+          i = (i + 1) % IA_CENAS.length;
+          tr.classList.add('ia-saindo');
+          setTimeout(function () { aplicar(IA_CENAS[i]); tr.classList.remove('ia-saindo'); }, 300);
+        }
+        agendar();
+      }, celular.matches ? 10000 : 8000);
+    }
+    tr.addEventListener('mouseenter', function () { sobre = true; });
+    tr.addEventListener('mouseleave', function () { sobre = false; });
+    aplicar(IA_CENAS[i]); agendar();
   })();
 
   // ================= 12. Formulário =================
