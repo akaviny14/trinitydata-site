@@ -407,7 +407,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .sol.visto:hover { transform: translateY(-3px); box-shadow: var(--peca-sombra); }
 .sol svg.ic { width: 32px; height: 32px; color: var(--sobretitulo); }
 .sol { --dep-fundo: var(--td-azul-50); }
-[data-tema="escuro"] .sol { --dep-fundo: var(--td-azul-800); background: var(--td-azul-900); border-color: var(--td-azul-800); border-top-color: var(--filete); }
+/* Escuro: a seção é Azul 900, então o cartão sobe para Azul 800 e o DEPOIS desce para Azul 900, como no destaque. */
+[data-tema="escuro"] .sol { --dep-fundo: var(--td-azul-900); background: var(--td-azul-800); border-color: var(--td-azul-600); border-top-color: var(--filete); }
 .sol h3 { font-size: 20px; line-height: 1.28; font-weight: 700; color: var(--titulo); margin: 0; }
 .ad { display: contents; margin: 0; }
 .ad > div { align-self: start; }
@@ -1475,8 +1476,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <div class="rod-grid">
           <div>
             <img class="logo-rod" src="assets/td-lockup-mono-negativo.svg" alt="Trinity Data" width="240">
-            <p>Consultoria de dados e BI para empresas que querem decidir com base nos próprios dados.</p>
-            <p>Atendemos empresas no Brasil e no exterior.</p>
+            <p>Consultoria de dados, BI e IA para empresas no Brasil e no exterior.</p>
             <p><span data-cfg="cidade">Cidade · UF</span></p>
           </div>
           <div><h4>SERVIÇOS</h4><ul><li><a href="#servicos">Dashboards e integração</a></li><li><a href="#servicos">Qualidade de dados</a></li><li><a href="#servicos">Monitoramento e alertas</a></li><li><a href="#servicos">Automação de relatórios</a></li></ul></div>
@@ -1530,7 +1530,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   function movOn() { return S.movimento && !reduzido.matches; }
 
   // ---------- Configuração (dados fictícios num só arquivo) ----------
-  var zapUrl = 'https://wa.me/' + (CFG.whatsapp || '');
+  var zapUrl = 'https://wa.me/' + (CFG.whatsapp || '') + (CFG.whatsappMensagem ? '?text=' + encodeURIComponent(CFG.whatsappMensagem) : '');
   document.querySelectorAll('[data-zap]').forEach(function (a) { a.href = zapUrl; a.target = '_blank'; a.rel = 'noopener'; });
   document.querySelectorAll('[data-email]').forEach(function (a) { a.href = 'mailto:' + (CFG.email || ''); });
   document.querySelectorAll('[data-linkedin]').forEach(function (a) { a.href = CFG.linkedin || '#'; a.target = '_blank'; a.rel = 'noopener'; });
@@ -1700,7 +1700,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 
   // Rede: atrás do texto; os nós perto do cursor se acendem e se ligam.
   (function () {
-    var cv = document.getElementById('rede'), C, nos = [], arestas = [], t0 = performance.now(), limite = {}, K = {};
+    var cv = document.getElementById('rede'), texto = abertura.querySelector('.texto'), C, nos = [], arestas = [], t0 = performance.now(), limite = {}, K = {};
     var cur = { x: 0, y: 0, sx: -9999, sy: -9999, ativo: 0 };
     function construir() {
       C = prepCanvas(cv);
@@ -1718,8 +1718,16 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       // A rede some antes do painel: à esquerda dele (tela larga) ou acima dele (celular).
       var pr = palco.getBoundingClientRect(), ar = abertura.getBoundingClientRect();
       limite.vertical = celular.matches; limite.x = pr.left - ar.left; limite.y = pr.top - ar.top;
+      // Atrás do texto a rede baixa quase a nada, para não disputar a leitura do título e do subtítulo.
+      var tr = texto.getBoundingClientRect();
+      limite.t = [tr.left - ar.left, tr.top - ar.top, tr.right - ar.left, tr.bottom - ar.top];
     }
-    function fade(n) { return limite.vertical ? 1 - liso(limite.y - 140, limite.y + 20, n.y) : 1 - liso(limite.x - 180, limite.x + 10, n.x); }
+    function calma(n) {
+      var t = limite.t, dx = Math.max(t[0] - n.x, 0, n.x - t[2]), dy = Math.max(t[1] - n.y, 0, n.y - t[3]);
+      var piso = limite.vertical ? 0.12 : 0.2;
+      return piso + (1 - piso) * liso(0, 56, Math.hypot(dx, dy));
+    }
+    function fade(n) { return (limite.vertical ? 1 - liso(limite.y - 140, limite.y + 20, n.y) : 1 - liso(limite.x - 180, limite.x + 10, n.x)) * calma(n); }
     function quadro(agora) {
       if (!C) return false;
       var mov = movOn(), t = (agora - t0) / 1000, ctx = C.ctx, I = S.redeInt, ar = abertura.getBoundingClientRect(), alvo = 0;
