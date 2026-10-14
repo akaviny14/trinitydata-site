@@ -406,7 +406,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .sol { background: var(--cartao); border: 1px solid var(--cartao-borda); border-top: 3px solid var(--filete); border-radius: 8px; padding: 24px 22px 22px; display: grid; grid-row: span 5; grid-template-rows: subgrid; row-gap: 16px; transition: transform .35s var(--suave), opacity .7s ease, background-color .35s ease, box-shadow .35s ease; }
 .sol.visto:hover { transform: translateY(-3px); box-shadow: var(--peca-sombra); }
 .sol svg.ic { width: 32px; height: 32px; color: var(--sobretitulo); }
-.sol { --dep-fundo: var(--td-azul-50); }
+/* A seção é branca, então o cartão vai para Cinza 50 e o DEPOIS fica branco, a mesma inversão do tema escuro. */
+.sol { --dep-fundo: var(--td-neutro-0); background: var(--td-neutro-50); }
 /* Escuro: a seção é Azul 900, então o cartão sobe para Azul 800 e o DEPOIS desce para Azul 900, como no destaque. */
 [data-tema="escuro"] .sol { --dep-fundo: var(--td-azul-900); background: var(--td-azul-800); border-color: var(--td-azul-600); border-top-color: var(--filete); }
 .sol h3 { font-size: 20px; line-height: 1.28; font-weight: 700; color: var(--titulo); margin: 0; }
