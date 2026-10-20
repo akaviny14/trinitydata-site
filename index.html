@@ -10,11 +10,11 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <script src="config.js"></script>
 <script>
-  // Tema antes da pintura: ?tema= > escolha guardada > claro. No celular não há botão de tema: vale o do aparelho.
+  // Tema antes da pintura: ?tema= > escolha guardada > claro (no celular também; o escuro só pelo botão do menu).
   (function () {
-    var t = new URLSearchParams(location.search).get('tema'), cel = matchMedia('(max-width: 900px)').matches;
-    if (!t && !cel) { try { t = localStorage.getItem('td-tema'); } catch (e) {} }
-    if (!t) t = cel && matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+    var t = new URLSearchParams(location.search).get('tema');
+    if (!t) { try { t = localStorage.getItem('td-tema'); } catch (e) {} }
+    if (!t) t = 'claro';
     document.documentElement.dataset.tema = t;
   })();
 </script>
@@ -244,6 +244,8 @@ a:hover { color: var(--link-hover); }
 .menu-on .menu-btn i:nth-child(1) { transform: translateY(6.6px) rotate(45deg); }
 .menu-on .menu-btn i:nth-child(2) { opacity: 0; }
 .menu-on .menu-btn i:nth-child(3) { transform: translateY(-6.6px) rotate(-45deg); }
+.menu-tema .so-escuro, [data-tema="escuro"] .menu-tema .so-claro { display: none; }
+[data-tema="escuro"] .menu-tema .so-escuro { display: inline; }
 
 /* ===== 1. Abertura ===== */
 .abertura { position: relative; overflow: hidden; background: var(--fundo); }
@@ -881,7 +883,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .cab-in { height: 64px; padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left)); gap: 10px; }
   .cab .logo { width: 120px; }
   .cab-acoes { margin-left: auto; gap: 8px; }
-  .cab-acoes .tema-btn { display: none; } /* no celular o tema segue o do aparelho */
+  .cab-acoes .tema-btn { display: none; } /* o tema fica dentro da gaveta */
   .menu-on .cab { z-index: 70; }
   .menu-fundo { display: block; position: fixed; inset: 0; background: rgba(14, 20, 23, .5); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
   .menu-on .menu-fundo { opacity: 1; pointer-events: auto; }
@@ -895,6 +897,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .menu-cel nav { display: flex; flex-direction: column; gap: 0; margin: 0; }
   .menu-cel:focus { outline: none; }
   .menu-cel nav a { display: flex; align-items: center; min-height: 52px; font-size: 18px; font-weight: 500; color: var(--titulo); text-decoration: none; border-bottom: 1px solid var(--divisa); }
+  .menu-tema { display: flex; justify-content: space-between; align-items: center; min-height: 52px; margin-top: 8px; padding: 0; background: none; border: 0; border-bottom: 1px solid var(--divisa); cursor: pointer; font-family: inherit; font-size: 16px; color: var(--texto); }
+  .menu-tema-v { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; border: 1px solid var(--etiqueta-borda); border-radius: 4px; padding: 5px 10px; color: var(--titulo); }
   .menu-acoes { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 28px; }
   .menu-acoes .btn { min-height: 50px; font-size: 16px; }
 
@@ -1117,6 +1121,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <a data-blog href="#blog">Blog</a>
         <a href="#perguntas">Perguntas frequentes</a>
       </nav>
+      <button class="menu-tema" type="button" id="menu-tema"><span>Tema</span><span class="menu-tema-v"><span class="so-claro">Claro</span><span class="so-escuro">Escuro</span></span></button>
       <div class="menu-acoes">
         <a class="btn" data-cta data-icone data-origem="menu" href="#">Falar com a Trinity no WhatsApp</a>
       </div>
@@ -1634,15 +1639,10 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     try { localStorage.setItem('td-tema', t); } catch (e) {}
     setTimeout(reconstruir, 30);
   });
-  // No celular o tema acompanha o aparelho, inclusive quando ele troca com a página aberta.
-  var escuroSO = matchMedia('(prefers-color-scheme: dark)');
-  escuroSO.addEventListener('change', function () {
-    if (!celular.matches || params.get('tema')) return;
-    raiz.dataset.tema = escuroSO.matches ? 'escuro' : 'claro'; setTimeout(reconstruir, 30);
-  });
+
 
   // ---------- Menu do celular ----------
-  // Gaveta lateral: seções e a chamada para o WhatsApp. Fecha no fundo, no Esc, num link ou ao voltar para a tela larga.
+  // Gaveta lateral: seções, tema e a chamada para o WhatsApp. Fecha no fundo, no Esc, num link ou ao voltar para a tela larga.
   var menuBtn = document.getElementById('menu-btn'), menu = document.getElementById('menu-cel'), menuFundo = document.getElementById('menu-fundo');
   function menuAberto(a) {
     raiz.classList.toggle('menu-on', a); menu.inert = !a;
@@ -1655,6 +1655,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   menu.addEventListener('click', function (e) { if (e.target.closest('a')) menuAberto(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && raiz.classList.contains('menu-on')) { menuAberto(false); menuBtn.focus(); } });
   celular.addEventListener('change', function () { if (!celular.matches) menuAberto(false); });
+  document.getElementById('menu-tema').addEventListener('click', function () { document.getElementById('tema-btn').click(); });
   if (params.has('menu') && celular.matches) menuAberto(true); // capturas
 
   // ================= 1. Abertura =================
