@@ -2,18 +2,18 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Trinity Data · Protótipo da home</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <script src="config.js"></script>
 <script>
-  // Tema antes da pintura: ?tema= > escolha guardada > claro.
+  // Tema antes da pintura: ?tema= > escolha guardada > claro. No celular não há botão de tema: vale o do aparelho.
   (function () {
-    var t = new URLSearchParams(location.search).get('tema');
-    if (!t) { try { t = localStorage.getItem('td-tema'); } catch (e) {} }
-    if (!t) t = 'claro';
+    var t = new URLSearchParams(location.search).get('tema'), cel = matchMedia('(max-width: 900px)').matches;
+    if (!t && !cel) { try { t = localStorage.getItem('td-tema'); } catch (e) {} }
+    if (!t) t = cel && matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
     document.documentElement.dataset.tema = t;
   })();
 </script>
@@ -191,6 +191,9 @@ a:hover { color: var(--link-hover); }
 .prov { display: none; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; font-weight: 400; color: var(--texto); border: 1px dashed var(--etiqueta-borda); border-radius: 4px; padding: 1px 6px; margin-left: 8px; vertical-align: middle; }
 .marcar-prov .prov { display: inline-block; }
 .so-celular { display: none !important; }
+.so-cel-bloco { display: none !important; }
+/* Conteúdo que depende de um dado ainda vazio no config.js fica com hidden, mesmo quando a classe define um display. */
+[hidden] { display: none !important; }
 
 /* Entrada suave dos blocos */
 .surge { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .65s var(--suave); }
@@ -239,8 +242,6 @@ a:hover { color: var(--link-hover); }
 .menu-on .menu-btn i:nth-child(1) { transform: translateY(6.6px) rotate(45deg); }
 .menu-on .menu-btn i:nth-child(2) { opacity: 0; }
 .menu-on .menu-btn i:nth-child(3) { transform: translateY(-6.6px) rotate(-45deg); }
-.menu-tema .so-escuro, [data-tema="escuro"] .menu-tema .so-claro { display: none; }
-[data-tema="escuro"] .menu-tema .so-escuro { display: inline; }
 
 /* ===== 1. Abertura ===== */
 .abertura { position: relative; overflow: hidden; background: var(--fundo); }
@@ -256,6 +257,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .sub { font-size: 17px; line-height: 1.6; color: var(--texto); margin: 0; max-width: 46ch; text-wrap: pretty; }
 .chamada { display: flex; align-items: center; gap: 28px; margin-top: 40px; flex-wrap: wrap; }
 .nota { font-size: 13px; color: var(--texto-suave); margin-top: 16px; }
+/* Linha de prova: número de clientes e prazo de resposta, cada parte só com o campo preenchido no config.js */
+.prova { font-size: 14px; line-height: 1.5; color: var(--texto-suave); margin: 16px 0 0; }
+.btn .i-zap { width: 20px; height: 20px; flex: none; }
 
 .palco { position: relative; height: 500px; z-index: 1; }
 .mm { position: absolute; left: -72px; top: -72px; width: calc(100% + 144px); height: calc(100% + 144px); display: block; pointer-events: none; }
@@ -343,7 +347,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .quadro { margin: 0; background: var(--cartao); border: 1px solid var(--cartao-borda); border-radius: 8px; padding: 16px 18px 18px; transition: background-color .35s ease, opacity .7s ease, transform .9s var(--suave); }
 .quadro .rotulo { display: block; margin-bottom: 6px; }
 .il-palco { display: contents; }
-.graf-pontos { display: none; }
 .quadro svg { display: block; width: 100%; height: auto; overflow: visible; }
 .il-txt { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; fill: var(--texto); }
 .il-txt.forte { fill: var(--titulo); font-weight: 500; }
@@ -457,7 +460,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .exemplos.apertada .email .kpis { margin-bottom: 12px; }
 .abas-caixa { position: relative; margin-top: 28px; }
 .abas { display: flex; gap: 8px; flex-wrap: wrap; }
-.abas-seta { display: none; }
 .aba {
   font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; min-height: 44px;
   padding: 10px 16px; border-radius: 6px; border: 1.5px solid var(--etiqueta-borda); background: transparent; color: var(--texto);
@@ -701,23 +703,23 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 /* ===== Degradê entre seções (pedido do Mateus, 13/10) =====
    Onde uma seção branca encosta numa cinza, a de baixo começa na cor da de cima e passa para a sua.
    No tema escuro as duas são Azul 900, então não há o que suavizar. As seções escuras (destaque) mantêm a borda. */
-:is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + .alt,
-:is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + [hidden] + .alt,
-.alt + :is(.passagem, .secao:not(.alt):not(.destaque)),
-.alt + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque)) { position: relative; isolation: isolate; }
+:is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + .alt:not([hidden]),
+:is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + [hidden] + .alt:not([hidden]),
+.alt:not([hidden]) + :is(.passagem, .secao:not(.alt):not(.destaque)),
+.alt:not([hidden]) + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque)) { position: relative; isolation: isolate; }
 :is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + .alt::before,
 :is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + [hidden] + .alt::before,
-.alt + :is(.passagem, .secao:not(.alt):not(.destaque))::before,
-.alt + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque))::before {
+.alt:not([hidden]) + :is(.passagem, .secao:not(.alt):not(.destaque))::before,
+.alt:not([hidden]) + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque))::before {
   content: ""; position: absolute; left: 0; right: 0; top: 0; height: 104px; z-index: -1; pointer-events: none;
   background: linear-gradient(to bottom, var(--td-neutro-0), transparent);
 }
-.alt + :is(.passagem, .secao:not(.alt):not(.destaque))::before,
-.alt + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque))::before { background: linear-gradient(to bottom, var(--td-neutro-50), transparent); }
+.alt:not([hidden]) + :is(.passagem, .secao:not(.alt):not(.destaque))::before,
+.alt:not([hidden]) + [hidden] + :is(.passagem, .secao:not(.alt):not(.destaque))::before { background: linear-gradient(to bottom, var(--td-neutro-50), transparent); }
 /* No celular a passagem some, e os números encostam direto nas soluções. */
 @media (max-width: 900px) {
-  .alt + .passagem + .secao:not(.alt):not(.destaque) { position: relative; isolation: isolate; }
-  .alt + .passagem + .secao:not(.alt):not(.destaque)::before {
+  .alt:not([hidden]) + .passagem + .secao:not(.alt):not(.destaque) { position: relative; isolation: isolate; }
+  .alt:not([hidden]) + .passagem + .secao:not(.alt):not(.destaque)::before {
     content: ""; position: absolute; left: 0; right: 0; top: 0; height: 104px; z-index: -1; pointer-events: none;
     background: linear-gradient(to bottom, var(--td-neutro-50), transparent);
   }
@@ -729,12 +731,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .abertura-in { padding-bottom: 64px; min-height: min(760px, calc(100vh - 76px)); }
   :is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + .secao.alt,
   :is(.abertura, .passagem, .secao:not(.alt):not(.destaque)) + [hidden] + .secao.alt,
-  .alt + .secao:not(.alt):not(.destaque),
-  .alt + [hidden] + .secao:not(.alt):not(.destaque) { padding-top: 100px; }
-  .secao:not(.alt):not(.destaque):has(+ .alt, + [hidden] + .alt),
+  .alt:not([hidden]) + .secao:not(.alt):not(.destaque),
+  .alt:not([hidden]) + [hidden] + .secao:not(.alt):not(.destaque) { padding-top: 100px; }
+  .secao:not(.alt):not(.destaque):has(+ .alt:not([hidden]), + [hidden] + .alt),
   .secao.alt:has(+ .secao:not(.alt):not(.destaque), + [hidden] + .secao:not(.alt):not(.destaque)) { padding-bottom: 100px; }
   .faq-sec { padding-bottom: 88px; }
 }
+/* Duas seções brancas juntas (o Blog oculto entre Como funciona e as perguntas): sem o respiro dobrado. */
+.secao:not(.alt):not(.destaque) + [hidden] + .secao:not(.alt):not(.destaque) { padding-top: 0; }
 .dores { padding-bottom: 48px; }
 .dores + .mercado { padding-top: 56px; }
 /* Os padrões em movimento somem nas bordas, em vez de terminar cortados na troca de seção. */
@@ -751,6 +755,10 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .dif h3 { font-size: 21px; font-weight: 700; color: var(--titulo); margin: 10px 0 10px; line-height: 1.3; }
 .dif p { font-size: 16px; line-height: 1.6; margin: 0; color: var(--texto); }
 .porque-link { margin-top: 40px; display: inline-block; }
+.prova-sobre { margin: 40px 0 0; border-left: 3px solid var(--filete); padding: 4px 0 4px 24px; }
+.prova-sobre b { display: block; font-family: "DM Mono", ui-monospace, monospace; font-size: 44px; font-weight: 500; letter-spacing: -.02em; line-height: 1; color: var(--kpi-valor); margin-bottom: 10px; }
+.prova-sobre span { font-size: 17px; line-height: 1.5; color: var(--titulo); font-weight: 600; }
+.prova-sobre + .porque-grid { margin-top: 40px; }
 
 /* ===== 10. Blog ===== */
 .blog-cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
@@ -767,6 +775,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .post .arco { stroke: var(--grade-graf); }
 .post .arco-foco { stroke: var(--pad-c); }
 [data-tema="escuro"] .post .arco-foco { stroke: var(--td-azul-200); }
+.post-txt { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .post h3 { font-size: 19px; line-height: 1.35; font-weight: 600; color: var(--titulo); margin: 0; }
 .post:hover h3 { text-decoration: underline; }
 .post .etiqueta { align-self: flex-start; }
@@ -774,17 +783,18 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 /* ===== 11. Perguntas frequentes ===== */
 .faq-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: start; }
 .faq-grid aside p { font-size: 16px; margin: 20px 0 0; color: var(--texto); }
-.faq { border-top: 1px solid var(--divisa); interpolate-size: allow-keywords; }
-.faq details { border-bottom: 1px solid var(--divisa); }
+/* O mesmo visual vale para os blocos que abrem ao tocar no celular (Serviços e Exemplos): .abre-lista */
+:is(.faq, .abre-lista) { border-top: 1px solid var(--divisa); interpolate-size: allow-keywords; }
+:is(.faq, .abre-lista) details { border-bottom: 1px solid var(--divisa); }
 .faq-mais { display: none; margin: 20px 0 0; padding: 12px 0; min-height: 44px; background: none; border: 0; cursor: pointer; font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-size: 16px; font-weight: 500; color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
-.faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; min-height: 44px; font-size: 17px; font-weight: 600; color: var(--titulo); }
-.faq summary::-webkit-details-marker { display: none; }
-.faq summary i { flex: none; width: 20px; height: 20px; position: relative; }
-.faq summary i::before, .faq summary i::after { content: ""; position: absolute; left: 3px; right: 3px; top: 9px; height: 1.6px; background: var(--titulo); transition: transform .3s var(--suave); }
-.faq summary i::after { transform: rotate(90deg); }
-.faq details[open] summary i::after { transform: rotate(0deg); }
-.faq details::details-content { height: 0; overflow: clip; transition: height .35s var(--suave), content-visibility .35s allow-discrete; }
-.faq details[open]::details-content { height: auto; }
+:is(.faq, .abre-lista) summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; min-height: 44px; font-size: 17px; font-weight: 600; color: var(--titulo); }
+:is(.faq, .abre-lista) summary::-webkit-details-marker { display: none; }
+:is(.faq, .abre-lista) summary i { flex: none; width: 20px; height: 20px; position: relative; }
+:is(.faq, .abre-lista) summary i::before, :is(.faq, .abre-lista) summary i::after { content: ""; position: absolute; left: 3px; right: 3px; top: 9px; height: 1.6px; background: var(--titulo); transition: transform .3s var(--suave); }
+:is(.faq, .abre-lista) summary i::after { transform: rotate(90deg); }
+:is(.faq, .abre-lista) details[open] summary i::after { transform: rotate(0deg); }
+:is(.faq, .abre-lista) details::details-content { height: 0; overflow: clip; transition: height .35s var(--suave), content-visibility .35s allow-discrete; }
+:is(.faq, .abre-lista) details[open]::details-content { height: auto; }
 .faq .resp { padding: 0 40px 22px 0; font-size: 16px; line-height: 1.6; color: var(--texto); }
 .faq .resp p { margin: 0 0 10px; }
 
@@ -797,6 +807,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .tres { list-style: none; margin: 40px 0 0; padding: 0; max-width: 460px; }
 .tres li { display: grid; grid-template-columns: 40px 1fr; padding: 14px 0; border-top: 1px solid var(--divisa); font-size: 16px; }
 .tres li span { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); padding-top: 3px; }
+/* A ação do fechamento é o WhatsApp; o formulário, quando ligado a um destino real, fica abaixo dele. */
+.final-acao { align-self: center; display: flex; flex-direction: column; gap: 28px; }
+.final-acao > .btn { width: 100%; }
+.form-tit { font-size: 19px; font-weight: 700; color: var(--titulo); margin: 0 0 18px; }
+.form-falha { display: none; font-size: 14px; line-height: 1.5; color: var(--erro-texto); margin: 14px 0 0; text-align: center; }
+.form.falhou .form-falha { display: block; }
 .form { background: var(--fundo); color: var(--texto); border-radius: 10px; padding: 28px 28px 24px; border: 1px solid var(--divisa); transition: background-color .35s ease, opacity .7s ease, transform .9s var(--suave); }
 .campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
 .campo label { font-size: 14px; font-weight: 500; color: var(--titulo); }
@@ -854,17 +870,18 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 @media (max-width: 900px) {
   .so-tela { display: none !important; }
   .so-celular { display: inline-flex !important; }
-  .wrap { padding-left: 16px; padding-right: 16px; }
-  .cab-in { height: 64px; padding: 0 16px; gap: 10px; }
+  .so-cel-bloco { display: block !important; }
+  .wrap { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  .cab-in { height: 64px; padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left)); gap: 10px; }
   .cab .logo { width: 120px; }
   .cab-acoes { margin-left: auto; gap: 8px; }
-  .cab-acoes .tema-btn { display: none; } /* o tema fica dentro da gaveta */
+  .cab-acoes .tema-btn { display: none; } /* no celular o tema segue o do aparelho */
   .menu-on .cab { z-index: 70; }
   .menu-fundo { display: block; position: fixed; inset: 0; background: rgba(14, 20, 23, .5); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
   .menu-on .menu-fundo { opacity: 1; pointer-events: auto; }
   .menu-cel {
     display: flex; flex-direction: column; position: fixed; top: 0; right: 0; bottom: 0; width: min(86vw, 340px); z-index: 1;
-    padding: 76px 20px 24px; background: var(--fundo); border-left: 1px solid var(--divisa); overflow-y: auto;
+    padding: 76px 20px max(24px, env(safe-area-inset-bottom)); background: var(--fundo); border-left: 1px solid var(--divisa); overflow-y: auto;
     transform: translateX(100%); visibility: hidden; transition: transform .38s var(--suave), visibility 0s linear .38s;
   }
   .menu-on .menu-cel { transform: none; visibility: visible; transition: transform .38s var(--suave), visibility 0s; }
@@ -872,29 +889,33 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .menu-cel nav { display: flex; flex-direction: column; gap: 0; margin: 0; }
   .menu-cel:focus { outline: none; }
   .menu-cel nav a { display: flex; align-items: center; min-height: 52px; font-size: 18px; font-weight: 500; color: var(--titulo); text-decoration: none; border-bottom: 1px solid var(--divisa); }
-  .menu-tema { display: flex; justify-content: space-between; align-items: center; min-height: 52px; margin-top: 8px; padding: 0; background: none; border: 0; border-bottom: 1px solid var(--divisa); cursor: pointer; font-family: inherit; font-size: 16px; color: var(--texto); }
-  .menu-tema-v { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; border: 1px solid var(--etiqueta-borda); border-radius: 4px; padding: 5px 10px; color: var(--titulo); }
   .menu-acoes { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 28px; }
   .menu-acoes .btn { min-height: 50px; font-size: 16px; }
-  .secao { padding: 56px 0; scroll-margin-top: 64px; }
-  .secao-tit { font-size: 28px; }
+
+  /* Tipografia e respiro menores (19/10): a mesma história, em menos telas */
+  .secao { padding: 40px 0; scroll-margin-top: 64px; }
+  .secao-tit { font-size: 24px; }
   .secao-sub { font-size: 16px; }
-  .abertura-in { grid-template-columns: minmax(0, 1fr); padding: 40px 16px 56px; gap: 36px; min-height: 0; }
-  .sobretitulo { margin-bottom: 16px; }
-  h1 { font-size: 34px; line-height: 1.15; margin-bottom: 16px; }
+  /* Sem movimento contínuo no celular: nenhum padrão em canvas e nenhuma entrada animada */
+  .rede, .mm, .padrao-cv { display: none !important; }
+  .surge { opacity: 1; transform: none; }
+
+  /* Abertura: título, subtítulo, WhatsApp e prova cabem na primeira tela; o painel começa no pé dela */
+  .abertura-in { grid-template-columns: minmax(0, 1fr); padding: 28px 16px 40px; gap: 28px; min-height: 0; }
+  .sobretitulo { margin-bottom: 14px; }
+  h1 { font-size: 28px; line-height: 1.18; margin-bottom: 14px; max-width: none; }
   .sub { font-size: 16px; }
-  .chamada { margin-top: 28px; gap: 20px; }
+  .chamada { margin-top: 24px; gap: 16px; }
+  .chamada .btn { width: 100%; }
   .abertura .nota { display: none; } /* a barra fixa cumpre esse papel */
+  .prova { margin-top: 14px; }
   .palco { height: auto; }
-  .mm { left: -16px; top: -24px; width: calc(100% + 32px); height: calc(100% + 48px); }
   .peca { position: relative; inset: auto; }
-  .p-ind, .p-graf { width: auto; }
-  .p-ind { padding: 12px 12px 14px; }
-  .p-graf { margin: 12px 0 0; padding: 14px 14px 16px; }
-  /* O aviso encosta no canto do gráfico, como na tela larga, sem ocupar uma faixa própria */
-  .p-aviso { position: relative; top: auto; right: auto; width: auto; margin: -22px 0 0 28px; }
+  .p-ind { width: auto; padding: 12px 12px 14px; }
+  .p-graf { display: none; } /* o painel fica com os 3 indicadores e o aviso */
+  .p-aviso { position: relative; top: auto; right: auto; width: auto; margin: 12px 0 0; }
   .ind-cab { flex-direction: column; gap: 2px; margin-bottom: 10px; }
-  /* Indicadores compactos: três colunas na abertura, grade 2×2 na demonstração */
+  /* Indicadores compactos: três colunas na abertura, dois nos exemplos */
   .kpis { gap: 6px; }
   .dash .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kpi { padding: 8px 8px 9px; gap: 3px; }
@@ -903,49 +924,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .kpi .d { white-space: normal; line-height: 1.3; }
   .p-ind .kpi .r { min-height: 2.4em; }
   .p-ind .kpi .v { font-size: 15px; }
-  .graf svg { height: 84px; }
-  .graf-y { height: 92px; }
-  .graf-leg .fonte { display: none; }
-  .p-graf { padding-bottom: 30px; }
-  .barra { display: none; }
-  .linha-real { display: block; transition: clip-path 1.1s var(--suave) .3s; clip-path: inset(0 0 0 0); }
-  .palco:not(.desenhado) .linha-real { clip-path: inset(0 100% 0 0); }
-  /* Números de mercado: lista compacta, número à esquerda, frase e fonte à direita */
-  .mercado { padding: 48px 0 40px; }
-  .mercado-leg { font-size: 16px; margin-bottom: 16px; }
-  .numeros { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .numero { display: grid; grid-template-columns: 124px minmax(0, 1fr); column-gap: 14px; row-gap: 4px; background: none; border: 0; border-top: 1px solid var(--divisa); border-radius: 0; padding: 14px 0; }
-  .numero b { grid-row: 1 / span 2; font-size: 19px; padding: 2px 0 0; border: 0; }
-  .numero p { font-size: 15px; line-height: 1.45; }
-  .numero cite { min-height: 0; }
-  .dores-grid, .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-  .ia-topo { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .ia-dado { padding-left: 16px; }
-  .ia-dado b { font-size: 32px; margin-bottom: 8px; }
-  /* IA no celular: as três etapas completas num trilho que desliza, uma por vez, com a próxima aparecendo na borda */
-  .ia-trilha { display: flex; gap: 12px; margin: 28px -16px 0; padding: 0 16px 4px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; overscroll-behavior-x: contain; scrollbar-width: none; }
-  .ia-trilha::-webkit-scrollbar { display: none; }
-  .ia-etapa { flex: 0 0 84%; scroll-snap-align: start; }
-  .ia-pontos { margin-top: 8px; }
-  .ia-leg { text-align: left; margin-top: 2px; }
-  .ia-area { padding: 7px 10px; gap: 10px; font-size: 13px; }
-  .ia-area b { font-size: 13px; }
-  .ia-areas { gap: 8px; }
-  .ia-perg, .ia-resp { font-size: 13px; padding: 7px 11px; }
-  .ia-conversa { gap: 8px; }
-  .ia-etapa { box-shadow: none; }
-  .ia-etapa::after { display: none; }
-  .ia-vis { height: 176px; padding: 14px 16px; }
-  .ia-txt { padding: 16px 18px 18px; }
-  .ia-txt h3 { font-size: 18px; margin: 6px 0 4px; }
-  .dores-grid { gap: 28px; }
-  .sintomas { margin-top: 24px; }
-  .sintomas li { font-size: 16px; padding: 12px 0; grid-template-columns: 32px minmax(0, 1fr); }
-  .fecho { font-size: 16px; margin-top: 20px; }
-  /* Dores: um quadro só, que passa de HOJE para DEPOIS; o seletor deixa o visitante alternar */
+
+  /* Dores: três sintomas e o quadro que alterna HOJE e DEPOIS, com menos respiro */
+  .dores-grid, .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .dores { padding-bottom: 16px; }
+  .sintomas { margin-top: 16px; }
+  .sintomas li { font-size: 16px; padding: 10px 0; grid-template-columns: 32px minmax(0, 1fr); }
+  .sintomas li:nth-child(4) { display: none; }
+  .fecho { font-size: 16px; margin-top: 16px; }
   .ilustra { gap: 10px; }
   .il-troca { display: flex !important; justify-self: start; border: 1px solid var(--divisa); border-radius: 6px; padding: 3px; gap: 2px; }
-  .il-troca button { min-height: 36px; padding: 0 16px; border: 0; border-radius: 4px; background: none; cursor: pointer; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; color: var(--texto-suave); transition: background-color .25s ease, color .25s ease; }
+  .il-troca button { min-height: 44px; padding: 0 16px; border: 0; border-radius: 4px; background: none; cursor: pointer; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; color: var(--texto-suave); transition: background-color .25s ease, color .25s ease; }
   .il-troca button[aria-pressed="true"] { background: var(--botao-fundo); color: var(--botao-texto); }
   .il-palco .il-txt { font-size: 15px; }
   .il-palco .il-txt.branco { font-size: 15px; }
@@ -956,56 +945,77 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .ilustra:not(.depois) .depois-svg .il-liga { stroke-dashoffset: 400 !important; }
   .depois-svg .il-liga { transition: stroke-dashoffset 1.2s var(--suave); }
   .ilustra .depois-svg .il-liga:nth-of-type(n+5) { transition-delay: .5s; }
+
+  /* Números: os três que medem o custo da dor, número e frase na mesma linha, perto de meia tela */
+  .dores + .mercado { padding-top: 20px; }
+  .mercado { padding: 20px 0 32px; }
+  .mercado-leg { font-size: 16px; margin-bottom: 8px; }
+  .numeros { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .numero:nth-child(2), .numero:nth-child(4) { display: none; }
+  .numero { display: grid; grid-template-columns: 140px minmax(0, 1fr); column-gap: 12px; row-gap: 4px; background: none; border: 0; border-top: 1px solid var(--divisa); border-radius: 0; padding: 12px 0; }
+  .numero b { grid-row: 1 / span 2; font-size: 22px; padding: 1px 0 0; border: 0; }
+  .numero p { font-size: 15px; line-height: 1.45; }
+  .numero cite { min-height: 0; font-size: 13px; }
   .passagem { display: none; }
-  .cartoes4 { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 28px; }
-  /* Soluções: cartões mais baixos, ícone e título na mesma linha */
-  .sol { grid-row: auto; grid-template-rows: none; grid-template-columns: 26px minmax(0, 1fr); column-gap: 12px; row-gap: 10px; padding: 18px 16px 16px; align-items: start; }
-  .sol svg.ic { width: 26px; height: 26px; margin-top: 1px; }
-  .sol h3 { font-size: 18px; }
-  .ad > div { grid-column: 1 / -1; }
-  .ad > div:not(.dep) { flex-direction: row; flex-wrap: wrap; column-gap: 8px; align-items: baseline; }
-  .ad .dep { padding: 9px 12px; }
-  .ad .dep dd { font-size: 15px; }
-  .sol .rodape-sol { grid-column: 1 / -1; gap: 8px; padding-top: 2px; }
-  .faixa-trilho span { font-size: 18px; padding: 0 14px; }
-  .faixa-trilho span::after { margin-left: 28px; }
-  .sem-mov .faixa-trilho { padding: 0 2px; }
-  .abas-caixa { margin-top: 32px; }
-  .abas { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 0 56px 4px 16px; scrollbar-width: none; }
-  .abas-seta {
-    display: flex; align-items: center; justify-content: center; position: absolute; top: 0; bottom: 4px; width: 44px; padding: 0; cursor: pointer;
-    background: var(--fundo); border: 0; color: var(--titulo); font-family: "DM Mono", ui-monospace, monospace; font-size: 18px;
-    transition: opacity .2s ease;
-  }
-  .abas-mais { right: -16px; box-shadow: -14px 0 12px -4px var(--fundo); }
-  .abas-ant { left: -16px; box-shadow: 14px 0 12px -4px var(--fundo); }
-  .abas-caixa.fim .abas-mais, .abas-caixa.inicio .abas-ant { opacity: 0; pointer-events: none; }
-  .aba { flex: none; }
-  .demo-palco .mm { left: -16px; top: 0; width: calc(100% + 32px); height: calc(100% + 24px); }
-  .dash { gap: 10px; }
+  /* A seção de IA não aparece: o conteúdo dela é o 5º bloco de Serviços */
+  #ia { display: none; }
+  #ia + .alt::before { display: none; }
+
+  /* Serviços e Exemplos: blocos que abrem ao tocar, no visual das perguntas frequentes */
+  .cartoes4, .abas-caixa, .demo { display: none; }
+  .abre-lista { margin-top: 20px; }
+  .abre-lista summary { justify-content: flex-start; gap: 12px; padding: 14px 0; font-size: 17px; line-height: 1.3; }
+  .abre-lista summary > span { flex: 1; }
+  .abre-lista summary .ic { width: 24px; height: 24px; flex: none; color: var(--sobretitulo); }
+  .abre-corpo { padding: 0 0 18px 36px; font-size: 16px; line-height: 1.55; color: var(--texto); }
+  .abre-corpo > p { margin: 0 0 10px; }
+  .abre-corpo > p:last-child { margin-bottom: 0; }
+  .abre-passos { list-style: none; margin: 4px 0 12px; padding: 0; }
+  .abre-passos li { display: grid; grid-template-columns: 28px minmax(0, 1fr); padding: 8px 0; border-top: 1px solid var(--divisa); font-size: 15px; line-height: 1.45; }
+  .abre-passos li span { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); padding-top: 2px; }
+  .abre-passos b { display: block; font-weight: 600; color: var(--titulo); }
+  .abre-dado { font-size: 15px; }
+  .abre-dado b { font-family: "DM Mono", ui-monospace, monospace; font-weight: 500; color: var(--kpi-valor); }
+  .abre-dado cite { font-style: normal; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); }
+  .ex-lista .abre-corpo { padding-left: 0; }
+  /* Painel de cada exemplo numa tela: o gráfico principal, dois indicadores e o alerta numa frase */
+  .dash { --h: 104px; gap: 8px; }
   .dpeca { padding: 12px 12px 14px; }
-  /* Demonstração: gráfico principal e de apoio num trilho que desliza, um por vez */
-  .dash-graf { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; scroll-padding: 0 16px; }
-  .dash-graf::-webkit-scrollbar { display: none; }
-  .dash-graf .ch-card { flex: 0 0 100%; scroll-snap-align: start; }
-  .graf-pontos { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: -2px; }
-  .graf-pontos span { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--texto-suave); }
-  .graf-pontos div { display: flex; gap: 6px; }
-  .graf-pontos button { width: 44px; height: 32px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  .graf-pontos button i { display: block; width: 28px; height: 3px; border-radius: 2px; background: var(--divisa); transition: background-color .25s ease; }
-  .graf-pontos button[aria-current="true"] i { background: var(--filete); }
-  .lado h3, .lado ul, .lado .feito, .lado .tit-rel { display: none; }
-  .lado .seta { display: inline-block; padding: 6px 0; }
-  .demo { gap: 16px; }
-  .dash-alerta { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .dash .ind-cab .mono { display: none; }
+  .dash .ind-cab { margin-bottom: 8px; }
+  .dash .kpis > .kpi:not(:first-child):not(.atencao):not(.critico) { display: none; }
+  .dash .kpis:not(:has(> .kpi:not(:first-child):is(.atencao, .critico))) > .kpi:nth-child(2) { display: flex; }
+  .aviso-mais { display: none; }
+  .dash-alerta { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 9px 12px; }
+  .dash-graf { display: block; }
+  .dash-graf .ch-card + .ch-card { display: none; }
+  .ch-sub { margin: 2px 0 10px; }
   .ch { grid-template-columns: 32px minmax(0, 1fr) 64px; }
+  .dash-pe { display: none; } /* o subtítulo da seção já diz que os dados são fictícios */
   .rel { grid-template-columns: minmax(0, 1fr); justify-items: center; }
-  .dash-pe { flex-direction: column; gap: 2px; }
-  .funil div { grid-template-columns: 84px minmax(0, 1fr) 76px; }
   .fone { width: 280px; }
+  .fone-chat { min-height: 0; }
+  .funil div { grid-template-columns: 84px minmax(0, 1fr) 76px; }
+
+  /* Sobre: prova e diferenciais; as ferramentas viram texto parado */
+  .caso-cols, .medidas, .porque-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .porque-grid { gap: 20px; margin-top: 24px; }
+  .prova-sobre { margin-top: 20px; padding-left: 16px; }
+  .prova-sobre b { font-size: 32px; margin-bottom: 6px; }
+  .prova-sobre span { font-size: 16px; }
+  .prova-sobre + .porque-grid { margin-top: 24px; }
+  .dif { padding-top: 14px; }
+  .dif h3 { font-size: 18px; margin: 6px 0 6px; }
+  .dif p { font-size: 15px; line-height: 1.55; }
+  .porque-link { margin-top: 24px; }
+  .ferramentas { padding: 24px 0 36px; }
+  .ferr-frase { font-size: 16px; margin-bottom: 8px; }
+  .faixa { display: none; }
+  .ferr-lista { margin: 0; font-size: 14px; line-height: 1.6; color: var(--texto-suave); }
+
   /* Como funciona: linha do tempo vertical, marcador numerado sobre uma linha contínua */
-  .passos { grid-template-columns: minmax(0, 1fr); row-gap: 0; margin-top: 28px; }
-  .passo { padding: 0 0 22px 48px; border-top: 0; }
+  .passos { grid-template-columns: minmax(0, 1fr); row-gap: 0; margin-top: 20px; }
+  .passo { padding: 0 0 16px 48px; border-top: 0; }
   .passo:last-child { padding-bottom: 0; }
   .passo::after { content: ""; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--divisa); }
   .passo::before { left: 15px; top: 0; width: 2px; height: 100%; z-index: 1; transform: scaleY(0); transform-origin: 50% 0; }
@@ -1015,28 +1025,29 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .passo.ativo .n { border-color: var(--filete); }
   .passo h3 { font-size: 17px; margin: 5px 0 4px; }
   .passo p { font-size: 15px; line-height: 1.5; max-width: none; }
-  .como-acao { display: none; }
-  .caso-cols, .medidas, .porque-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .porque-grid { gap: 22px; margin-top: 28px; }
-  .dif { padding-top: 14px; }
-  .dif h3 { font-size: 18px; margin: 6px 0 6px; }
-  .dif p { font-size: 15px; line-height: 1.55; }
-  .porque-link { margin-top: 24px; }
-  /* Blog: trilho que desliza, com o próximo artigo aparecendo pela borda */
+  .como-acao { display: none; } /* a barra fixa já leva ao WhatsApp */
+
+  /* Blog (com posts reais): lista vertical de até três, sem carrossel */
   .blog-cab { gap: 12px; }
-  .posts { display: flex; gap: 12px; margin: 28px -16px 0; padding: 0 16px 4px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; scrollbar-width: none; }
-  .posts::-webkit-scrollbar { display: none; }
-  .post { flex: 0 0 78%; scroll-snap-align: start; gap: 10px; }
-  .post .img { aspect-ratio: 16 / 9; }
-  .post h3 { font-size: 17px; }
-  .ferramentas { padding: 40px 0; }
-  .ferr-frase { font-size: 16px; margin-bottom: 24px; }
-  .faq-grid { gap: 24px; }
-  .final-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 56px 0 48px; }
-  .final-tit { margin-bottom: 0; }
-  .tres { margin-top: 24px; }
+  .posts { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 16px; }
+  .post:nth-child(n+4) { display: none; }
+  .post { flex-direction: row; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--divisa); }
+  .post .img { flex: 0 0 88px; aspect-ratio: 16 / 10; }
+  .post-txt { gap: 6px; }
+  .post h3 { font-size: 16px; }
+
+  /* Perguntas frequentes: as 4 primeiras; as outras com um toque */
+  .faq-grid { gap: 20px; }
+  .faq:not(.todas) details:nth-of-type(n+5) { display: none; }
+  .faq:not(.todas) .faq-mais { display: block; }
+
+  /* Fechamento: o botão do WhatsApp em largura total */
+  .final-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 40px 0 36px; }
+  .final-tit { font-size: 24px; margin-bottom: 0; }
+  .final-txt { font-size: 16px; margin-top: 12px; }
+  .tres { margin-top: 16px; }
   .tres li { padding: 10px 0; font-size: 15px; grid-template-columns: 28px 1fr; }
-  .final-tit { font-size: 30px; }
+  .final-acao { gap: 20px; }
   .form { padding: 22px 18px 20px; }
   /* Rodapé: marca e contatos primeiro, Serviços e Empresa lado a lado */
   .rod-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
@@ -1047,55 +1058,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .rod-grid .logo-rod { margin-bottom: 20px; }
   .rod-grid ul a { font-size: 15px; display: inline-block; padding: 3px 0; }
   .rod-base { margin-top: 36px; }
-  .rodape { padding-bottom: 100px; }
+  .rodape { padding-bottom: max(40px, calc(env(safe-area-inset-bottom) + 24px)); }
+
+  /* Barra fixa: um botão só, de largura total, que leva ao WhatsApp */
   .zap { display: none; }
   .barra-cel {
-    display: flex; gap: 10px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; padding: 10px 16px 14px;
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    padding: 10px max(16px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     background: var(--fundo); border-top: 1px solid var(--divisa); transform: translateY(110%); transition: transform .4s var(--suave), background-color .35s ease;
   }
   .barra-cel.mostra { transform: none; }
-  .barra-cel .btn { flex: 1; min-height: 48px; }
-  .barra-cel .btn-zap { flex: none; width: 48px; padding: 0; }
-  .barra-cel .btn-zap svg { width: 22px; height: 22px; }
-}
-
-/* ===== Celular enxuto (revisão do Mateus, 13/10): menos itens por seção; o detalhe fica nas páginas internas ===== */
-@media (max-width: 900px) {
-  /* Abertura: o painel fica só com os 3 indicadores e o aviso */
-  .p-graf { display: none; }
-  .p-aviso { margin: 12px 0 0; }
-  /* Dores: três sintomas bastam para o leitor se reconhecer */
-  .sintomas li:nth-child(4) { display: none; }
-  .dores { padding-bottom: 24px; }
-  /* Números: os três que medem o custo da dor; sem o pontilhado atrás do texto */
-  .numero:nth-child(2), .numero:nth-child(4) { display: none; }
-  .mercado .padrao-cv { display: none; }
-  .numero { grid-template-columns: minmax(0, 1fr); padding: 18px 0; }
-  .numero b { grid-row: auto; font-size: 26px; }
-  /* Soluções: título e o resultado; o ANTES já está nas Dores e a etiqueta repete o título */
-  .ad > div:not(.dep), .sol .etiqueta { display: none; }
-  .ad .dep { background: none; border-left: 0; padding: 0; }
-  .ad .dep dt { display: none; }
-  .ad .dep dd { font-size: 16px; font-weight: 400; color: var(--texto); }
-  .sol .rodape-sol { justify-content: flex-start; }
-  /* Demonstração: abas e painel cabem juntos numa tela (o ímã enquadra a partir das abas).
-     Dois indicadores (o primeiro e o que está em alerta), alerta numa frase, gráfico mais baixo, sem o horário. */
-  .dash { --h: 104px; gap: 8px; }
-  .dash .ind-cab .mono { display: none; }
-  .dash .ind-cab { margin-bottom: 8px; }
-  .dash .kpis > .kpi:not(:first-child):not(.atencao):not(.critico) { display: none; }
-  .dash .kpis:not(:has(> .kpi:not(:first-child):is(.atencao, .critico))) > .kpi:nth-child(2) { display: flex; }
-  .aviso-mais { display: none; }
-  .dash-alerta { padding: 9px 12px; }
-  .ch-sub { margin: 2px 0 10px; }
-  .dash-pe { display: none; } /* o subtítulo da seção já diz que os dados são fictícios */
-  .graf-pontos button { height: 28px; }
-  /* FAQ: as 4 primeiras perguntas; as outras com um toque */
-  .faq:not(.todas) details:nth-of-type(n+5) { display: none; }
-  .faq:not(.todas) .faq-mais { display: block; }
-  /* Ferramentas sempre numa linha só, mesmo sem movimento */
-  .sem-mov .faixa { overflow-x: auto; scrollbar-width: none; }
-  .sem-mov .faixa-trilho { width: max-content; flex-wrap: nowrap; padding: 0 16px; }
+  .barra-cel .btn { flex: 1; min-height: 50px; font-size: 16px; }
 }
 
 /* Movimento reduzido: estado final, sem transições */
@@ -1123,8 +1096,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <svg class="i-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
         <svg class="i-lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
       </button>
-      <a class="btn btn-sec so-tela" href="#blog">Blog</a>
-      <a class="btn so-tela" href="#avaliar">Falar com a Trinity</a>
+      <a class="btn btn-sec so-tela" data-blog href="#blog">Blog</a>
+      <a class="btn so-tela" data-cta data-origem="cabecalho" href="#">Conversar no WhatsApp</a>
       <button class="menu-btn so-celular" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu-cel" aria-label="Abrir o menu"><i></i><i></i><i></i></button>
     </div>
     <div class="menu-fundo" id="menu-fundo" aria-hidden="true"></div>
@@ -1134,13 +1107,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <a href="#exemplos">Exemplos</a>
         <a href="#sobre">Sobre</a>
         <a href="#como-funciona">Como funciona</a>
-        <a href="#blog">Blog</a>
+        <a data-blog href="#blog">Blog</a>
         <a href="#perguntas">Perguntas frequentes</a>
       </nav>
-      <button class="menu-tema" type="button" id="menu-tema"><span>Tema</span><span class="menu-tema-v"><span class="so-claro">Claro</span><span class="so-escuro">Escuro</span></span></button>
       <div class="menu-acoes">
-        <a class="btn" href="#avaliar">Falar com a Trinity</a>
-        <a class="btn btn-sec" data-zap href="#">Falar no WhatsApp</a>
+        <a class="btn" data-cta data-icone data-origem="menu" href="#">Conversar no WhatsApp</a>
       </div>
     </div>
   </div>
@@ -1157,10 +1128,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <h1>Os dados da sua empresa num só lugar, sempre atualizados</h1>
         <p class="sub">Centralizamos os dados que hoje estão espalhados em planilhas, sistemas e plataformas e entregamos visibilidade de vendas, caixa e operação, sem montagem manual.</p>
         <div class="chamada">
-          <a class="btn btn-grande" href="#avaliar">Falar com a Trinity</a>
+          <a class="btn btn-grande" data-cta data-icone data-origem="abertura" href="#">Conversar no WhatsApp</a>
           <a class="seta" href="#exemplos">Ver exemplos ↓</a>
         </div>
         <p class="nota">Conte o que você precisa e retornamos o contato.</p>
+        <p class="prova" id="prova" hidden></p>
       </div>
 
       <div class="palco" id="palco" aria-label="Painel de exemplo, visão geral, com dados fictícios">
@@ -1307,6 +1279,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           <div class="rodape-sol"><span class="etiqueta">Automação de relatórios</span><a class="seta" href="#">Ver o serviço →</a></div>
         </article>
       </div>
+      <!-- Celular: os mesmos cartões em blocos que abrem ao tocar, mais o bloco de IA (montados pelo JS a partir dos cartões e da seção #ia) -->
+      <div class="abre-lista sol-lista so-cel-bloco" id="sol-lista"></div>
     </div>
   </section>
 
@@ -1315,7 +1289,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <div class="wrap">
       <h2 class="secao-tit surge">Um painel mostra em segundos o que hoje leva dias para montar</h2>
       <p class="secao-sub surge">Exemplos construídos com dados fictícios, para cenários comuns de gestão.</p>
-      <div class="abas-caixa" id="abas-caixa"><div class="abas" role="tablist" id="abas" aria-label="Exemplos de painel"></div><button class="abas-seta abas-ant" type="button" tabindex="-1" aria-label="Exemplos anteriores">←</button><button class="abas-seta abas-mais" type="button" tabindex="-1" aria-label="Mais exemplos">→</button></div>
+      <div class="abas-caixa" id="abas-caixa"><div class="abas" role="tablist" id="abas" aria-label="Exemplos de painel"></div></div>
+      <!-- Celular: um bloco por exemplo; abrir um fecha os outros, e o painel só é montado quando o bloco abre -->
+      <div class="abre-lista ex-lista so-cel-bloco" id="ex-lista"></div>
       <div class="demo">
         <div class="demo-palco">
           <canvas class="mm" id="mm-demo" aria-hidden="true"></canvas>
@@ -1358,7 +1334,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           <div class="ia-txt"><span class="n">04 · IA</span><h3>IA sobre a base certa</h3><p>Perguntar ao painel em linguagem comum, receber o relatório da semana já resumido, ser avisado com a explicação do que mudou.</p></div>
         </li>
       </ol>
-      <div class="graf-pontos ia-pontos"><span>1 / 4 · deslize</span><div><button type="button" aria-label="Etapa 1" aria-current="true"><i></i></button><button type="button" aria-label="Etapa 2"><i></i></button><button type="button" aria-label="Etapa 3"><i></i></button><button type="button" aria-label="Etapa 4"><i></i></button></div></div>
       <p class="rotulo ia-leg">EXEMPLO · DADOS FICTÍCIOS</p>
     </div>
   </section>
@@ -1367,6 +1342,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   <section class="secao alt porque" id="sobre">
     <div class="wrap">
       <h2 class="secao-tit surge">Quem atende é quem constrói, e o seu time aprende a manter</h2>
+      <p class="prova-sobre" id="prova-sobre" hidden></p>
       <div class="porque-grid">
         <div class="dif surge"><span class="n">01</span><h3>Fala direto com quem constrói.</h3><p>Sem intermediário entre a conversa e a entrega.</p></div>
         <div class="dif surge"><span class="n">02</span><h3>Seu time aprende a manter.</h3><p>O que é construído fica documentado e com a sua equipe.</p></div>
@@ -1380,6 +1356,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   <section class="ferramentas alt" aria-label="Ferramentas">
     <div class="wrap">
       <p class="ferr-frase">Não nos prendemos à ferramenta: escolhemos a que resolve o seu problema.</p>
+      <p class="ferr-lista so-cel-bloco" id="ferr-lista"></p>
     </div>
     <div class="faixa"><div class="faixa-trilho" id="faixa"></div></div>
   </section>
@@ -1416,17 +1393,18 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <li class="passo"><span class="n">05</span><h3>Entrega</h3><p>Treinamento do time para usar e manter o que foi construído.</p></li>
       </ol>
       <div class="como-acao surge">
-        <a class="btn btn-grande" href="#avaliar">Falar com a Trinity</a>
+        <a class="btn btn-grande" data-cta data-icone data-origem="como_funciona" href="#">Conversar no WhatsApp</a>
       </div>
     </div>
   </section>
 
   <!-- 10. Blog -->
-  <section class="secao alt blog" id="blog">
+  <!-- Só aparece com pelo menos um post real em TD_CONFIG.posts -->
+  <section class="secao alt blog" id="blog" hidden>
     <div class="wrap">
       <div class="blog-cab">
         <h2 class="secao-tit surge">Boas práticas para organizar os dados da sua empresa</h2>
-        <a class="seta" href="#">Ver todos os artigos no blog →</a>
+        <a class="seta" id="blog-todos" href="#">Ver todos os artigos no blog →</a>
       </div>
       <div class="posts" id="posts"></div>
     </div>
@@ -1437,7 +1415,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <div class="wrap faq-grid">
       <aside>
         <h2 class="secao-tit surge">Custo, dados, segurança e dependência: respondidos antes da conversa</h2>
-        <p>Não achou a sua? <a class="seta" data-zap href="#">Pergunte direto.</a></p>
+        <p>Não achou a sua? <a class="seta" data-zap data-origem="faq" href="#">Pergunte direto.</a></p>
       </aside>
       <div class="faq" id="faq"></div>
     </div>
@@ -1450,26 +1428,29 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       <div class="final-grid">
         <div>
           <h2 class="final-tit surge">Fale com a Trinity sobre os dados da sua empresa</h2>
-          <p class="final-txt surge">Conte o que você precisa e retornamos o contato.</p>
+          <p class="final-txt surge">Conte o que você precisa pelo WhatsApp.</p>
           <ol class="tres surge">
-            <li><span>1</span>Você deixa seu contato.</li>
-            <li><span>2</span>Retornamos pelo e-mail ou WhatsApp.</li>
+            <li><span>1</span>Você chama no WhatsApp.</li>
+            <li id="passo-prazo"><span>2</span>Respondemos por lá mesmo.</li>
             <li><span>3</span>Entendemos o seu cenário.</li>
           </ol>
         </div>
-        <form class="form superficie surge" id="form" novalidate>
-          <div class="form-campos">
-            <div class="campo"><label for="f-nome">Nome</label><input id="f-nome" name="nome" autocomplete="name" required><span class="msg">Informe o seu nome.</span></div>
-            <div class="campo"><label for="f-email">E-mail corporativo</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="msg">Informe um e-mail válido, como nome@empresa.com.br.</span></div>
-            <div class="campo"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" autocomplete="organization" required><span class="msg">Informe o nome da empresa.</span></div>
-            <div class="campo"><label for="f-tel">Telefone (WhatsApp)</label><input id="f-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required><span class="msg">Informe um telefone com DDD.</span></div>
-            <div class="campo"><label for="f-desc">Qual é o maior problema com os dados hoje?</label><textarea id="f-desc" name="descricao" rows="3" required placeholder="Ex.: o relatório do mês ainda é montado à mão no Excel."></textarea><span class="msg">Conte em poucas palavras o que precisa resolver.</span></div>
-            <button class="btn btn-grande" type="submit">Falar com a Trinity</button>
-            <p class="form-pos">Prefere conversar agora? <a data-zap href="#">Falar no WhatsApp</a></p>
-            <p class="form-legal">Usamos seus dados só para responder ao contato. <a href="/politica-de-privacidade">Política de privacidade</a>.</p>
-          </div>
-          <div class="form-ok" role="status"><b>Contato recebido.</b>Retornaremos pelo e-mail ou WhatsApp informado. </div>
-        </form>
+        <div class="final-acao">
+          <a class="btn btn-grande surge" data-cta data-icone data-origem="final" href="#">Conversar no WhatsApp</a>
+          <!-- Formulário: oculto enquanto TD_CONFIG.formularioDestino estiver vazio (não há para onde enviar) -->
+          <form class="form superficie surge" id="form" novalidate hidden>
+            <div class="form-campos">
+              <p class="form-tit">Prefere que a gente entre em contato?</p>
+              <div class="campo"><label for="f-nome">Nome</label><input id="f-nome" name="nome" autocomplete="name" required><span class="msg">Informe o seu nome.</span></div>
+              <div class="campo"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" autocomplete="organization" required><span class="msg">Informe o nome da empresa.</span></div>
+              <div class="campo"><label for="f-desc">Qual é o maior problema com os dados hoje?</label><textarea id="f-desc" name="descricao" rows="3" required placeholder="Ex.: o relatório do mês ainda é montado à mão no Excel."></textarea><span class="msg">Conte em poucas palavras o que precisa resolver.</span></div>
+              <button class="btn btn-grande btn-sec" type="submit">Enviar</button>
+              <p class="form-falha" role="alert">Não foi possível enviar agora. <a data-zap data-origem="final" href="#">Fale pelo WhatsApp</a>.</p>
+              <p class="form-legal">Usamos seus dados só para responder ao contato. <a href="/politica-de-privacidade">Política de privacidade</a>.</p>
+            </div>
+            <div class="form-ok" role="status"><b>Contato recebido.</b>Obrigado por escrever para a Trinity.</div>
+          </form>
+        </div>
       </div>
     </section>
     <footer class="rodape">
@@ -1478,11 +1459,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           <div>
             <img class="logo-rod" src="assets/td-lockup-mono-negativo.svg" alt="Trinity Data" width="240">
             <p>Consultoria de dados, BI e IA para empresas no Brasil e no exterior.</p>
-            <p><span data-cfg="cidade">Cidade · UF</span></p>
+            <p data-cfg="cidade" hidden></p>
           </div>
           <div><h4>SERVIÇOS</h4><ul><li><a href="#servicos">Dashboards e integração</a></li><li><a href="#servicos">Qualidade de dados</a></li><li><a href="#servicos">Monitoramento e alertas</a></li><li><a href="#servicos">Automação de relatórios</a></li></ul></div>
-          <div><h4>EMPRESA</h4><ul><li><a href="#sobre">Sobre</a></li><li><a href="#blog">Blog</a></li><li><a href="#avaliar">Contato</a></li></ul></div>
-          <div><h4>CONTATO</h4><ul><li><a data-zap href="#">WhatsApp</a></li><li><a data-email href="#">E-mail</a></li><li><a data-linkedin href="#">LinkedIn</a></li></ul></div>
+          <div><h4>EMPRESA</h4><ul><li><a href="#sobre">Sobre</a></li><li><a data-blog href="#blog">Blog</a></li><li><a href="#avaliar">Contato</a></li></ul></div>
+          <div><h4>CONTATO</h4><ul><li><a data-zap data-origem="rodape" href="#">WhatsApp</a></li><li><a data-email href="#">E-mail</a></li><li><a data-linkedin href="#">LinkedIn</a></li></ul></div>
         </div>
         <div class="rod-base"><span>Trinity Data</span><a href="/politica-de-privacidade">Política de privacidade</a></div>
       </div>
@@ -1490,14 +1471,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   </div>
 </main>
 
-<a class="zap" data-zap href="#" aria-label="Falar no WhatsApp">
+<a class="zap" data-zap data-origem="flutuante" href="#" aria-label="Falar no WhatsApp">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9.2 8.6c.3 2.6 2 4.7 4.6 5.6l1.2-1.1 1.8.9-.5 1.6c-3.9.3-8-3.6-8-7.6l1.6-.6.9 1.8z"/></svg>
 </a>
 <div class="barra-cel" id="barra-cel">
-  <a class="btn" href="#avaliar">Falar com a Trinity</a>
-  <a class="btn btn-sec btn-zap" data-zap href="#" aria-label="Falar no WhatsApp">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9.2 8.6c.3 2.6 2 4.7 4.6 5.6l1.2-1.1 1.8.9-.5 1.6c-3.9.3-8-3.6-8-7.6l1.6-.6.9 1.8z"/></svg>
-  </a>
+  <a class="btn" data-cta data-icone data-origem="barra" href="#">Conversar no WhatsApp</a>
 </div>
 
 
@@ -1530,12 +1508,55 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   var celular = matchMedia('(max-width: 900px)');
   function movOn() { return S.movimento && !reduzido.matches; }
 
-  // ---------- Configuração (dados fictícios num só arquivo) ----------
+  // ---------- Configuração (config.js): campo vazio = conteúdo oculto ----------
+  var ICONE_ZAP = '<svg class="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9.2 8.6c.3 2.6 2 4.7 4.6 5.6l1.2-1.1 1.8.9-.5 1.6c-3.9.3-8-3.6-8-7.6l1.6-.6.9 1.8z"/></svg>';
+  // Chamada principal: WhatsApp (padrão) ou o formulário antigo, que só vale com um destino real para ele.
+  // No modo formulário, o botão do fechamento continua no WhatsApp, porque o formulário já está ao lado dele.
+  var ctaForm = CFG.ctaPrincipal === 'formulario' && !!CFG.formularioDestino;
+  document.querySelectorAll('[data-cta]').forEach(function (a) {
+    if (ctaForm && a.dataset.origem !== 'final') { a.textContent = 'Falar com a Trinity'; a.href = '#avaliar'; return; }
+    a.setAttribute('data-zap', '');
+    if (a.hasAttribute('data-icone')) a.insertAdjacentHTML('afterbegin', ICONE_ZAP);
+  });
   var zapUrl = 'https://wa.me/' + (CFG.whatsapp || '') + (CFG.whatsappMensagem ? '?text=' + encodeURIComponent(CFG.whatsappMensagem) : '');
   document.querySelectorAll('[data-zap]').forEach(function (a) { a.href = zapUrl; a.target = '_blank'; a.rel = 'noopener'; });
-  document.querySelectorAll('[data-email]').forEach(function (a) { a.href = 'mailto:' + (CFG.email || ''); });
-  document.querySelectorAll('[data-linkedin]').forEach(function (a) { a.href = CFG.linkedin || '#'; a.target = '_blank'; a.rel = 'noopener'; });
-  document.querySelectorAll('[data-cfg]').forEach(function (el) { if (CFG[el.dataset.cfg]) el.textContent = CFG[el.dataset.cfg]; });
+  document.querySelectorAll('[data-email]').forEach(function (a) { if (CFG.email) a.href = 'mailto:' + CFG.email; });
+  document.querySelectorAll('[data-linkedin]').forEach(function (a) { if (CFG.linkedin) { a.href = CFG.linkedin; a.target = '_blank'; a.rel = 'noopener'; } });
+  document.querySelectorAll('[data-cfg]').forEach(function (el) { if (CFG[el.dataset.cfg]) { el.textContent = CFG[el.dataset.cfg]; el.hidden = false; } });
+  // Prova: número de clientes e prazo de resposta, na abertura; o número também em destaque no Sobre.
+  (function () {
+    var linha = [CFG.textoProva, CFG.prazoResposta ? 'resposta ' + CFG.prazoResposta : ''].filter(Boolean).join(' · ');
+    if (linha) { var p = document.getElementById('prova'); p.textContent = linha; p.hidden = false; }
+    if (CFG.textoProva) {
+      var ps = document.getElementById('prova-sobre'), m = CFG.textoProva.match(/^(\+?[\d.,]+\s?(?:%|mil|mi)?)\s+(.+)$/);
+      if (m) { var b = document.createElement('b'); b.textContent = m[1]; ps.appendChild(b); }
+      var sp = document.createElement('span'); sp.textContent = m ? m[2] : CFG.textoProva; ps.appendChild(sp);
+      ps.hidden = false;
+    }
+    if (CFG.prazoResposta) document.getElementById('passo-prazo').lastChild.textContent = 'Respondemos ' + CFG.prazoResposta + '.';
+  })();
+  // Blog: a seção e os links para ela só aparecem com pelo menos um post real; com o endereço do Ghost, os links vão para lá.
+  var POSTS = (CFG.posts || []).filter(function (p) { return p && p.titulo && p.url; });
+  document.getElementById('blog').hidden = !POSTS.length;
+  document.querySelectorAll('[data-blog]').forEach(function (a) { (a.closest('li') || a).hidden = !POSTS.length; if (CFG.blogUrl) a.href = CFG.blogUrl; });
+  if (CFG.blogUrl) document.getElementById('blog-todos').href = CFG.blogUrl;
+
+  // ---------- Medição: track(evento, dados) chama o provedor de TD_CONFIG.analytics; sem provedor, não faz nada ----------
+  // Os dois provedores previstos funcionam sem cookies. Ao ligar um deles, liberar o domínio na Content-Security-Policy do vercel.json.
+  var AN = CFG.analytics && CFG.analytics.provedor ? CFG.analytics : null;
+  if (AN) {
+    var sc = document.createElement('script'); sc.defer = true;
+    if (AN.provedor === 'umami' && AN.id) { sc.src = AN.src || 'https://cloud.umami.is/script.js'; sc.dataset.websiteId = AN.id; document.head.appendChild(sc); }
+    if (AN.provedor === 'vercel') { window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); }; sc.src = '/_vercel/insights/script.js'; document.head.appendChild(sc); }
+  }
+  function track(evento, dados) {
+    if (!AN) return;
+    try {
+      if (AN.provedor === 'umami' && window.umami) window.umami.track(evento, dados);
+      else if (AN.provedor === 'vercel' && window.va) window.va('event', { name: evento, data: dados });
+    } catch (e) {}
+  }
+  document.addEventListener('click', function (e) { var a = e.target.closest('[data-zap]'); if (a) track('whatsapp_clique', { origem: a.dataset.origem || 'outro' }); });
 
   // ---------- Datas dos exemplos: sempre relativas a hoje (o mês corrente fecha as séries) ----------
   var HOJE = new Date(), MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -1581,11 +1602,13 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   document.addEventListener('pointerleave', function () { ptr.on = false; pedirTudo(); });
 
   // Laço único: cada padrão desenha só quando está na tela e diz se precisa de mais quadros.
+  // Os padrões em canvas (tela: true) não rodam no celular: lá eles nem aparecem.
   var padroes = [], raf = 0;
   function pedirTudo() { if (!raf) raf = requestAnimationFrame(laco); }
+  function vale(p) { return !(p.tela && celular.matches); }
   function laco(agora) {
     raf = 0; var mais = false;
-    padroes.forEach(function (p) { if (p.ativo() && p.quadro(agora)) mais = true; });
+    padroes.forEach(function (p) { if (vale(p) && p.ativo() && p.quadro(agora)) mais = true; });
     if (mais) pedirTudo();
   }
   addEventListener('scroll', pedirTudo, { passive: true });
@@ -1597,9 +1620,15 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     try { localStorage.setItem('td-tema', t); } catch (e) {}
     setTimeout(reconstruir, 30);
   });
+  // No celular o tema acompanha o aparelho, inclusive quando ele troca com a página aberta.
+  var escuroSO = matchMedia('(prefers-color-scheme: dark)');
+  escuroSO.addEventListener('change', function () {
+    if (!celular.matches || params.get('tema')) return;
+    raiz.dataset.tema = escuroSO.matches ? 'escuro' : 'claro'; setTimeout(reconstruir, 30);
+  });
 
   // ---------- Menu do celular ----------
-  // Gaveta lateral: seções, tema e as duas chamadas. Fecha no fundo, no Esc, num link ou ao voltar para a tela larga.
+  // Gaveta lateral: seções e a chamada para o WhatsApp. Fecha no fundo, no Esc, num link ou ao voltar para a tela larga.
   var menuBtn = document.getElementById('menu-btn'), menu = document.getElementById('menu-cel'), menuFundo = document.getElementById('menu-fundo');
   function menuAberto(a) {
     raiz.classList.toggle('menu-on', a); menu.inert = !a;
@@ -1612,7 +1641,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   menu.addEventListener('click', function (e) { if (e.target.closest('a')) menuAberto(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && raiz.classList.contains('menu-on')) { menuAberto(false); menuBtn.focus(); } });
   celular.addEventListener('change', function () { if (!celular.matches) menuAberto(false); });
-  document.getElementById('menu-tema').addEventListener('click', function () { document.getElementById('tema-btn').click(); });
   if (params.has('menu') && celular.matches) menuAberto(true); // capturas
 
   // ================= 1. Abertura =================
@@ -1675,12 +1703,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     })(t0);
     setTimeout(function () { palco.classList.remove('aviso-off'); }, 1300);
   }
-  // Troca de cenário a cada S.cenaSeg segundos, só com a abertura na tela e o movimento ligado.
+  // Troca de cenário a cada S.cenaSeg segundos, só com a abertura na tela e o movimento ligado. No celular o painel fica parado na primeira cena.
   function agendarCena() {
     clearTimeout(cenaT);
     if (!S.cenaSeg || params.has('cena')) return;
     cenaT = setTimeout(function () {
-      if (movOn() && visivel(abertura) && !document.hidden) { cena = (cena + 1) % CENAS.length; aplicarCena(cena, true); }
+      if (movOn() && !celular.matches && visivel(abertura) && !document.hidden) { cena = (cena + 1) % CENAS.length; aplicarCena(cena, true); }
       agendarCena();
     }, S.cenaSeg * 1000);
   }
@@ -1777,7 +1805,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       ctx.globalAlpha = 1;
       return mov && (S.redeVel > 0 || Math.abs(alvo - cur.ativo) > 0.01 || Math.abs(cur.x - cur.sx) > 0.5 || Math.abs(cur.y - cur.sy) > 0.5);
     }
-    padroes.push({ construir: construir, quadro: quadro, ativo: function () { return visivel(abertura); } });
+    padroes.push({ tela: true, construir: construir, quadro: quadro, ativo: function () { return visivel(abertura); } });
   })();
 
   // Milimetrado: chão dos painéis. Os blocos de 5×5 células respiram numa onda lenta, e a célula sob o cursor se acende.
@@ -1844,7 +1872,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       ctx.globalAlpha = 1;
       return respira || rastro.length > 1 || (rastro.length === 1 && ultima === '');
     }
-    var api = { construir: construir, quadro: quadro, ativo: function () { return visivel(cv); } };
+    var api = { tela: true, construir: construir, quadro: quadro, ativo: function () { return visivel(cv); } };
     padroes.push(api); return api;
   }
   criarMilimetrado(document.getElementById('mm-abertura'), 72);
@@ -1877,7 +1905,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       }
       ctx.globalAlpha = 1; return mov;
     }
-    padroes.push({ construir: construir, quadro: quadro, ativo: function () { return visivel(mercado); } });
+    padroes.push({ tela: true, construir: construir, quadro: quadro, ativo: function () { return visivel(mercado); } });
   })();
 
   // ================= 3. Ilustrações das Dores =================
@@ -1953,7 +1981,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       else { rotA.style.opacity = (1 - p).toFixed(2); rotB.style.opacity = p.toFixed(2); }
       return false;
     }
-    padroes.push({ construir: construir, quadro: quadro, ativo: function () { return visivel(passagem); } });
+    padroes.push({ tela: true, construir: construir, quadro: quadro, ativo: function () { return visivel(passagem); } });
   })();
 
   // ================= 5. Ferramentas =================
@@ -1961,6 +1989,29 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     var nomes = ['Power BI', 'Metabase', 'Tableau', 'Looker Studio', 'Excel', 'Python', 'SQL', 'Airflow', 'n8n', 'MySQL', 'PostgreSQL', 'Google Cloud', 'AWS', 'APIs de ERP e CRM'];
     document.getElementById('faixa').innerHTML = nomes.map(function (n) { return '<span>' + n + '</span>'; }).join('') +
       nomes.map(function (n) { return '<span class="dup" aria-hidden="true">' + n + '</span>'; }).join('');
+    document.getElementById('ferr-lista').textContent = nomes.join(' · '); // celular: texto parado, sem rolagem
+  })();
+
+  // ================= 4. Serviços no celular =================
+  // Os cartões viram blocos que abrem ao tocar (ícone e título; aberto, o DEPOIS e o link do serviço, se houver destino).
+  // O 5º bloco traz a seção de IA em versão curta, porque ela não aparece no celular.
+  var ICONE_IA = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="1.8"/><circle cx="19" cy="5" r="1.8"/><circle cx="12" cy="20.2" r="1.8"/><path d="M6.4 6.4l3.4 3.4M17.6 6.4l-3.4 3.4M12 15v3.4"/></svg>';
+  (function () {
+    var lista = document.getElementById('sol-lista'), ia = document.getElementById('ia');
+    function bloco(icone, titulo, corpo) { return '<details><summary>' + icone + '<span>' + titulo + '</span><i aria-hidden="true"></i></summary><div class="abre-corpo">' + corpo + '</div></details>'; }
+    var html = [].map.call(document.querySelectorAll('#servicos .sol'), function (s) {
+      var dest = s.querySelector('.rodape-sol .seta').getAttribute('href');
+      return bloco(s.querySelector('svg.ic').outerHTML, s.querySelector('h3').textContent,
+        '<p>' + s.querySelector('.dep dd').textContent + '</p>' + (dest && dest !== '#' ? '<p><a class="seta" href="' + dest + '">Ver o serviço →</a></p>' : ''));
+    });
+    var passos = [].map.call(ia.querySelectorAll('.ia-txt'), function (t) {
+      return '<li><span>' + t.querySelector('.n').textContent.slice(0, 2) + '</span><div><b>' + t.querySelector('h3').textContent + '</b>' + t.querySelector('p').textContent + '</div></li>';
+    }).join('');
+    var dado = ia.querySelector('.ia-dado');
+    html.push(bloco(ICONE_IA, 'IA sobre os dados certos', '<p>' + ia.querySelector('.secao-sub').textContent + '</p><ol class="abre-passos">' + passos + '</ol>' +
+      '<p class="abre-dado"><b>' + dado.querySelector('b').textContent + '</b> ' + dado.querySelector('p').textContent + ' <cite>(' + dado.querySelector('cite').textContent.split(',')[0] + ')</cite></p>'));
+    lista.innerHTML = html.join('');
+    lista.addEventListener('toggle', function (e) { if (e.target.open) track('servico_aberto', { servico: e.target.querySelector('summary span').textContent }); }, true);
   })();
 
   // ================= 6. Demonstração =================
@@ -2086,8 +2137,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     return '<div class="dash"><div class="dpeca"' + atraso() + '><div class="ind-cab"><span><b>' + e.titulo + '</b> · ' + e.periodo + '</span><span class="mono">atualizado hoje, 08:00</span></div>' +
       '<div class="kpis" style="--n:' + e.kpis.length + '">' + e.kpis.join('') + '</div></div>' +
       '<div class="dpeca dash-alerta ' + l[0] + '"' + (l[0] === 'cr' ? ' role="status"' : '') + atraso() + '><div class="aviso-l"><i></i>' + l[1] + '</div><div class="aviso-t">' + leitura + '</div></div>' +
-      '<div class="dash-graf">' + e.graf.map(function (g) { return g.replace('<div class="ch-card', '<div' + atraso() + ' class="ch-card'); }).join('') + '</div>' +
-      '<div class="graf-pontos"><span>1 / ' + e.graf.length + ' · deslize</span><div>' + e.graf.map(function (g, j) { return '<button type="button" aria-label="Gráfico ' + (j + 1) + '"' + (j ? '' : ' aria-current="true"') + '><i></i></button>'; }).join('') + '</div></div>' + pe + '</div>';
+      '<div class="dash-graf">' + e.graf.map(function (g) { return g.replace('<div class="ch-card', '<div' + atraso() + ' class="ch-card'); }).join('') + '</div>' + pe + '</div>';
   }
   function htmlLado(e) {
     var topo = e.relatorio ? '<p class="tit-rel">O que chega sem ninguém montar</p>' : '';
@@ -2128,7 +2178,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     [].forEach.call(abasEl.children, function (b, j) { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; });
     painelEl.setAttribute('aria-labelledby', 'aba-' + i);
     if (foco) abasEl.children[i].focus();
-    if (celular.matches) abasEl.scrollTo({ left: abasEl.children[i].offsetLeft - 40, behavior: movOn() ? 'smooth' : 'auto' });
     var aplicar = function () {
       painelEl.innerHTML = datas(htmlPainel(EXEMPLOS[i])); ladoEl.innerHTML = htmlLado(EXEMPLOS[i]);
       painelEl.classList.remove('saindo');
@@ -2139,35 +2188,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           var al = painelEl.querySelector('.dash-alerta.cr'); if (al) setTimeout(function () { al.classList.add('acende'); }, 500);
         }); });
       } else painelEl.classList.remove('desenhar');
-      mmDemo.construir(); pedirTudo();
+      if (!celular.matches) mmDemo.construir();
+      pedirTudo();
     };
     clearTimeout(trocaT);
     if (movOn() && demoVisto) { painelEl.classList.add('saindo'); trocaT = setTimeout(aplicar, 150); } else aplicar();
   }
-  // Celular: trilho dos gráficos (um por vez). Os marcadores acompanham o deslize e levam ao gráfico tocado.
-  function trilhoGraf() { return painelEl.querySelector('.dash-graf'); }
-  painelEl.addEventListener('scroll', function (e) {
-    if (!e.target.classList || !e.target.classList.contains('dash-graf')) return;
-    var t = e.target, i = Math.round(t.scrollLeft / (t.clientWidth || 1)), pts = painelEl.querySelectorAll('.graf-pontos button');
-    pts.forEach(function (b, j) { if (j === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
-    var sp = painelEl.querySelector('.graf-pontos span'); if (sp) sp.textContent = (i + 1) + ' / ' + pts.length + ' · deslize';
-  }, true);
-  painelEl.addEventListener('click', function (e) {
-    var b = e.target.closest('.graf-pontos button'); if (!b) return;
-    var t = trilhoGraf(), i = [].indexOf.call(b.parentNode.children, b);
-    t.scrollTo({ left: t.children[i].offsetLeft - t.children[0].offsetLeft, behavior: movOn() ? 'smooth' : 'auto' });
+  abasEl.addEventListener('click', function (e) {
+    var b = e.target.closest('.aba'); if (!b) return;
+    var i = [].indexOf.call(abasEl.children, b);
+    demoVisto = true; mostrar(i); track('exemplo_aberto', { exemplo: EXEMPLOS[i].aba });
   });
-  var abasCaixa = document.getElementById('abas-caixa');
-  function fimAbas() {
-    abasCaixa.classList.toggle('fim', abasEl.scrollLeft + abasEl.clientWidth >= abasEl.scrollWidth - 4);
-    abasCaixa.classList.toggle('inicio', abasEl.scrollLeft <= 4);
-  }
-  abasCaixa.querySelectorAll('.abas-seta').forEach(function (b) {
-    b.addEventListener('click', function () { abasEl.scrollBy({ left: (b.classList.contains('abas-mais') ? 1 : -1) * abasEl.clientWidth * 0.6, behavior: movOn() ? 'smooth' : 'auto' }); });
-  });
-  abasEl.addEventListener('scroll', fimAbas, { passive: true });
-  addEventListener('resize', fimAbas); fimAbas();
-  abasEl.addEventListener('click', function (e) { var b = e.target.closest('.aba'); if (b) { demoVisto = true; mostrar([].indexOf.call(abasEl.children, b)); } });
   abasEl.addEventListener('keydown', function (e) {
     var n = EXEMPLOS.length, i = atual;
     if (e.key === 'ArrowRight') i = (atual + 1) % n; else if (e.key === 'ArrowLeft') i = (atual - 1 + n) % n; else if (e.key === 'Home') i = 0; else if (e.key === 'End') i = n - 1; else return;
@@ -2183,6 +2214,24 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (es[0].isIntersecting) { ob.disconnect(); mostrar(atual); demoVisto = true; }
   }, { threshold: 0.5 }).observe(painelEl.parentNode);
 
+  // Celular: um bloco por exemplo, no lugar das abas. O primeiro começa aberto, abrir um fecha os outros
+  // (name="exemplos", com o mesmo efeito pelo JS onde o navegador não tem esse recurso) e o painel só é montado quando o bloco abre.
+  (function () {
+    var lista = document.getElementById('ex-lista');
+    lista.innerHTML = EXEMPLOS.map(function (e, i) {
+      return '<details name="exemplos" data-i="' + i + '"' + (i === 0 ? ' open data-inicial' : '') + '><summary><span>' + e.aba + '</span><i aria-hidden="true"></i></summary><div class="abre-corpo">' + (i === 0 ? datas(htmlPainel(e)) : '') + '</div></details>';
+    }).join('');
+    lista.addEventListener('toggle', function (e) {
+      var d = e.target, inicial = d.hasAttribute('data-inicial');
+      d.removeAttribute('data-inicial');
+      if (!d.open || inicial) return; // a abertura do primeiro, no carregamento, não conta como visita
+      lista.querySelectorAll('details[open]').forEach(function (o) { if (o !== d) o.open = false; });
+      var corpo = d.querySelector('.abre-corpo'), ex = EXEMPLOS[+d.dataset.i];
+      if (!corpo.firstChild) corpo.innerHTML = datas(htmlPainel(ex));
+      track('exemplo_aberto', { exemplo: ex.aba });
+    }, true);
+  })();
+
   // ================= 7. Ondas (avançam passo a passo) =================
   // A sequência roda sozinha quando a seção entra na tela: um passo a cada 0,5 s, sem prender a rolagem.
   var como = document.getElementById('como-funciona'), passosEl = document.querySelectorAll('.passo'), passoComo = 0, comoT = [];
@@ -2195,11 +2244,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   new IntersectionObserver(function (es, ob) { if (es[0].isIntersecting) { ob.disconnect(); rodarComo(); } }, { threshold: 0.35 }).observe(como);
   (function () {
     var cv = document.getElementById('cv-ondas'), C, K = {}, ultimo = -1, vis = 0;
-    function construir() { C = prepCanvas(cv); K.b = cor(cv, '--pad-b'); K.a = cor(cv, '--pad-a'); ultimo = -1; }
+    function construir() { if (celular.matches) return; C = prepCanvas(cv); K.b = cor(cv, '--pad-b'); K.a = cor(cv, '--pad-a'); ultimo = -1; }
     function quadro() {
-      if (!C) return false;
       var passo = movOn() ? passoComo : 5;
       passosEl.forEach(function (el, i) { el.classList.toggle('ativo', i < passo); });
+      if (!C || celular.matches) return false; // no celular os passos acendem, mas as ondas não aparecem
       var alvo = passo * 4 + 3, mov = movOn();
       vis += (alvo - vis) * (mov ? 0.12 : 1);
       if (Math.abs(vis - ultimo) < 0.01) return false; ultimo = vis;
@@ -2217,8 +2266,10 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   })();
 
   // ================= 10. Blog =================
+  // Os posts vêm de TD_CONFIG.posts; sem nenhum, a seção fica oculta. A tela larga mostra três; o celular, uma lista de até três.
   (function () {
-    var posts = [['Boas práticas', 'Título do artigo a definir'], ['Como trabalhamos', 'Título do artigo a definir'], ['Boas práticas', 'Título do artigo a definir']];
+    if (!POSTS.length) return;
+    function txt(t) { var d = document.createElement('div'); d.textContent = t || ''; return d.innerHTML; }
     var linhasG = '', i;
     for (i = 0; i <= 20; i++) linhasG += '<path d="M' + i * 16 + ' 0V200"/>';
     for (i = 0; i <= 12; i++) linhasG += '<path d="M0 ' + i * 16 + 'H320"/>';
@@ -2230,10 +2281,13 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + arcos + '</svg>',
       '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + colunas + '<path d="M28 170.5H300" style="stroke:var(--eixo)"/></svg>'
     ];
-    document.getElementById('posts').innerHTML = posts.map(function (p, i) { return '<a class="post surge" href="#"><span class="img">' + arte[i] + '</span><span class="etiqueta">' + p[0] + '</span><h3>' + p[1] + '</h3></a>'; }).join('');
+    document.getElementById('posts').innerHTML = POSTS.slice(0, 3).map(function (p, i) {
+      return '<a class="post surge" href="' + txt(p.url) + '"><span class="img">' + arte[i] + '</span><span class="post-txt">' + (p.categoria ? '<span class="etiqueta">' + txt(p.categoria) + '</span>' : '') + '<h3>' + txt(p.titulo) + '</h3></span></a>';
+    }).join('');
   })();
 
   // ================= 11. Perguntas frequentes =================
+  // Cada pergunta: [pergunta, resposta, resposta provisória, endereço opcional do artigo com a resposta completa].
   (function () {
     var faq = [
       ['Quanto custa e como funciona a contratação?', 'A primeira conversa serve para entender o seu cenário. A análise e o projeto têm proposta própria, feita a partir do que a sua empresa precisa.', false],
@@ -2248,24 +2302,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     ];
     var faqEl = document.getElementById('faq');
     faqEl.innerHTML = faq.map(function (f, i) {
-      return '<details' + (i === 0 ? ' open' : '') + '><summary>' + f[0] + '<i aria-hidden="true"></i></summary><div class="resp"><p>' + f[1] + (f[2] ? '' : '') + '</p><a class="seta" href="#">Resposta completa no blog →</a></div></details>';
+      return '<details' + (i === 0 ? ' open' : '') + '><summary>' + f[0] + '<i aria-hidden="true"></i></summary><div class="resp"><p>' + f[1] + (f[2] ? '' : '') + '</p>' + (f[3] ? '<a class="seta" href="' + f[3] + '">Resposta completa no blog →</a>' : '') + '</div></details>';
     }).join('') + '<button class="faq-mais" type="button" aria-expanded="false">Ver mais ' + (faq.length - 4) + ' perguntas</button>';
     // No celular aparecem as 4 primeiras; o resto abre com um toque.
     faqEl.querySelector('.faq-mais').addEventListener('click', function () {
       faqEl.classList.add('todas'); this.setAttribute('aria-expanded', 'true');
     });
-  })();
-
-  // IA no celular: o indicador acompanha o deslize do trilho; tocar num traço leva à etapa.
-  (function () {
-    var tr = document.querySelector('.ia-trilha'), pts = document.querySelectorAll('.ia-pontos button'), sp = document.querySelector('.ia-pontos span');
-    function passo() { return (tr.children[1].offsetLeft - tr.children[0].offsetLeft) || 1; }
-    tr.addEventListener('scroll', function () {
-      var i = Math.min(pts.length - 1, Math.round(tr.scrollLeft / passo()));
-      pts.forEach(function (b, j) { b.setAttribute('aria-current', String(j === i)); });
-      sp.textContent = (i + 1) + ' / ' + pts.length + ' · deslize';
-    }, { passive: true });
-    pts.forEach(function (b, j) { b.addEventListener('click', function () { tr.scrollTo({ left: j * passo(), behavior: 'smooth' }); }); });
   })();
 
   // IA: cenários que se alternam, nos mesmos temas da abertura. O cartão 2 mostra o número, igual em todas as áreas;
@@ -2312,13 +2354,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   })();
 
   // ================= 12. Formulário =================
+  // Só aparece com TD_CONFIG.formularioDestino preenchido. Envia de verdade; "Contato recebido" só depois de uma resposta
+  // de sucesso, e uma falha mostra o link do WhatsApp. Ao ligar, liberar o destino em connect-src no vercel.json.
   (function () {
-    var form = document.getElementById('form');
+    var form = document.getElementById('form'), destino = CFG.formularioDestino;
+    form.hidden = !destino && !params.has('erro'); // ?erro mostra o formulário e o estado de erro nas capturas
     var regras = {
       nome: function (v) { return v.trim().length > 1; },
-      email: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); },
       empresa: function (v) { return v.trim().length > 1; },
-      telefone: function (v) { return v.replace(/\D/g, '').length >= 10; },
       descricao: function (v) { return v.trim().length >= 3; }
     };
     function checar(inp) { var ok = regras[inp.name](inp.value); inp.parentNode.classList.toggle('erro', !ok); inp.setAttribute('aria-invalid', String(!ok)); return ok; }
@@ -2327,11 +2370,16 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       var primeiro = null;
       form.querySelectorAll('input, textarea').forEach(function (inp) { if (!checar(inp) && !primeiro) primeiro = inp; });
       if (primeiro) { primeiro.focus(); return; }
-      form.classList.add('enviado');
+      if (!destino) return;
+      var bt = form.querySelector('[type=submit]');
+      form.classList.remove('falhou'); bt.disabled = true;
+      fetch(destino, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); form.classList.add('enviado'); })
+        .catch(function () { form.classList.add('falhou'); })
+        .then(function () { bt.disabled = false; });
     });
     form.addEventListener('input', function (e) { if (e.target.parentNode.classList.contains('erro')) checar(e.target); });
-    // ?erro mostra o estado de erro nas capturas
-    if (params.has('erro')) form.querySelectorAll('input, textarea').forEach(function (inp, i) { if (i === 0) inp.value = 'Cláudio'; if (i === 1) inp.value = 'claudio@empresa'; checar(inp); });
+    if (params.has('erro')) form.querySelectorAll('input, textarea').forEach(function (inp, i) { if (i === 0) inp.value = 'Cláudio'; checar(inp); });
   })();
 
   // ================= 12–13. Séries (movimento lento, quase parado) =================
@@ -2356,19 +2404,24 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       ctx.globalAlpha = 1;
       return mov && S.serVel > 0;
     }
-    padroes.push({ construir: construir, quadro: quadro, ativo: function () { return visivel(finalEl); } });
+    padroes.push({ tela: true, construir: construir, quadro: quadro, ativo: function () { return visivel(finalEl); } });
   })();
 
   // ================= Entrada dos blocos, barra do celular, rolagem =================
   var surgir = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visto'); surgir.unobserve(e.target); } });
   }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-  function observarSurge() { document.querySelectorAll('.surge:not(.visto)').forEach(function (el) { if (movOn()) surgir.observe(el); else el.classList.add('visto'); }); }
+  // No celular os blocos já aparecem no lugar, sem a entrada animada.
+  function observarSurge() { document.querySelectorAll('.surge:not(.visto)').forEach(function (el) { if (movOn() && !celular.matches) surgir.observe(el); else el.classList.add('visto'); }); }
 
-  var barraCel = document.getElementById('barra-cel'), aberturaFora = false, finalDentro = false;
+  // Barra do celular: aparece depois da abertura e some quando o fechamento (com o rodapé) entra na tela.
+  var barraCel = document.getElementById('barra-cel'), aberturaFora = false, finalDentro = false, fimContado = false;
   function atualizarBarra() { var on = aberturaFora && !finalDentro; barraCel.classList.toggle('mostra', on); document.body.classList.toggle('barra-on', on); }
   new IntersectionObserver(function (es) { aberturaFora = !es[0].isIntersecting; atualizarBarra(); }).observe(abertura);
-  new IntersectionObserver(function (es) { finalDentro = es[0].isIntersecting; atualizarBarra(); }, { threshold: 0.05 }).observe(document.getElementById('avaliar'));
+  new IntersectionObserver(function (es) {
+    finalDentro = es[0].isIntersecting; atualizarBarra();
+    if (finalDentro && !fimContado) { fimContado = true; track('fim_da_pagina'); }
+  }, { threshold: 0.05 }).observe(finalEl);
 
   var lenis = null;
   function rolagem() {
@@ -2379,19 +2432,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       lenis.on('scroll', pedirTudo);
     } else if (!quer && lenis) { lenis.destroy(); lenis = null; }
   }
-  // Ímãs de rolagem: quando a rolagem para perto de um bloco, a página desliza até enquadrá-lo inteiro.
-  // Tela larga: a demonstração logo abaixo do cabeçalho e o bloco de IA centrado na área útil.
-  // Celular: as abas e o painel da demonstração, a partir das abas.
+  // Ímãs de rolagem (só na tela larga): quando a rolagem para perto de um bloco, a página desliza até enquadrá-lo inteiro:
+  // a demonstração logo abaixo do cabeçalho e o bloco de IA centrado na área útil.
   var exemplosEl = document.getElementById('exemplos'), imaT = 0, imaAte = 0;
   function alvosIma(cab) {
-    if (celular.matches) return [{ el: document.getElementById('abas-caixa'), d: function (r) { return r.top - cab - 12; } }];
     return [
       { el: exemplosEl, d: function (r) { return r.top - cab; } },
       { el: document.querySelector('#ia .wrap'), d: function (r) { return r.top - cab - Math.max(0, (innerHeight - cab - r.height) / 2); } }
     ];
   }
   function enquadrar() {
-    if (!movOn() || performance.now() < imaAte) return;
+    if (celular.matches || !movOn() || performance.now() < imaAte) return;
     var cab = document.querySelector('.cab').offsetHeight, d = null;
     alvosIma(cab).forEach(function (a) {
       var x = a.d(a.el.getBoundingClientRect());
@@ -2402,7 +2453,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (lenis) lenis.scrollTo(scrollY + d, { duration: 0.7 });
     else window.scrollTo({ top: scrollY + d, behavior: 'smooth' });
   }
-  addEventListener('scroll', function () { clearTimeout(imaT); imaT = setTimeout(enquadrar, celular.matches ? 220 : 160); }, { passive: true });
+  addEventListener('scroll', function () { clearTimeout(imaT); imaT = setTimeout(enquadrar, 160); }, { passive: true });
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#"]'); if (!a) return;
     var id = a.getAttribute('href');
@@ -2410,18 +2461,21 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     if (id.length < 2) return;
     var alvo = document.querySelector(id); if (!alvo) return;
     var off = -document.querySelector('.cab').offsetHeight;
-    // Na tela larga, a chamada final centraliza o formulário (o bloco mais alto) na área abaixo do cabeçalho.
-    if (id === '#avaliar' && !celular.matches) { alvo = document.getElementById('form'); off -= Math.max(16, (innerHeight + off - alvo.offsetHeight) / 2); }
+    // Na tela larga, a chamada final fica centrada na área abaixo do cabeçalho.
+    if (id === '#avaliar' && !celular.matches) { alvo = document.querySelector('.final-grid'); off -= Math.max(16, (innerHeight + off - alvo.offsetHeight) / 2); }
     if (lenis) lenis.scrollTo(alvo, { offset: off }); else window.scrollTo({ top: alvo.getBoundingClientRect().top + scrollY + off, behavior: movOn() ? 'smooth' : 'auto' });
   });
 
   // ================= Início =================
+  // Nenhum link visível sem destino: o que ainda aponta para "#" fica oculto até ganhar endereço.
+  document.querySelectorAll('a[href="#"]').forEach(function (a) { (a.closest('li') || a).hidden = true; });
+
   function reconstruir() {
     caberExemplos();
     raiz.classList.toggle('sem-mov', !movOn());
     raiz.classList.toggle('marcar-prov', !!S.prov);
     document.getElementById('caso').hidden = !S.caso;
-    padroes.forEach(function (p) { p.construir(); });
+    padroes.forEach(function (p) { if (vale(p)) p.construir(); });
     observarSurge(); rolagem(); pedirTudo();
   }
   var tReflow;

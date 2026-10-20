@@ -1,9 +1,14 @@
-// Dados de contato e da empresa: o único lugar onde ficam. O WhatsApp já é o real; os demais ainda são fictícios.
+// Dados de contato e da empresa: o único lugar onde ficam. O WhatsApp já é o real.
+// Todo campo vazio deixa oculto o conteúdo que depende dele, e o site funciona assim (MUDANCAS-SITE.md).
 window.TD_CONFIG = {
-  dominio: 'trinitydata.exemplo',
   whatsapp: '5511956511090', // real: +55 11 95651-1090
   whatsappMensagem: 'Olá! Vim pelo site da Trinity Data e gostaria de conversar sobre os dados da minha empresa.',
-  email: 'contato@trinitydata.exemplo',
-  linkedin: 'https://www.linkedin.com/company/trinity-data-exemplo',
-  cidade: 'Cidade · UF'
+  ctaPrincipal: 'whatsapp', // 'whatsapp' | 'formulario' (o formulário só vale com formularioDestino preenchido)
+  textoProva: '', // ex.: '+120 empresas já atendidas pelos nossos especialistas' (vazio = oculto)
+  prazoResposta: '', // ex.: 'em até 1 dia útil' (vazio = oculto; o passo 2 do fechamento fica genérico)
+  formularioDestino: '', // URL que recebe o formulário de verdade (vazio = formulário oculto)
+  posts: [], // [{ titulo, categoria, url }] (vazio = seção Blog oculta, e somem os links para ela)
+  blogUrl: '', // endereço do blog no Ghost (ex.: https://blog.dominio.com.br/); vazio = sem o link "Ver todos os artigos"
+  analytics: null, // ex.: { provedor: 'umami', id: '...' } ou { provedor: 'vercel' } (null = sem medição)
+  dominio: '', email: '', linkedin: '', cidade: '' // vazios até haver dados reais
 };
