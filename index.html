@@ -225,6 +225,7 @@ a:hover { color: var(--link-hover); }
 .cab nav a { color: var(--texto); text-decoration: none; }
 .cab nav a:hover { color: var(--link-hover); }
 .cab-acoes { display: flex; gap: 12px; align-items: center; }
+.cab-acoes .btn { white-space: nowrap; }
 .tema-btn {
   width: 40px; height: 40px; padding: 0; border-radius: 6px; cursor: pointer;
   background: transparent; color: var(--texto); border: 1.5px solid var(--divisa);
@@ -907,6 +908,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .sub { font-size: 16px; }
   .chamada { margin-top: 24px; gap: 16px; }
   .chamada .btn { width: 100%; }
+  .btn-grande { padding: 15px 16px; font-size: 16px; } /* "Falar com a Trinity no WhatsApp" numa linha só, até 360 px */
   .abertura .nota { display: none; } /* a barra fixa cumpre esse papel */
   .prova { margin-top: 14px; }
   .palco { height: auto; }
@@ -1097,7 +1099,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <svg class="i-lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
       </button>
       <a class="btn btn-sec so-tela" data-blog href="#blog">Blog</a>
-      <a class="btn so-tela" data-cta data-origem="cabecalho" href="#">Conversar no WhatsApp</a>
+      <a class="btn so-tela" data-cta data-origem="cabecalho" href="#">Falar no WhatsApp</a>
       <button class="menu-btn so-celular" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu-cel" aria-label="Abrir o menu"><i></i><i></i><i></i></button>
     </div>
     <div class="menu-fundo" id="menu-fundo" aria-hidden="true"></div>
@@ -1111,7 +1113,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <a href="#perguntas">Perguntas frequentes</a>
       </nav>
       <div class="menu-acoes">
-        <a class="btn" data-cta data-icone data-origem="menu" href="#">Conversar no WhatsApp</a>
+        <a class="btn" data-cta data-icone data-origem="menu" href="#">Falar com a Trinity no WhatsApp</a>
       </div>
     </div>
   </div>
@@ -1128,7 +1130,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <h1>Os dados da sua empresa num só lugar, sempre atualizados</h1>
         <p class="sub">Centralizamos os dados que hoje estão espalhados em planilhas, sistemas e plataformas e entregamos visibilidade de vendas, caixa e operação, sem montagem manual.</p>
         <div class="chamada">
-          <a class="btn btn-grande" data-cta data-icone data-origem="abertura" href="#">Conversar no WhatsApp</a>
+          <a class="btn btn-grande" data-cta data-icone data-origem="abertura" href="#">Falar com a Trinity no WhatsApp</a>
           <a class="seta" href="#exemplos">Ver exemplos ↓</a>
         </div>
         <p class="nota">Conte o que você precisa e retornamos o contato.</p>
@@ -1393,7 +1395,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <li class="passo"><span class="n">05</span><h3>Entrega</h3><p>Treinamento do time para usar e manter o que foi construído.</p></li>
       </ol>
       <div class="como-acao surge">
-        <a class="btn btn-grande" data-cta data-icone data-origem="como_funciona" href="#">Conversar no WhatsApp</a>
+        <a class="btn btn-grande" data-cta data-icone data-origem="como_funciona" href="#">Falar com a Trinity no WhatsApp</a>
       </div>
     </div>
   </section>
@@ -1436,19 +1438,23 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           </ol>
         </div>
         <div class="final-acao">
-          <a class="btn btn-grande surge" data-cta data-icone data-origem="final" href="#">Conversar no WhatsApp</a>
+          <a class="btn btn-grande surge" data-cta data-icone data-origem="final" href="#">Falar com a Trinity no WhatsApp</a>
           <!-- Formulário: oculto enquanto TD_CONFIG.formularioDestino estiver vazio (não há para onde enviar) -->
           <form class="form superficie surge" id="form" novalidate hidden>
             <div class="form-campos">
               <p class="form-tit">Prefere que a gente entre em contato?</p>
               <div class="campo"><label for="f-nome">Nome</label><input id="f-nome" name="nome" autocomplete="name" required><span class="msg">Informe o seu nome.</span></div>
               <div class="campo"><label for="f-empresa">Empresa</label><input id="f-empresa" name="empresa" autocomplete="organization" required><span class="msg">Informe o nome da empresa.</span></div>
+              <div class="campo"><label for="f-contato">WhatsApp ou e-mail</label><input id="f-contato" name="contato" autocomplete="email" inputmode="email" required><span class="msg">Informe um WhatsApp com DDD ou um e-mail, para a resposta.</span></div>
               <div class="campo"><label for="f-desc">Qual é o maior problema com os dados hoje?</label><textarea id="f-desc" name="descricao" rows="3" required placeholder="Ex.: o relatório do mês ainda é montado à mão no Excel."></textarea><span class="msg">Conte em poucas palavras o que precisa resolver.</span></div>
+              <!-- Formspree: assunto do e-mail e campo-armadilha contra robôs (fica escondido para pessoas) -->
+              <input type="hidden" name="_subject" value="Contato pelo site da Trinity Data">
+              <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
               <button class="btn btn-grande btn-sec" type="submit">Enviar</button>
               <p class="form-falha" role="alert">Não foi possível enviar agora. <a data-zap data-origem="final" href="#">Fale pelo WhatsApp</a>.</p>
               <p class="form-legal">Usamos seus dados só para responder ao contato. <a href="/politica-de-privacidade">Política de privacidade</a>.</p>
             </div>
-            <div class="form-ok" role="status"><b>Contato recebido.</b>Obrigado por escrever para a Trinity.</div>
+            <div class="form-ok" role="status"><b>Contato recebido.</b>Vamos responder pelo WhatsApp ou e-mail que você informou.</div>
           </form>
         </div>
       </div>
@@ -1475,7 +1481,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9.2 8.6c.3 2.6 2 4.7 4.6 5.6l1.2-1.1 1.8.9-.5 1.6c-3.9.3-8-3.6-8-7.6l1.6-.6.9 1.8z"/></svg>
 </a>
 <div class="barra-cel" id="barra-cel">
-  <a class="btn" data-cta data-icone data-origem="barra" href="#">Conversar no WhatsApp</a>
+  <a class="btn" data-cta data-icone data-origem="barra" href="#">Falar com a Trinity no WhatsApp</a>
 </div>
 
 
@@ -2362,13 +2368,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     var regras = {
       nome: function (v) { return v.trim().length > 1; },
       empresa: function (v) { return v.trim().length > 1; },
+      contato: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) || v.replace(/\D/g, '').length >= 10; },
       descricao: function (v) { return v.trim().length >= 3; }
     };
     function checar(inp) { var ok = regras[inp.name](inp.value); inp.parentNode.classList.toggle('erro', !ok); inp.setAttribute('aria-invalid', String(!ok)); return ok; }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var primeiro = null;
-      form.querySelectorAll('input, textarea').forEach(function (inp) { if (!checar(inp) && !primeiro) primeiro = inp; });
+      form.querySelectorAll('.campo input, .campo textarea').forEach(function (inp) { if (!checar(inp) && !primeiro) primeiro = inp; });
       if (primeiro) { primeiro.focus(); return; }
       if (!destino) return;
       var bt = form.querySelector('[type=submit]');
@@ -2379,7 +2386,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         .then(function () { bt.disabled = false; });
     });
     form.addEventListener('input', function (e) { if (e.target.parentNode.classList.contains('erro')) checar(e.target); });
-    if (params.has('erro')) form.querySelectorAll('input, textarea').forEach(function (inp, i) { if (i === 0) inp.value = 'Cláudio'; checar(inp); });
+    if (params.has('erro')) form.querySelectorAll('.campo input, .campo textarea').forEach(function (inp, i) { if (i === 0) inp.value = 'Cláudio'; checar(inp); });
   })();
 
   // ================= 12–13. Séries (movimento lento, quase parado) =================

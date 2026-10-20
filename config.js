@@ -6,7 +6,7 @@ window.TD_CONFIG = {
   ctaPrincipal: 'whatsapp', // 'whatsapp' | 'formulario' (o formulário só vale com formularioDestino preenchido)
   textoProva: '', // ex.: '+120 empresas já atendidas pelos nossos especialistas' (vazio = oculto)
   prazoResposta: '', // ex.: 'em até 1 dia útil' (vazio = oculto; o passo 2 do fechamento fica genérico)
-  formularioDestino: '', // URL que recebe o formulário de verdade (vazio = formulário oculto)
+  formularioDestino: 'https://formspree.io/f/mgaobpqj', // Formspree (envia por e-mail aos sócios); vazio = formulário oculto
   posts: [], // [{ titulo, categoria, url }] (vazio = seção Blog oculta, e somem os links para ela)
   blogUrl: '', // endereço do blog no Ghost (ex.: https://blog.dominio.com.br/); vazio = sem o link "Ver todos os artigos"
   analytics: null, // ex.: { provedor: 'umami', id: '...' } ou { provedor: 'vercel' } (null = sem medição)
