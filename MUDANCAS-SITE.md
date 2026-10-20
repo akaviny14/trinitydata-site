@@ -36,6 +36,9 @@ O código está no ramo `mobile-whatsapp` do projeto. As mudanças marcadas com 
 |---|---|---|---|---|
 | M22 | Rótulo dos botões: "Falar com a Trinity no WhatsApp" nos botões grandes e "Falar no WhatsApp" no cabeçalho. Botões grandes com 16 px de lado no celular, para caber numa linha até 360 px. | celular, desktop e blog | Junta o "Falar com a Trinity" que o Mateus queria com o "WhatsApp" escrito no botão que a pesquisa indicou; "WhatsApp Trinity" não tem verbo e soa como nome de produto. | Trocar o texto dos elementos `data-cta`. |
 | M23 | Formulário ligado ao Formspree (`https://formspree.io/f/mgaobpqj`), com o campo "WhatsApp ou e-mail"; `formspree.io` liberado em `connect-src` nos dois `vercel.json`; política de privacidade com o Formspree como recebedor. | celular e desktop | Decisão dos sócios: testar o Formspree. | `formularioDestino: ''`. |
+| M24 | Sem ímãs de rolagem: a página não desliza mais sozinha para enquadrar os Exemplos e o bloco de IA. | desktop | Os ímãs puxavam a página e brigavam com a roda do mouse (reclamação de 20/10; numa simulação com a roda, saltos de 325 px quando a pessoa descia 100). | Reverter o commit. |
+| M25 | Exemplos: "Relatório automático" passa a ser o primeiro (aba e bloco do celular). Na tela larga, os painéis trocam sozinhos a cada 9 s com a demonstração na tela; a troca pausa com o foco do teclado e para quando o visitante escolhe uma aba. No celular não há troca automática. | desktop e celular | O relatório é o que o gestor quer ver; a troca mostra os outros painéis sem exigir clique. | Reverter o commit. |
+| M26 | Ícone da aba do navegador com o símbolo oficial. | celular e desktop | O site pedia `favicon.ico`, que não existia, e o console mostrava um erro 404. | Reverter o commit. |
 
 ## Medidas da rodada
 
