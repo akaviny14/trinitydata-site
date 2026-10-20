@@ -39,6 +39,7 @@ O código está no ramo `mobile-whatsapp` do projeto. As mudanças marcadas com 
 | M24 | Sem ímãs de rolagem: a página não desliza mais sozinha para enquadrar os Exemplos e o bloco de IA. | desktop | Os ímãs puxavam a página e brigavam com a roda do mouse (reclamação de 20/10; numa simulação com a roda, saltos de 325 px quando a pessoa descia 100). | Reverter o commit. |
 | M25 | Exemplos: "Relatório automático" passa a ser o primeiro (aba e bloco do celular). Na tela larga, os painéis trocam sozinhos a cada 9 s com a demonstração na tela; a troca pausa com o foco do teclado e para quando o visitante escolhe uma aba. No celular não há troca automática. | desktop e celular | O relatório é o que o gestor quer ver; a troca mostra os outros painéis sem exigir clique. | Reverter o commit. |
 | M26 | Ícone da aba do navegador com o símbolo oficial. | celular e desktop | O site pedia `favicon.ico`, que não existia, e o console mostrava um erro 404. | Reverter o commit. |
+| M27 | Ícones de LinkedIn, Instagram e YouTube no rodapé, abaixo da descrição, no site e no blog. Cada um só aparece com o endereço preenchido (`linkedin`, `instagram`, `youtube` no `config.js`; Customize no Ghost). O LinkedIn sai da lista de texto da coluna Contato. No blog, os padrões do tema deixam de trazer o e-mail fictício e o texto antigo da chamada final. | celular, desktop e blog | Pedido do Vinicius. | Esvaziar os campos. |
 
 ## Medidas da rodada
 

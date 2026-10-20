@@ -843,6 +843,10 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 .rod-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: 48px; }
 .rod-grid .logo-rod { display: block; width: 240px; height: auto; margin-bottom: 28px; }
 .rod-grid p { font-size: 15px; line-height: 1.6; margin: 0 0 8px; max-width: 38ch; }
+.redes { display: flex; gap: 4px; margin: 16px 0 0 -10px !important; }
+.redes a { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 6px; color: var(--texto); transition: color .2s ease, background-color .2s ease; }
+.redes a:hover { color: var(--titulo); background: var(--botao2-hover); }
+.redes svg { width: 22px; height: 22px; }
 .rod-grid h4 { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; font-weight: 500; color: var(--texto-suave); margin: 0 0 14px; }
 .rod-grid ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .rod-grid ul a { font-size: 15px; color: var(--texto); text-decoration: none; }
@@ -1467,10 +1471,12 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
             <img class="logo-rod" src="assets/td-lockup-mono-negativo.svg" alt="Trinity Data" width="240">
             <p>Consultoria de dados, BI e IA para empresas no Brasil e no exterior.</p>
             <p data-cfg="cidade" hidden></p>
+            <!-- Redes sociais: cada ícone só aparece com o endereço no config.js (linkedin, instagram, youtube) -->
+            <p class="redes" id="redes" hidden><a data-rede="linkedin" href="#" aria-label="Trinity Data no LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V16M8 7.6v.01M11.5 16v-5.5M11.5 13.2c0-1.7 1-2.7 2.4-2.7S16 11.5 16 13.2V16"/></svg></a><a data-rede="instagram" href="#" aria-label="Trinity Data no Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.3 6.7v.01"/></svg></a><a data-rede="youtube" href="#" aria-label="Trinity Data no YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.5 9.5l4 2.5-4 2.5z"/></svg></a></p>
           </div>
           <div><h4>SERVIÇOS</h4><ul><li><a href="#servicos">Dashboards e integração</a></li><li><a href="#servicos">Qualidade de dados</a></li><li><a href="#servicos">Monitoramento e alertas</a></li><li><a href="#servicos">Automação de relatórios</a></li></ul></div>
           <div><h4>EMPRESA</h4><ul><li><a href="#sobre">Sobre</a></li><li><a data-blog href="#blog">Blog</a></li><li><a href="#avaliar">Contato</a></li></ul></div>
-          <div><h4>CONTATO</h4><ul><li><a data-zap data-origem="rodape" href="#">WhatsApp</a></li><li><a data-email href="#">E-mail</a></li><li><a data-linkedin href="#">LinkedIn</a></li></ul></div>
+          <div><h4>CONTATO</h4><ul><li><a data-zap data-origem="rodape" href="#">WhatsApp</a></li><li><a data-email href="#">E-mail</a></li></ul></div>
         </div>
         <div class="rod-base"><span>Trinity Data</span><a href="/politica-de-privacidade">Política de privacidade</a></div>
       </div>
@@ -1528,7 +1534,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   var zapUrl = 'https://wa.me/' + (CFG.whatsapp || '') + (CFG.whatsappMensagem ? '?text=' + encodeURIComponent(CFG.whatsappMensagem) : '');
   document.querySelectorAll('[data-zap]').forEach(function (a) { a.href = zapUrl; a.target = '_blank'; a.rel = 'noopener'; });
   document.querySelectorAll('[data-email]').forEach(function (a) { if (CFG.email) a.href = 'mailto:' + CFG.email; });
-  document.querySelectorAll('[data-linkedin]').forEach(function (a) { if (CFG.linkedin) { a.href = CFG.linkedin; a.target = '_blank'; a.rel = 'noopener'; } });
+  // Redes sociais no rodapé: só as que têm endereço; sem nenhuma, a linha some.
+  document.querySelectorAll('[data-rede]').forEach(function (a) { var u = CFG[a.dataset.rede]; if (u) { a.href = u; a.target = '_blank'; a.rel = 'noopener'; document.getElementById('redes').hidden = false; } });
   document.querySelectorAll('[data-cfg]').forEach(function (el) { if (CFG[el.dataset.cfg]) { el.textContent = CFG[el.dataset.cfg]; el.hidden = false; } });
   // Prova: número de clientes e prazo de resposta, na abertura; o número também em destaque no Sobre.
   (function () {
