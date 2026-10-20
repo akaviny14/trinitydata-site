@@ -27,6 +27,7 @@ O código está no ramo `mobile-whatsapp` do projeto. As mudanças marcadas com 
 | M17 | Celular: a faixa de ferramentas que rolava sozinha vira texto parado. | celular | Menos movimento. | Reverter o commit. |
 | M18 | Celular: o Blog, quando houver posts, é uma lista vertical de até três, sem carrossel. | celular | Sem carrosséis no celular. | Reverter o commit. |
 | M19 | Celular: Dores e Como funciona com menos espaço entre os itens. | celular | Página mais curta sem tirar conteúdo. | Reverter o commit. |
+| M21 | Blog (tema do Ghost): botão único "Conversar no WhatsApp" no cabeçalho, no menu, na chamada final e na barra do celular, que passa a ter um botão de largura total; passos da chamada final iguais aos do site; no celular, o tema segue o do aparelho; e-mail e LinkedIn do rodapé só aparecem quando preenchidos nas configurações do tema. | blog, celular e desktop | Ninguém notou o quadradinho do WhatsApp no teste informal do Mateus; o "Falar com a Trinity" do blog levava ao formulário, agora oculto. | Reverter o commit e subir o tema anterior no Ghost. |
 | M20 | Código que deixou de ser usado foi removido: trilho de gráficos dos exemplos com os marcadores, setas da faixa de abas e trilho da IA no celular. | celular | Nada rodando sem uso. | Reverter o commit. |
 
 ## Medidas da rodada
