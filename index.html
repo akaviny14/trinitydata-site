@@ -2324,6 +2324,17 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       if (montado) return; montado = true;
       [].forEach.call(slides, function (sl, i) { sl.innerHTML = datas(htmlPainelCel(EXEMPLOS[i])); if (movOn()) sl.classList.add('desenhar'); });
       [].forEach.call(slides, function (sl) { obs.observe(sl); }); // só observa com os painéis montados (vazios, contariam como visíveis)
+      igualar();
+      if (document.fonts) document.fonts.ready.then(igualar);
+      var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(igualar, 150); });
+    }
+    // Os cartões têm a altura do mais alto; para não sobrar branco embaixo, o gráfico dos mais baixos cresce até preencher (26/10).
+    function igualar() {
+      if (!celular.matches) return;
+      var pecas = [].map.call(slides, function (sl) { var d = sl.querySelector('.dash'); d.style.removeProperty('--h'); return d; });
+      var alt = pecas.map(function (d) { return [].reduce.call(d.querySelector('.exc-peca').children, function (a, c) { return a + c.offsetHeight; }, 0); });
+      var max = Math.max.apply(null, alt);
+      pecas.forEach(function (d, i) { if (d.querySelector('.ln-area') && max > alt[i]) d.style.setProperty('--h', (280 + max - alt[i]) + 'px'); });
     }
     function desenhar(i) { if (!emTela || visto[i]) return; visto[i] = true; setTimeout(function () { slides[i].classList.remove('desenhar'); }, 60); }
     function ativar(i, porToque) {

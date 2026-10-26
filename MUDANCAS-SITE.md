@@ -68,6 +68,7 @@ Especificação em `docs/superpowers/specs/2026-10-26-celular-respiro.md`, aprov
 | M39 | Um nível de caixa só. Em Serviços, o DEPOIS vira uma linha forte. Saem os fios entre os sintomas, entre os números de mercado e acima dos diferenciais. A frase de fechamento das Dores vira uma afirmação solta, em 21 px. | celular | Cada moldura e cada fio era mais uma coisa para ler; o espaço passa a separar as ideias. | Reverter o commit. |
 | M40 | Escala: seções com 80 px em cima e embaixo (eram 64), títulos de seção em 29 px (eram 26), números de mercado em 48 px (eram 44). A altura fica em 11,2 telas em 390 × 844. | celular | Pouco contraste de tamanho entre título e texto. | Reverter o commit. |
 | M41 | Exemplos: todos os painéis se desenham juntos quando o trilho aparece na tela, e não um por vez ao ficar ativo. O Relatório perde a bolha do anexo, para ter a altura dos gráficos. | celular | Ao passar de um painel para o outro, o que chegava aparecia em branco, só com os eixos, até a linha terminar; e os cartões de gráfico sobravam com uns 150 px em branco embaixo (achado do Vinicius no celular). | Reverter o commit. |
+| M42 | Exemplos: o gráfico dos cartões mais baixos cresce até o cartão ficar cheio, medido no carregamento, depois das fontes e a cada mudança de largura (`igualar`). | celular | No celular do Vinicius (412 px), os cartões ainda sobravam com uns 65 px em branco embaixo do gráfico. | Reverter o commit. |
 
 ## Medidas da rodada
 
