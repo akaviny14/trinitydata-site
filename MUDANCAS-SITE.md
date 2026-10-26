@@ -74,6 +74,8 @@ Especificação em `docs/superpowers/specs/2026-10-26-celular-respiro.md`, aprov
 | M45 | A seção de IA volta no celular, com os quatro passos ilustrados (presente, medição, contexto, IA) um embaixo do outro, ligados por um fio. Sai o 5º cartão de Serviços, que a resumia. | celular | A história da marca em imagem estava reduzida a um parágrafo. | Reverter o commit. |
 | M46 | Ferramentas: a faixa do desktop, parada, em fichas que se passam com o dedo, no lugar da lista de texto miúdo (`#ferr-lista` sai). | celular | Lista de 14 nomes em 14 px não se lia como elemento visual. | Reverter o commit. |
 | M47 | Fundos com corte nítido: no celular saem os degradês entre seções. A página fica com cerca de 13,5 telas em 390 × 844 (12,2 em 412 × 915). | celular | Cada parte da história fica marcada pela troca de fundo. | Reverter o commit. |
+| M48 | Ferramentas: volta a faixa que passa sozinha, igual à do desktop, no lugar das fichas de M46. Só CSS, parada fora da tela e com "reduzir movimento". Sai o vão cinza com o fio acima dela. Exceção à regra de nada em movimento contínuo no celular. | celular | Pedido do Vinicius: a lista lateral para passar com o dedo não funcionava bem. | Reverter o commit. |
+| M49 | Os arcos do Como funciona somem nos últimos 220 px da seção, e as perguntas frequentes ganham 40 px em cima. | celular | O título das perguntas encostava nos arcos. | Reverter o commit. |
 
 ## Medidas da rodada
 

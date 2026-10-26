@@ -995,6 +995,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .rede-cel circle { fill: var(--pad-a); }
   .ret-cel circle { fill: var(--pad-a); opacity: .6; }
   .ondas-cel path { fill: none; stroke: var(--pad-b); stroke-width: 1.2; }
+  /* Os arcos somem antes do fim da seção, para não encostar no título das perguntas (que começa sem respiro em cima) */
+  .ondas-cel { -webkit-mask-image: linear-gradient(to bottom, var(--td-neutro-0) calc(100% - 220px), transparent calc(100% - 80px)); mask-image: linear-gradient(to bottom, var(--td-neutro-0) calc(100% - 220px), transparent calc(100% - 80px)); }
+  #perguntas { padding-top: 40px; }
   .ondas-cel path.a { stroke: var(--pad-a); }
   /* Fundos com corte nítido: no celular saem os degradês entre seções, para cada parte ficar marcada */
   :is(.alt, .passagem, .secao)::before { display: none !important; }
@@ -1064,13 +1067,15 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .porque-link { margin-top: 28px; }
   .ferramentas { padding: 32px 0 56px; }
   .ferr-frase { font-size: 17px; margin-bottom: 20px; }
-  /* Ferramentas: a faixa do desktop, parada, em fichas que se passam com o dedo */
-  .faixa { overflow-x: auto; scrollbar-width: none; margin-top: 4px; }
-  .faixa::-webkit-scrollbar { display: none; }
-  .faixa-trilho, .sem-mov .faixa-trilho { width: max-content; flex-wrap: nowrap; gap: 8px; padding: 0 16px; animation: none; }
-  .faixa-trilho .dup { display: none; }
-  .faixa-trilho span { font-size: 16px; font-weight: 500; color: var(--titulo); padding: 9px 16px; border: 1px solid var(--etiqueta-borda); border-radius: 20px; }
-  .faixa-trilho span::after { content: none; }
+  /* Ferramentas: a mesma faixa do desktop, passando sozinha. É a exceção, pedida pelo Vinicius em 26/10, à regra de
+     nada em movimento contínuo no celular: é só CSS, para fora da tela e com "reduzir movimento" fica parada. */
+  #sobre { padding-bottom: 40px; }
+  .ferramentas { border-top: 0; padding: 16px 0 64px; }
+  .faixa { margin-top: 12px; }
+  .faixa-trilho span { font-size: 19px; padding: 0 16px; }
+  .faixa-trilho span::after { margin-left: 32px; }
+  .faixa:not(.na-tela) .faixa-trilho { animation-play-state: paused; }
+  .sem-mov .faixa-trilho { padding: 0 16px; }
 
   /* Como funciona: linha do tempo vertical, marcador numerado sobre uma linha contínua */
   .passos { grid-template-columns: minmax(0, 1fr); row-gap: 0; margin-top: 32px; }
@@ -2145,8 +2150,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   // ================= 5. Ferramentas =================
   (function () {
     var nomes = ['Power BI', 'Metabase', 'Tableau', 'Looker Studio', 'Excel', 'Python', 'SQL', 'Airflow', 'n8n', 'MySQL', 'PostgreSQL', 'Google Cloud', 'AWS', 'APIs de ERP e CRM'];
-    document.getElementById('faixa').innerHTML = nomes.map(function (n) { return '<span>' + n + '</span>'; }).join('') +
+    var faixa = document.getElementById('faixa');
+    faixa.innerHTML = nomes.map(function (n) { return '<span>' + n + '</span>'; }).join('') +
       nomes.map(function (n) { return '<span class="dup" aria-hidden="true">' + n + '</span>'; }).join('');
+    // No celular a faixa só corre quando está na tela.
+    new IntersectionObserver(function (es) { faixa.parentNode.classList.toggle('na-tela', es[0].isIntersecting); }).observe(faixa.parentNode);
   })();
 
   // ================= 4. Serviços no celular =================
