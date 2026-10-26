@@ -1020,6 +1020,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .exc-conversa { border: 1px solid var(--td-neutro-100); border-radius: 10px; }
   .exc-conversa .fone-cab { padding: 14px; }
   .exc-conversa .fone-chat { min-height: 0; }
+  .exc-conversa .bolha + .bolha { display: none; } /* sem o anexo, o Relatório fica da altura dos gráficos e eles não sobram em branco embaixo */
   .ex-marca { display: flex; align-items: center; justify-content: center; gap: 12px; }
   .ex-pontos { display: flex; gap: 6px; }
   .ex-pontos i { width: 6px; height: 6px; border-radius: 3px; background: var(--td-azul-600); transition: width .3s var(--suave), background-color .3s ease; }
@@ -2352,8 +2353,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     // Montados já no carregamento, para a página não crescer durante a rolagem; na tela larga, só se a janela encolher.
     if (celular.matches) montar();
     else new IntersectionObserver(function (es, ob) { if (es[0].isIntersecting) { ob.disconnect(); montar(); } }, { rootMargin: '600px 0px' }).observe(caixa);
-    // O primeiro painel se desenha quando o trilho aparece na tela.
-    new IntersectionObserver(function (es, ob) { if (es[0].isIntersecting) { ob.disconnect(); montar(); emTela = true; desenhar(ativo); } }, { threshold: 0.4 }).observe(trilho);
+    // Todos os painéis se desenham juntos quando o trilho aparece na tela: desenhando um por vez, o painel que chegava
+    // pelo arrasto aparecia em branco, só com os eixos, até a linha terminar (26/10).
+    new IntersectionObserver(function (es, ob) { if (es[0].isIntersecting) { ob.disconnect(); montar(); emTela = true; [].forEach.call(slides, function (sl, i) { desenhar(i); }); } }, { threshold: 0.4 }).observe(trilho);
   })();
 
   // ================= 7. Ondas (avançam passo a passo) =================
