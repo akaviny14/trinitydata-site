@@ -976,10 +976,37 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .numero b { font-size: 48px; line-height: 1; padding: 0; border: 0; }
   .numero p { font-size: 17px; line-height: 1.5; }
   .numero cite { min-height: 0; font-size: 13px; }
-  .passagem { display: none; }
-  /* A seção de IA não aparece: o conteúdo dela é o 5º bloco de Serviços */
-  #ia { display: none; }
-  #ia + .alt::before { display: none; }
+  /* Passagem (26/10): volta no celular, na cor dos números, com as barras que se alinham uma vez e o rótulo DEPOIS.
+     Embaixo dela começa o branco dos Serviços, num corte nítido. */
+  .passagem { height: 150px; --fundo: var(--td-neutro-50); }
+  [data-tema="escuro"] .passagem { --fundo: var(--td-azul-900); }
+  .passagem #barras-svg, .passagem .rot-a { display: none; }
+  .passagem .rot-b { right: 16px; opacity: 1; }
+  .barras-cel { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 118px; }
+  .barras-cel line { stroke: var(--pad-b); stroke-width: 1; }
+  .barras-cel rect { fill: var(--pad-a); transform-box: fill-box; transform-origin: 50% 100%; transition: transform .9s var(--suave) calc(var(--i) * 30ms); }
+  .barras-cel rect.f { fill: var(--pad-c); }
+  .passagem:not(.visto) .barras-cel rect { transform: scaleY(var(--s0)); }
+  /* Grafismos parados atrás do conteúdo: rede na abertura, trama nos números, arcos no Como funciona */
+  .abertura, .mercado, .como { position: relative; }
+  .graf-cel { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .abertura-in, .mercado > .wrap, .como > .wrap { position: relative; z-index: 1; }
+  .rede-cel line { stroke: var(--rede-linha); stroke-width: 1; }
+  .rede-cel circle { fill: var(--pad-a); }
+  .ret-cel circle { fill: var(--pad-a); opacity: .6; }
+  .ondas-cel path { fill: none; stroke: var(--pad-b); stroke-width: 1.2; }
+  .ondas-cel path.a { stroke: var(--pad-a); }
+  /* Fundos com corte nítido: no celular saem os degradês entre seções, para cada parte ficar marcada */
+  :is(.alt, .passagem, .secao)::before { display: none !important; }
+  /* IA: seção própria, com os quatro passos ilustrados um embaixo do outro, ligados por um fio */
+  .ia-topo { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .ia-dado b { font-size: 48px; }
+  .ia-trilha { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 36px; }
+  .ia-etapa:not(:last-child)::after { top: 100%; left: 31px; right: auto; width: 2px; height: 25px; }
+  .ia-vis { height: 190px; }
+  .ia-txt h3 { font-size: 20px; }
+  .ia-txt p { font-size: 16px; }
+  .ia-leg { text-align: left; }
 
   /* Serviços: os quatro cartões e o de IA, abertos, um embaixo do outro (sem blocos que abrem ao tocar).
      Um nível de caixa só (26/10): o DEPOIS é uma linha forte, não outra caixa dentro do cartão. */
@@ -995,10 +1022,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .solc .dep { margin-top: 12px; color: var(--titulo); font-weight: 600; }
   .solc .dep > span { color: var(--sobretitulo); }
   .solc .seta { display: inline-block; margin-top: 14px; }
-  .solc .ia-frase { color: var(--texto); }
-  .solc .ia-num { margin-top: 14px; color: var(--texto); }
-  .solc .ia-num b { display: block; font-family: "DM Mono", ui-monospace, monospace; font-size: 32px; font-weight: 500; letter-spacing: -.02em; line-height: 1.1; color: var(--kpi-valor); }
-  .solc .ia-num cite { font-style: normal; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; }
 
   /* Exemplos: passar com o dedo. Fichas com os seis nomes, um painel por tela com a borda do próximo à vista e o
      marcador "N de 6". Cada painel é desenhado para a tela em pé: a conclusão e o gráfico grande, nada mais (26/10). */
@@ -1040,9 +1063,14 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .dif p { font-size: 16px; line-height: 1.55; }
   .porque-link { margin-top: 28px; }
   .ferramentas { padding: 32px 0 56px; }
-  .ferr-frase { font-size: 17px; margin-bottom: 10px; }
-  .faixa { display: none; }
-  .ferr-lista { margin: 0; font-size: 14px; line-height: 1.6; color: var(--texto-suave); }
+  .ferr-frase { font-size: 17px; margin-bottom: 20px; }
+  /* Ferramentas: a faixa do desktop, parada, em fichas que se passam com o dedo */
+  .faixa { overflow-x: auto; scrollbar-width: none; margin-top: 4px; }
+  .faixa::-webkit-scrollbar { display: none; }
+  .faixa-trilho, .sem-mov .faixa-trilho { width: max-content; flex-wrap: nowrap; gap: 8px; padding: 0 16px; animation: none; }
+  .faixa-trilho .dup { display: none; }
+  .faixa-trilho span { font-size: 16px; font-weight: 500; color: var(--titulo); padding: 9px 16px; border: 1px solid var(--etiqueta-borda); border-radius: 20px; }
+  .faixa-trilho span::after { content: none; }
 
   /* Como funciona: linha do tempo vertical, marcador numerado sobre uma linha contínua */
   .passos { grid-template-columns: minmax(0, 1fr); row-gap: 0; margin-top: 32px; }
@@ -1153,6 +1181,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   <!-- 1. Abertura -->
   <section class="abertura" id="abertura">
     <canvas class="rede" id="rede" aria-hidden="true"></canvas>
+    <svg class="graf-cel rede-cel so-cel-bloco" aria-hidden="true"></svg>
     <div class="abertura-in">
       <div class="texto">
         <p class="sobretitulo">CONSULTORIA DE DADOS, BI E IA</p>
@@ -1290,6 +1319,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   <!-- 3. Faixa de indicadores de mercado (o custo da dor) -->
   <section class="secao alt mercado" id="mercado" aria-labelledby="mercado-leg">
     <canvas class="padrao-cv" id="cv-reticula" aria-hidden="true"></canvas>
+    <svg class="graf-cel ret-cel so-cel-bloco" aria-hidden="true"></svg>
     <div class="wrap">
       <p class="mercado-leg" id="mercado-leg">O que os estudos de mercado medem quando uma empresa organiza os seus dados</p>
       <div class="numeros">
@@ -1307,6 +1337,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     <span class="rotulo rot-a" id="rot-a">ANTES · DADOS ESPALHADOS</span>
     <span class="rotulo rot-b" id="rot-b">DEPOIS · DADOS CONCILIADOS</span>
     <svg id="barras-svg" preserveAspectRatio="none"></svg>
+    <svg class="barras-cel so-cel-bloco" id="barras-cel" preserveAspectRatio="none"></svg>
   </div>
 
   <!-- 4. Soluções -->
@@ -1416,7 +1447,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   <section class="ferramentas alt" aria-label="Ferramentas">
     <div class="wrap">
       <p class="ferr-frase">Não nos prendemos à ferramenta: escolhemos a que resolve o seu problema.</p>
-      <p class="ferr-lista so-cel-bloco" id="ferr-lista"></p>
     </div>
     <div class="faixa"><div class="faixa-trilho" id="faixa"></div></div>
   </section>
@@ -1443,6 +1473,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   <!-- 9. Como funciona -->
   <section class="secao como" id="como-funciona">
     <canvas class="padrao-cv" id="cv-ondas" aria-hidden="true"></canvas>
+    <svg class="graf-cel ondas-cel so-cel-bloco" aria-hidden="true"></svg>
     <div class="wrap">
       <h2 class="secao-tit surge">Do primeiro contato ao projeto entregue, em cinco passos</h2>
       <ol class="passos" id="passos">
@@ -2050,20 +2081,79 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     padroes.push({ tela: true, construir: construir, quadro: quadro, ativo: function () { return visivel(passagem); } });
   })();
 
+  // ================= Grafismos do celular =================
+  // Os padrões do desktop marcam onde começa cada parte da história. No celular eles aparecem parados (26/10): desenhados
+  // uma vez em SVG, sem canvas e sem laço de animação. Só as barras da passagem se mexem, uma vez, quando aparecem.
+  (function () {
+    var redeEl = document.querySelector('.rede-cel'), retEl = document.querySelector('.ret-cel'), ondasEl = document.querySelector('.ondas-cel'),
+      barrasEl = document.getElementById('barras-cel');
+    function med(el) { var r = el.getBoundingClientRect(); return { w: Math.round(r.width), h: Math.round(r.height) }; }
+    function caixa(svg, m, corpo) { svg.setAttribute('viewBox', '0 0 ' + m.w + ' ' + m.h); svg.innerHTML = corpo; }
+    // Rede da abertura: forte nas margens e no vão antes do painel, quase apagada atrás do texto.
+    function rede() {
+      var m = med(redeEl), ab = abertura.getBoundingClientRect(), tx = abertura.querySelector('.texto').getBoundingClientRect(),
+        pa = palco.getBoundingClientRect(), t = [tx.left - ab.left - 8, tx.top - ab.top - 8, tx.right - ab.left + 8, tx.bottom - ab.top + 8],
+        fim = pa.top - ab.top + 40, passo = 64, rnd = aleat(21), nos = [], s = '';
+      for (var gx = passo * 0.25; gx < m.w; gx += passo)
+        for (var gy = -passo * 0.5; gy < fim; gy += passo) {
+          var x = Math.min(m.w - 2, gx + (rnd() - 0.5) * passo * 0.5), y = gy + (rnd() - 0.5) * passo * 0.5;
+          var dent = x > t[0] && x < t[2] && y > t[1] && y < t[3];
+          nos.push({ x: x, y: y, a: (dent ? 0.22 : 1) * (1 - liso(fim - 120, fim, y)) });
+        }
+      for (var i = 0; i < nos.length; i++) for (var j = i + 1; j < nos.length; j++) {
+        var a = nos[i], b = nos[j], a2 = Math.min(a.a, b.a);
+        if (a2 > 0.02 && Math.hypot(a.x - b.x, a.y - b.y) < passo * 1.45) s += '<line x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '" x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '" opacity="' + a2.toFixed(2) + '"/>';
+      }
+      nos.forEach(function (n) { if (n.a > 0.02) s += '<circle cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) + '" r="1.8" opacity="' + n.a.toFixed(2) + '"/>'; });
+      caixa(redeEl, m, s);
+    }
+    // Trama de pontos dos números: os pontos crescem para a direita, como no fim do desenho do desktop.
+    function reticula() {
+      var m = med(retEl), passo = 22, s = '';
+      for (var y = passo / 2; y < m.h; y += passo) for (var x = passo / 2; x < m.w; x += passo) {
+        var t = lim((x / m.w - 0.5) * 2 + (y / m.h - 0.5) * 0.15), r = 0.4 + 2.4 * Math.pow(t, 1.6);
+        if (r >= 0.7) s += '<circle cx="' + x + '" cy="' + y + '" r="' + r.toFixed(2) + '"/>';
+      }
+      caixa(retEl, m, s);
+    }
+    // Arcos do Como funciona, a partir do canto de baixo à direita.
+    function ondas() {
+      var m = med(ondasEl), cx = m.w + 60, cy = m.h + 40, s = '';
+      for (var i = 0; i < 12; i++) {
+        var r = 120 + i * 28;
+        s += '<path' + (i % 5 === 4 ? ' class="a"' : '') + ' d="M' + (cx - r) + ' ' + cy + 'A' + r + ' ' + r + ' 0 0 1 ' + cx + ' ' + (cy - r) + '"/>';
+      }
+      caixa(ondasEl, m, s);
+    }
+    // Barras da passagem: desencontradas, se alinham uma vez quando a faixa aparece.
+    function barras() {
+      var W = med(barrasEl).w, N = 24, passo = W / N, larg = Math.max(6, passo * 0.5), rnd = aleat(7), s = '<line x1="0" x2="' + W + '" y1="149.5" y2="149.5"/>';
+      for (var i = 0; i < N; i++) {
+        var fim = 30 + 96 * Math.pow(i / (N - 1), 0.9) + Math.sin(i * 0.9) * 4, h0 = 14 + rnd() * 80;
+        s += '<rect' + (i % 9 === 4 ? ' class="f"' : '') + ' style="--i:' + i + ';--s0:' + (h0 / fim).toFixed(2) + '" x="' + (i * passo + (passo - larg) / 2).toFixed(1) + '" y="' + (150 - fim).toFixed(1) + '" width="' + larg.toFixed(1) + '" height="' + fim.toFixed(1) + '"/>';
+      }
+      barrasEl.setAttribute('viewBox', '0 0 ' + W + ' 150'); barrasEl.innerHTML = s;
+    }
+    function desenhar() { if (!celular.matches) return; rede(); reticula(); ondas(); barras(); }
+    desenhar();
+    if (document.fonts) document.fonts.ready.then(desenhar);
+    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(desenhar, 200); });
+    if (!movOn() || !('IntersectionObserver' in window)) passagem.classList.add('visto');
+    else new IntersectionObserver(function (es, ob) { if (es[0].isIntersecting) { ob.disconnect(); passagem.classList.add('visto'); } }, { threshold: 0.6 }).observe(passagem);
+  })();
+
   // ================= 5. Ferramentas =================
   (function () {
     var nomes = ['Power BI', 'Metabase', 'Tableau', 'Looker Studio', 'Excel', 'Python', 'SQL', 'Airflow', 'n8n', 'MySQL', 'PostgreSQL', 'Google Cloud', 'AWS', 'APIs de ERP e CRM'];
     document.getElementById('faixa').innerHTML = nomes.map(function (n) { return '<span>' + n + '</span>'; }).join('') +
       nomes.map(function (n) { return '<span class="dup" aria-hidden="true">' + n + '</span>'; }).join('');
-    document.getElementById('ferr-lista').textContent = nomes.join(' · '); // celular: texto parado, sem rolagem
   })();
 
   // ================= 4. Serviços no celular =================
   // Os cartões ficam abertos, um embaixo do outro: ícone, título, ANTES e DEPOIS, e o link do serviço quando houver destino.
-  // O 5º cartão traz a seção de IA em versão curta (a frase e o dado do Gartner), porque ela não aparece no celular.
-  var ICONE_IA = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="1.8"/><circle cx="19" cy="5" r="1.8"/><circle cx="12" cy="20.2" r="1.8"/><path d="M6.4 6.4l3.4 3.4M17.6 6.4l-3.4 3.4M12 15v3.4"/></svg>';
+  // A IA tem seção própria também no celular (26/10), com os quatro passos ilustrados.
   (function () {
-    var lista = document.getElementById('sol-lista'), ia = document.getElementById('ia');
+    var lista = document.getElementById('sol-lista');
     function cartao(icone, titulo, corpo) { return '<article class="solc">' + icone + '<h3>' + titulo + '</h3>' + corpo + '</article>'; }
     var html = [].map.call(document.querySelectorAll('#servicos .sol'), function (s) {
       var dest = s.querySelector('.rodape-sol .seta').getAttribute('href'), dd = s.querySelectorAll('.ad dd');
@@ -2071,9 +2161,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         '<p class="antes"><span>ANTES</span>' + dd[0].textContent + '</p><p class="dep"><span>DEPOIS</span>' + dd[1].textContent + '</p>' +
         (dest && dest !== '#' ? '<a class="seta" href="' + dest + '">Ver o serviço →</a>' : ''));
     });
-    var dado = ia.querySelector('.ia-dado');
-    html.push(cartao(ICONE_IA, 'IA sobre os dados certos', '<p class="ia-frase">' + ia.querySelector('.secao-sub').textContent + '</p>' +
-      '<p class="ia-num"><b>' + dado.querySelector('b').textContent + '</b>' + dado.querySelector('p').textContent + ' <cite>(' + dado.querySelector('cite').textContent.split(',')[0] + ')</cite></p>'));
     lista.innerHTML = html.join('');
   })();
 
