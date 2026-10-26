@@ -259,6 +259,7 @@ a:hover { color: var(--link-hover); }
 .sobretitulo { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; color: var(--sobretitulo); margin: 0 0 24px; }
 h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018em; color: var(--titulo); margin: 0 0 24px; max-width: 15ch; text-wrap: balance; }
 .sub { font-size: 17px; line-height: 1.6; color: var(--texto); margin: 0; max-width: 46ch; text-wrap: pretty; }
+.sub-cel { display: none; }
 .chamada { display: flex; align-items: center; gap: 28px; margin-top: 40px; flex-wrap: wrap; }
 .nota { font-size: 13px; color: var(--texto-suave); margin-top: 16px; }
 /* Linha de prova: número de clientes e prazo de resposta, cada parte só com o campo preenchido no config.js */
@@ -903,20 +904,21 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 
   /* Uma ideia por tela (25/10): cada rolagem mostra uma coisa, grande e com respiro; nada escondido atrás de "+",
      exceto nas perguntas frequentes. Revê o "menos telas" de 19/10. */
-  .secao { padding: 64px 0; scroll-margin-top: 64px; }
-  .secao-tit { font-size: 26px; line-height: 1.2; }
+  .secao { padding: 80px 0; scroll-margin-top: 64px; }
+  .secao-tit { font-size: 29px; line-height: 1.16; letter-spacing: -.015em; }
   .secao-sub { font-size: 17px; }
   /* Sem movimento contínuo no celular: nenhum padrão em canvas e nenhuma entrada animada */
   .rede, .mm, .padrao-cv { display: none !important; }
   .surge { opacity: 1; transform: none; }
 
-  /* Abertura: a primeira tela é só título, subtítulo e WhatsApp, com respiro. Abaixo dela, o painel vira
-     um cartão só: o indicador fora da faixa em destaque e o aviso, em vez de três cartões espremidos. */
-  .abertura-in { grid-template-columns: minmax(0, 1fr); padding: 40px 16px 64px; gap: 56px; min-height: 0; }
-  .sobretitulo { margin-bottom: 18px; }
-  h1 { font-size: 31px; line-height: 1.16; margin-bottom: 20px; max-width: none; }
-  .sub { font-size: 17px; line-height: 1.6; }
-  .chamada { margin-top: 32px; gap: 20px; }
+  /* Abertura: a primeira tela é só o título grande, uma frase curta e o WhatsApp (26/10: saem o sobretítulo, o
+     subtítulo de cinco linhas e o "Ver exemplos"). Abaixo dela, o painel vira um cartão só: o indicador fora da faixa
+     em destaque e o aviso, em vez de três cartões espremidos. */
+  .abertura-in { grid-template-columns: minmax(0, 1fr); padding: 56px 16px 72px; gap: 80px; min-height: 0; }
+  .abertura .sobretitulo, .abertura .chamada .seta, .sub:not(.sub-cel) { display: none; }
+  h1 { font-size: 36px; line-height: 1.12; letter-spacing: -.02em; margin-bottom: 18px; max-width: none; }
+  .sub-cel { display: block; font-size: 18px; line-height: 1.5; color: var(--texto-suave); }
+  .chamada { margin-top: 36px; gap: 20px; }
   .chamada .btn { width: 100%; }
   .btn-grande { padding: 15px 16px; font-size: 16px; } /* "Falar com a Trinity no WhatsApp" numa linha só, até 360 px */
   .abertura .nota { display: none; } /* a barra fixa cumpre esse papel */
@@ -938,15 +940,15 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .kpis { gap: 8px; }
   .kpi .d { white-space: normal; line-height: 1.3; }
 
-  /* Dores: cada sintoma com o número em linha própria, a frase de fechamento num bloco de destaque
-     e o quadro HOJE/DEPOIS na versão em pé, desenhada para a largura do celular */
+  /* Dores: cada sintoma com o número em linha própria, sem fios entre eles (o espaço separa); a frase de fechamento
+     como afirmação solta; o quadro HOJE/DEPOIS na versão em pé, sem moldura */
   .dores-grid, .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .dores { padding-bottom: 32px; }
   .sintomas { margin-top: 28px; }
-  .sintomas li { display: block; font-size: 18px; line-height: 1.45; color: var(--titulo); padding: 20px 0; }
+  .sintomas li { display: block; font-size: 18px; line-height: 1.45; color: var(--texto); padding: 14px 0; border-top: 0; }
   .sintomas li span { display: block; font-size: 15px; color: var(--sobretitulo); padding: 0; margin-bottom: 6px; }
   .sintomas li:nth-child(4) { display: none; }
-  .fecho { font-size: 18px; line-height: 1.5; margin-top: 12px; background: var(--cartao); border-radius: 0 8px 8px 0; padding: 18px 20px; }
+  .fecho { font-size: 21px; line-height: 1.35; font-weight: 700; margin-top: 28px; border-left: 0; padding-left: 0; }
   .ilustra { gap: 14px; }
   .il-troca { display: flex !important; justify-self: start; border: 1px solid var(--divisa); border-radius: 6px; padding: 3px; gap: 2px; }
   .il-troca button { min-height: 44px; padding: 0 16px; border: 0; border-radius: 4px; background: none; cursor: pointer; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .08em; color: var(--texto-suave); transition: background-color .25s ease, color .25s ease; }
@@ -954,7 +956,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .il-palco .il-txt { font-size: 15px; }
   .il-palco .il-txt.branco { font-size: 15px; }
   .il-palco { display: grid; }
-  .il-palco .quadro { grid-area: 1 / 1; padding: 16px 10px 12px; transition: opacity .45s ease, transform .9s var(--suave); }
+  .il-palco .quadro { grid-area: 1 / 1; padding: 12px 0 0; background: none; border: 0; transition: opacity .45s ease, transform .9s var(--suave); }
+  .depois-cel .il-txt { font-size: 14px; }
+  .depois-cel > g:nth-of-type(-n+4) .il-txt { font-size: 13px; } /* "Planilhas" cabe na caixa de 81 */
   .il-palco .quadro .rotulo { display: none; }
   .ilustra:not(.depois) .quadro-depois, .ilustra.depois .quadro-hoje { opacity: 0; pointer-events: none; }
   .ilustra:not(.depois) .depois-svg .il-liga { stroke-dashoffset: 400 !important; }
@@ -967,9 +971,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .mercado-leg { font-size: 18px; line-height: 1.45; margin-bottom: 12px; }
   .numeros { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .numero:nth-child(2), .numero:nth-child(4) { display: none; }
-  .numero { display: flex; flex-direction: column; gap: 8px; background: none; border: 0; border-top: 1px solid var(--divisa); border-radius: 0; padding: 28px 0; }
+  .numero { display: flex; flex-direction: column; gap: 8px; background: none; border: 0; border-radius: 0; padding: 24px 0; }
   .numero:last-child { padding-bottom: 0; }
-  .numero b { font-size: 44px; line-height: 1; padding: 0; border: 0; }
+  .numero b { font-size: 48px; line-height: 1; padding: 0; border: 0; }
   .numero p { font-size: 17px; line-height: 1.5; }
   .numero cite { min-height: 0; font-size: 13px; }
   .passagem { display: none; }
@@ -977,18 +981,18 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   #ia { display: none; }
   #ia + .alt::before { display: none; }
 
-  /* Serviços: os quatro cartões e o de IA, abertos, um embaixo do outro (sem blocos que abrem ao tocar) */
+  /* Serviços: os quatro cartões e o de IA, abertos, um embaixo do outro (sem blocos que abrem ao tocar).
+     Um nível de caixa só (26/10): o DEPOIS é uma linha forte, não outra caixa dentro do cartão. */
   .cartoes4, .abas-caixa, .demo { display: none; }
-  .sol-cel { display: flex !important; flex-direction: column; gap: 14px; margin-top: 32px; }
-  .solc { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 14px; align-items: start; background: var(--td-neutro-50); border-top: 3px solid var(--filete); border-radius: 8px; padding: 20px 20px 20px; }
+  .sol-cel { display: flex !important; flex-direction: column; gap: 16px; margin-top: 36px; }
+  .solc { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 14px; align-items: start; background: var(--td-neutro-50); border-radius: 12px; padding: 24px 20px; }
   .solc > :not(.ic):not(h3) { grid-column: 1 / -1; }
   [data-tema="escuro"] .solc { background: var(--td-azul-800); }
   .solc .ic { width: 28px; height: 28px; color: var(--sobretitulo); }
   .solc h3 { font-size: 20px; line-height: 1.3; font-weight: 700; color: var(--titulo); margin: 0 0 14px; }
   .solc p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--texto-suave); }
   .solc p > span { display: block; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; font-weight: 400; color: var(--texto-suave); margin-bottom: 2px; }
-  .solc .dep { margin-top: 10px; color: var(--titulo); font-weight: 600; background: var(--td-neutro-0); border-left: 3px solid var(--filete); border-radius: 0 4px 4px 0; padding: 10px 12px; }
-  [data-tema="escuro"] .solc .dep { background: var(--td-azul-900); }
+  .solc .dep { margin-top: 12px; color: var(--titulo); font-weight: 600; }
   .solc .dep > span { color: var(--sobretitulo); }
   .solc .seta { display: inline-block; margin-top: 14px; }
   .solc .ia-frase { color: var(--texto); }
@@ -997,7 +1001,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .solc .ia-num cite { font-style: normal; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; }
 
   /* Exemplos: passar com o dedo. Fichas com os seis nomes, um painel por tela com a borda do próximo à vista e o
-     marcador "N de 6". Cada painel é desenhado para a tela em pé: a conclusão, o indicador em destaque, o gráfico e o aviso. */
+     marcador "N de 6". Cada painel é desenhado para a tela em pé: a conclusão e o gráfico grande, nada mais (26/10). */
   .ex-cel { display: block !important; margin-top: 28px; }
   .ex-fichas { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; scroll-padding: 0 16px; }
   .ex-fichas::-webkit-scrollbar, .ex-trilho::-webkit-scrollbar { display: none; }
@@ -1007,19 +1011,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .ex-trilho { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; margin: 20px -16px 0; padding: 0 16px 20px; scroll-padding: 0 16px; }
   .ex-trilho:focus-visible { outline: 2px solid var(--foco); outline-offset: -2px; }
   .ex-slide { flex: 0 0 calc(100% - 28px); display: flex; scroll-snap-align: start; scroll-snap-stop: always; }
-  .ex-slide > .dash { flex: 1; --h: 150px; }
-  .exc-peca { flex: 1; display: flex; flex-direction: column; gap: 16px; background: var(--dp-fundo); border: 1px solid var(--dp-borda); border-radius: 12px; box-shadow: var(--dp-sombra); padding: 20px 18px; }
-  .exc-area { margin: 0; }
-  .exc-tit { margin: 0; font-size: 21px; line-height: 1.25; font-weight: 700; color: var(--titulo); }
-  .exc-kpi .kpi { border: 0; border-left: 3px solid var(--filete); border-radius: 0; padding: 2px 0 2px 14px; gap: 4px; }
-  .exc-kpi .kpi.atencao { border-left-color: var(--td-semantica-atencao); }
-  .exc-kpi .kpi.critico { border-left-color: var(--td-semantica-critico); }
-  .exc-kpi .kpi .v { font-size: 40px; line-height: 1.05; letter-spacing: -.03em; }
-  .exc-kpi .kpi .d { font-size: 15px; }
-  .exc .ch-sub { margin: 0 0 12px; }
+  .ex-slide > .dash { flex: 1; --h: 280px; }
+  .exc-peca { flex: 1; display: flex; flex-direction: column; gap: 24px; background: var(--dp-fundo); border: 1px solid var(--dp-borda); border-radius: 14px; box-shadow: var(--dp-sombra); padding: 24px 20px; }
+  .exc-tit { margin: 0; font-size: 23px; line-height: 1.22; font-weight: 700; letter-spacing: -.01em; color: var(--titulo); }
+  .exc .ch-sub { margin: 0 0 14px; }
   .exc .ch { grid-template-columns: 30px minmax(0, 1fr) 66px; gap: 6px; }
-  .exc .dash-alerta { grid-template-columns: minmax(0, 1fr); gap: 4px; margin-top: auto; padding: 10px 14px; background: var(--trilho); border-radius: 0 6px 6px 0; }
-  .exc .dash-alerta .aviso-t { font-size: 15px; line-height: 1.5; }
   .aviso-mais { display: none; }
   .exc-conversa { border: 1px solid var(--td-neutro-100); border-radius: 10px; }
   .exc-conversa .fone-cab { padding: 14px; }
@@ -1037,7 +1033,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .prova-sobre b { font-size: 40px; margin-bottom: 6px; }
   .prova-sobre span { font-size: 17px; }
   .prova-sobre + .porque-grid { margin-top: 32px; }
-  .dif { padding-top: 18px; }
+  .dif { padding-top: 0; border-top: 0; } /* sem o fio grosso: o número e o espaço separam */
   .dif .n { font-size: 15px; color: var(--sobretitulo); }
   .dif h3 { font-size: 20px; margin: 8px 0 8px; }
   .dif p { font-size: 16px; line-height: 1.55; }
@@ -1160,6 +1156,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
       <div class="texto">
         <p class="sobretitulo">CONSULTORIA DE DADOS, BI E IA</p>
         <h1>Os dados da sua empresa num só lugar, sempre atualizados</h1>
+        <p class="sub sub-cel">Vendas, caixa e operação num painel, sem montar relatório à mão.</p>
         <p class="sub">Centralizamos os dados que hoje estão espalhados em planilhas, sistemas e plataformas e entregamos visibilidade de vendas, caixa e operação, sem montagem manual.</p>
         <div class="chamada">
           <a class="btn btn-grande" data-cta data-icone data-origem="abertura" href="#">Falar com a Trinity no WhatsApp</a>
@@ -1252,10 +1249,10 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <figure class="quadro quadro-depois surge">
           <span class="rotulo">DEPOIS</span>
           <svg class="depois-svg depois-cel so-cel-bloco" viewBox="0 0 336 300" role="img" aria-label="Depois: as fontes ligadas a um só lugar, que alimenta um painel e um relatório pronto">
-            <g transform="translate(0 6)"><rect class="il-caixa" width="78" height="34" rx="5"/><text class="il-txt" x="39" y="22" text-anchor="middle">ERP</text></g>
-            <g transform="translate(86 6)"><rect class="il-caixa" width="78" height="34" rx="5"/><text class="il-txt" x="39" y="22" text-anchor="middle">CRM</text></g>
-            <g transform="translate(172 6)"><rect class="il-caixa" width="78" height="34" rx="5"/><text class="il-txt" x="39" y="22" text-anchor="middle">Planilhas</text></g>
-            <g transform="translate(258 6)"><rect class="il-caixa" width="78" height="34" rx="5"/><text class="il-txt" x="39" y="22" text-anchor="middle">Campo</text></g>
+            <g transform="translate(0 6)"><rect class="il-caixa" width="81" height="34" rx="5"/><text class="il-txt" x="40.5" y="22" text-anchor="middle">ERP</text></g>
+            <g transform="translate(85 6)"><rect class="il-caixa" width="81" height="34" rx="5"/><text class="il-txt" x="40.5" y="22" text-anchor="middle">CRM</text></g>
+            <g transform="translate(170 6)"><rect class="il-caixa" width="81" height="34" rx="5"/><text class="il-txt" x="40.5" y="22" text-anchor="middle">Planilhas</text></g>
+            <g transform="translate(255 6)"><rect class="il-caixa" width="81" height="34" rx="5"/><text class="il-txt" x="40.5" y="22" text-anchor="middle">Campo</text></g>
             <path class="il-liga" id="lgc1" d="M39 40 C 39 78, 150 70, 150 100"/>
             <path class="il-liga" id="lgc2" d="M125 40 C 125 70, 160 76, 160 100"/>
             <path class="il-liga" id="lgc3" d="M211 40 C 211 70, 176 76, 176 100"/>
@@ -2117,7 +2114,6 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   // ferramenta: quando preenchida, aparece como rótulo no painel e na lateral.
   // embed: endereço de um painel público real (Power BI, Metabase); quando preenchido, substitui o painel desenhado.
   // leitura: [tipo (cr, at, info), rótulo, texto], a frase que resume o período.
-  // kpiCel: o indicador em destaque no painel do celular quando nenhum está fora da faixa (padrão: o primeiro).
   // O Relatório automático vem primeiro: é o que o gestor quer receber.
   var EXEMPLOS = [
     { aba: 'Relatório automático', ferramenta: '', embed: '', relatorio: true,
@@ -2166,7 +2162,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         card('Sorocaba tem o maior custo', 'custo por entrega, por rota',
           hbar([{ n: 'SP – Sorocaba', txt: 'R$ 44,10', v: 100, tipo: 'at' }, { n: 'SP – Baixada', txt: 'R$ 41,50', v: 94 }, { n: 'SP – Vale do Paraíba', txt: 'R$ 36,80', v: 83 }, { n: 'SP – Campinas', txt: 'R$ 31,20', v: 71 }], { v: 87, txt: 'média R$ 38,40' }))
       ] },
-    { aba: 'Marketing', ferramenta: '', embed: '', titulo: 'Marketing', periodo: 'Empresa X · {mes}/{ano}', kpiCel: 1,
+    { aba: 'Marketing', ferramenta: '', embed: '', titulo: 'Marketing', periodo: 'Empresa X · {mes}/{ano}',
       ind: ['Custo por lead ao longo do ano', 'Retorno por canal', 'Investimento por canal'],
       kpis: [kpi('INVESTIMENTO', 'R$ 86,4 mil', '▲ 5,0% vs {ant3}', '', 'ne'), kpi('CUSTO POR LEAD', 'R$ 69,70', '▼ 7,4%'), kpi('CUSTO POR VENDA', 'R$ 1.217', '▼ 3,2%'), kpi('RETORNO', '5,8×', 'receita / investimento', '', 'ne')],
       leitura: ['info', 'LEITURA DO MÊS', 'O custo por lead caiu pelo terceiro mês e chegou ao menor valor do ano. O e-mail rende 9,8× com o menor orçamento.'],
@@ -2303,19 +2299,16 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   // Sem troca automática no celular.
   function htmlPainelCel(e) {
     if (e.relatorio) {
-      return '<div class="dash exc"><div class="exc-peca"><p class="exc-area rotulo">SEGUNDA, 07:00</p><p class="exc-tit">O que chega sem ninguém montar</p>' +
+      return '<div class="dash exc"><div class="exc-peca"><p class="exc-tit">O que chega sem ninguém montar</p>' +
         '<div class="fone-tela exc-conversa"><div class="fone-cab"><i></i><div><b>Relatório semanal</b><span>Empresa X</span></div></div><div class="fone-chat">' +
         '<div class="bolha" style="transition-delay:.3s"><p>Olá, Cláudio, bom dia! Aqui está o relatório semanal das áreas Comercial e Financeiro da Empresa X.</p><p>Faturamento da semana: <span class="num">R$ 184.320</span><br>Meta do mês: <span class="num">72%</span> atingida</p><p><span class="at">Atenção:</span> 3 pedidos parados há mais de 2 dias.</p><span class="hora">07:00</span></div>' +
         '<div class="bolha" style="transition-delay:1s"><div class="anexo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>relatório.pdf</div><span class="hora">07:00</span></div>' +
         '</div></div></div></div>';
     }
-    // O título do gráfico principal (a conclusão) vira o título do painel; o indicador em destaque é o que está fora da faixa.
+    // Uma ideia por painel (26/10): o título do gráfico principal (a conclusão) e o gráfico grande. O número em destaque
+    // e o aviso saem, porque repetiam o que o gráfico já marca.
     var g = e.graf[0].match(/<p class="ch-tit">([\s\S]*?)<\/p>([\s\S]*)<\/div>$/);
-    var k = e.kpis.filter(function (x) { return /kpi (atencao|critico)/.test(x); })[0] || e.kpis[e.kpiCel || 0];
-    var l = e.leitura, ponto = l[2].indexOf('. ');
-    return '<div class="dash exc"><div class="exc-peca"><p class="exc-area rotulo">' + e.titulo.toUpperCase() + ' · ' + e.periodo.replace('Empresa X · ', '') + '</p>' +
-      '<p class="exc-tit">' + g[1] + '</p><div class="exc-kpi">' + k + '</div><div class="exc-graf">' + g[2] + '</div>' +
-      '<div class="dash-alerta ' + l[0] + '"><div class="aviso-l"><i></i>' + l[1] + '</div><div class="aviso-t">' + (ponto > 0 ? l[2].slice(0, ponto + 1) : l[2]) + '</div></div></div></div>';
+    return '<div class="dash exc"><div class="exc-peca"><p class="exc-tit">' + g[1] + '</p><div class="exc-graf">' + g[2] + '</div></div></div>';
   }
   (function () {
     var caixa = document.getElementById('ex-lista'), n = EXEMPLOS.length, ativo = 0, montado = false, emTela = false;

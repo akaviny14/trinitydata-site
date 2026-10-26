@@ -56,6 +56,18 @@ Especificação em `docs/superpowers/specs/2026-10-25-celular-uma-ideia-por-tela
 | M34 | Exemplos passam com o dedo: fichas com os seis nomes, um trilho com um painel por vez (a borda do próximo à vista) e o marcador "N de 6". Cada painel é desenhado para a tela em pé: a conclusão do gráfico como título, o indicador fora da faixa em destaque (`kpiCel` escolhe quando nenhum está), o gráfico principal na largura toda e o aviso. O Relatório automático aparece como conversa, sem a moldura de celular. O gráfico se desenha na primeira vez que o painel fica ativo; `exemplo_aberto` conta quando o visitante arrasta ou toca numa ficha. Revê a regra "sem carrosséis" de 19/10. | celular | A seção que mais vende virava uma lista de títulos com "+", e não ficava claro que havia outros painéis. | Reverter o commit. |
 | M35 | Sobre, Como funciona e fechamento com mais espaço e texto maior; no rodapé, saem as colunas Serviços e Empresa, que repetem o menu. | celular | Respiro e menos repetição no fim da página. | Reverter o commit. |
 
+## Rodada de 26/10/2026: celular com respiro
+
+Especificação em `docs/superpowers/specs/2026-10-26-celular-respiro.md`, aprovada pelo Vinicius depois do comparativo com Ramp, Linear e Stripe (imagens em `docs/superpowers/specs/2026-10-26-celular-respiro/`). Só o celular muda; no desktop, a altura e as seções ficaram iguais às da rodada anterior. Ramo `celular-v2`. Todas voltam revertendo o commit da rodada.
+
+| ID | Mudança | Onde | Por quê | Como voltar |
+|---|---|---|---|---|
+| M36 | Abertura: saem o sobretítulo, o subtítulo de cinco linhas e o "Ver exemplos". O título vai para 36 px, seguido de uma frase curta só do celular em cinza (`.sub-cel`: "Vendas, caixa e operação num painel, sem montar relatório à mão."). | celular | A primeira tela tinha 6 blocos e cerca de 50 palavras; as referências têm 3 blocos e de 10 a 25 palavras. | Reverter o commit. |
+| M37 | Exemplos: cada painel fica só com a conclusão como título e o gráfico grande (280 px). Saem o rótulo da área, o número em destaque e o aviso, e com eles o campo `kpiCel` dos dados. O Relatório perde o rótulo "SEGUNDA, 07:00". | celular | O mesmo número aparecia três vezes e o painel tinha 5 camadas de texto; não ficava atraente. | Reverter o commit. |
+| M38 | HOJE/DEPOIS sem moldura, com o desenho solto. No DEPOIS, as caixas das fontes passam a ter 81 de largura e o texto fica em 13 e 14 px, sem vazar. | celular | A moldura cortada pela tela fazia o quadro parecer grande demais; "Planilhas" e "Relatório pronto" vazavam das caixas. | Reverter o commit. |
+| M39 | Um nível de caixa só. Em Serviços, o DEPOIS vira uma linha forte. Saem os fios entre os sintomas, entre os números de mercado e acima dos diferenciais. A frase de fechamento das Dores vira uma afirmação solta, em 21 px. | celular | Cada moldura e cada fio era mais uma coisa para ler; o espaço passa a separar as ideias. | Reverter o commit. |
+| M40 | Escala: seções com 80 px em cima e embaixo (eram 64), títulos de seção em 29 px (eram 26), números de mercado em 48 px (eram 44). A altura fica em 11,2 telas em 390 × 844. | celular | Pouco contraste de tamanho entre título e texto. | Reverter o commit. |
+
 ## Medidas da rodada
 
 | | Antes | Depois |
