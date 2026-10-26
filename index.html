@@ -904,7 +904,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
 
   /* Uma ideia por tela (25/10): cada rolagem mostra uma coisa, grande e com respiro; nada escondido atrás de "+",
      exceto nas perguntas frequentes. Revê o "menos telas" de 19/10. */
-  .secao { padding: 80px 0; scroll-margin-top: 64px; }
+  .secao { padding: 64px 0; scroll-margin-top: 64px; }
   .secao-tit { font-size: 29px; line-height: 1.16; letter-spacing: -.015em; }
   .secao-sub { font-size: 17px; }
   /* Sem movimento contínuo no celular: nenhum padrão em canvas e nenhuma entrada animada */
@@ -993,6 +993,13 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .abertura-in, .mercado > .wrap, .como > .wrap { position: relative; z-index: 1; }
   .rede-cel line { stroke: var(--rede-linha); stroke-width: 1; }
   .rede-cel circle { fill: var(--pad-a); }
+  /* A rede vive sem roubar a cena: deriva devagar, um nó acende de cada vez e três sinais correm pelas ligações */
+  .rede-cel .deriva { transform: translate(5px, -3px); animation: deriva 16s ease-in-out infinite alternate; }
+  .rede-cel .acende { fill: var(--pad-c); opacity: 0; transform-box: fill-box; transform-origin: center; animation: acende 7.2s ease-in-out infinite; }
+  .rede-cel .sinal { fill: var(--pad-c); }
+  .rede-cel.parada :is(.deriva, .acende) { animation-play-state: paused; }
+  @keyframes deriva { to { transform: translate(-5px, 3px); } }
+  @keyframes acende { 0%, 100% { opacity: 0; transform: scale(.4); } 6% { opacity: 1; transform: scale(1); } 14% { opacity: 0; transform: scale(.4); } }
   .ret-cel circle { fill: var(--pad-a); opacity: .6; }
   .ondas-cel path { fill: none; stroke: var(--pad-b); stroke-width: 1.2; }
   /* Os arcos somem antes do fim da seção, para não encostar no título das perguntas (que começa sem respiro em cima) */
@@ -1015,10 +1022,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
      Um nível de caixa só (26/10): o DEPOIS é uma linha forte, não outra caixa dentro do cartão. */
   .cartoes4, .abas-caixa, .demo { display: none; }
   .sol-cel { display: flex !important; flex-direction: column; gap: 16px; margin-top: 36px; }
-  .solc { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 14px; align-items: start; background: var(--td-neutro-50); border-radius: 12px; padding: 24px 20px; }
-  .solc > :not(.ic):not(h3) { grid-column: 1 / -1; }
+  .solc { display: block; background: var(--td-neutro-50); border-radius: 12px; padding: 24px 20px; }
   [data-tema="escuro"] .solc { background: var(--td-azul-800); }
-  .solc .ic { width: 28px; height: 28px; color: var(--sobretitulo); }
+  .solc .ic { display: block; width: 28px; height: 28px; margin-bottom: 14px; color: var(--sobretitulo); } /* em cima do título: o texto do cartão fica todo na mesma margem */
   .solc h3 { font-size: 20px; line-height: 1.3; font-weight: 700; color: var(--titulo); margin: 0 0 14px; }
   .solc p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--texto-suave); }
   .solc p > span { display: block; font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; font-weight: 400; color: var(--texto-suave); margin-bottom: 2px; }
@@ -2105,13 +2111,37 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
           var dent = x > t[0] && x < t[2] && y > t[1] && y < t[3];
           nos.push({ x: x, y: y, a: (dent ? 0.22 : 1) * (1 - liso(fim - 120, fim, y)) });
         }
+      var viz = nos.map(function () { return []; });
       for (var i = 0; i < nos.length; i++) for (var j = i + 1; j < nos.length; j++) {
         var a = nos[i], b = nos[j], a2 = Math.min(a.a, b.a);
-        if (a2 > 0.02 && Math.hypot(a.x - b.x, a.y - b.y) < passo * 1.45) s += '<line x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '" x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '" opacity="' + a2.toFixed(2) + '"/>';
+        if (a2 > 0.02 && Math.hypot(a.x - b.x, a.y - b.y) < passo * 1.45) {
+          s += '<line x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '" x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '" opacity="' + a2.toFixed(2) + '"/>';
+          if (a2 > 0.9) { viz[i].push(j); viz[j].push(i); }
+        }
       }
+      var fortes = nos.map(function (n, i) { return i; }).filter(function (i) { return nos[i].a > 0.9 && viz[i].length; }), vivo = '', k;
       nos.forEach(function (n) { if (n.a > 0.02) s += '<circle cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) + '" r="1.8" opacity="' + n.a.toFixed(2) + '"/>'; });
-      caixa(redeEl, m, s);
+      if (movOn() && fortes.length) {
+        // Alguns nós acendem, um de cada vez; nenhum fica atrás do texto.
+        for (k = 0; k < 8; k++) { var n = nos[fortes[Math.floor(rnd() * fortes.length)]]; vivo += '<circle class="acende" style="animation-delay:' + (k * 0.9).toFixed(1) + 's" cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) + '" r="3.2"/>'; }
+        // Três sinais percorrem caminhos de cinco ligações pela rede.
+        for (k = 0; k < 3; k++) {
+          var at = fortes[Math.floor(rnd() * fortes.length)], d = 'M' + nos[at].x.toFixed(1) + ' ' + nos[at].y.toFixed(1), antes = -1;
+          for (var q = 0; q < 5; q++) {
+            var op = viz[at].filter(function (v) { return v !== antes; }); if (!op.length) break;
+            antes = at; at = op[Math.floor(rnd() * op.length)]; d += 'L' + nos[at].x.toFixed(1) + ' ' + nos[at].y.toFixed(1);
+          }
+          vivo += '<path id="rede-cam' + k + '" d="' + d + '" fill="none" stroke="none"/><circle class="sinal" r="2.6"><animateMotion dur="' + (6 + k * 1.5) + 's" begin="' + (k * 2.2) + 's" repeatCount="indefinite"><mpath href="#rede-cam' + k + '"/></animateMotion></circle>';
+        }
+      }
+      caixa(redeEl, m, '<g class="deriva">' + s + vivo + '</g>');
+      if (!visivel(abertura) && redeEl.pauseAnimations) redeEl.pauseAnimations();
     }
+    // Fora da tela a rede para (a deriva e os nós em CSS, os sinais em SVG).
+    new IntersectionObserver(function (es) {
+      var v = es[0].isIntersecting; redeEl.classList.toggle('parada', !v);
+      if (redeEl.pauseAnimations) v ? redeEl.unpauseAnimations() : redeEl.pauseAnimations();
+    }).observe(abertura);
     // Trama de pontos dos números: os pontos crescem para a direita, como no fim do desenho do desktop.
     function reticula() {
       var m = med(retEl), passo = 22, s = '';

@@ -76,6 +76,8 @@ Especificação em `docs/superpowers/specs/2026-10-26-celular-respiro.md`, aprov
 | M47 | Fundos com corte nítido: no celular saem os degradês entre seções. A página fica com cerca de 13,5 telas em 390 × 844 (12,2 em 412 × 915). | celular | Cada parte da história fica marcada pela troca de fundo. | Reverter o commit. |
 | M48 | Ferramentas: volta a faixa que passa sozinha, igual à do desktop, no lugar das fichas de M46. Só CSS, parada fora da tela e com "reduzir movimento". Sai o vão cinza com o fio acima dela. Exceção à regra de nada em movimento contínuo no celular. | celular | Pedido do Vinicius: a lista lateral para passar com o dedo não funcionava bem. | Reverter o commit. |
 | M49 | Os arcos do Como funciona somem nos últimos 220 px da seção, e as perguntas frequentes ganham 40 px em cima. | celular | O título das perguntas encostava nos arcos. | Reverter o commit. |
+| M50 | A rede da abertura ganha vida, sem laço de `requestAnimationFrame`: deriva devagar (CSS), um nó acende de cada vez (CSS) e três sinais correm por caminhos da rede (SVG). Para fora da tela e com "reduzir movimento". | celular | O Vinicius sentia falta da rede em movimento do desktop, "sem roubar a cena". | Reverter o commit. |
+| M51 | Serviços: o ícone vai para cima do título, e o texto do cartão fica todo na mesma margem. Seções com 64 px em cima e embaixo (eram 80), porque, onde o fundo muda, os dois lados somavam 160 px de vazio. | celular | Prints do Vinicius: o texto do cartão desalinhado do título e vãos grandes entre as seções. | Reverter o commit. |
 
 ## Medidas da rodada
 
