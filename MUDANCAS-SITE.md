@@ -42,6 +42,20 @@ O código está no ramo `mobile-whatsapp` do projeto. As mudanças marcadas com 
 | M27 | Ícones de LinkedIn, Instagram e YouTube no rodapé, abaixo da descrição, no site e no blog. Cada um só aparece com o endereço preenchido (`linkedin`, `instagram`, `youtube` no `config.js`; Customize no Ghost). O LinkedIn sai da lista de texto da coluna Contato. No blog, os padrões do tema deixam de trazer o e-mail fictício e o texto antigo da chamada final. | celular, desktop e blog | Pedido do Vinicius. | Esvaziar os campos. |
 | M28 | Celular volta a abrir sempre no tema claro, e a linha "Tema" volta ao menu (a escolha fica guardada). Desfaz a parte de tema de M12. | celular | O Vinicius viu o site abrir escuro no celular e não achou onde trocar. Volta à decisão de 13/10. | Reverter o commit. |
 
+## Rodada de 25/10/2026: celular em "uma ideia por tela"
+
+Especificação em `docs/superpowers/specs/2026-10-25-celular-uma-ideia-por-tela.md`, decidida pelo Vinicius; capturas de antes e depois em `docs/superpowers/specs/2026-10-25-celular/`. Só o celular (até 900 px) muda; o desktop ficou igual na comparação das capturas. Ramo `celular-v2`. Todas voltam revertendo o commit da rodada.
+
+| ID | Mudança | Onde | Por quê | Como voltar |
+|---|---|---|---|---|
+| M29 | Mais respiro: seções com 64 px em cima e embaixo (eram 40), títulos de seção em 26 px e do fechamento em 28 px, corpo de texto em 16 a 18 px. A página passa de 8,7 para cerca de 11,2 telas em 390 × 844. Revê o limite de 9 telas de 19/10. | celular | O celular estava comprimido e cansativo, sem respiro entre uma ideia e outra. | Reverter o commit. |
+| M30 | Abertura: título em 31 px, mais espaço até o botão, e o painel de exemplo vira um cartão só, com o indicador fora da faixa em destaque ("37", em 56 px) e o aviso colado embaixo, no lugar de três cartões espremidos. | celular | Os três cartões de 110 px quebravam os rótulos e não se liam. | Reverter o commit. |
+| M31 | Dores: o número de cada sintoma em linha própria, texto em 18 px, frase de fechamento num bloco de destaque e o quadro HOJE/DEPOIS numa versão em pé (`.hoje-cel`, `.depois-cel`), com os rótulos no tamanho real. As animações valem para as duas versões. | celular | A ilustração larga, encolhida, ficava com o texto minúsculo (pendência desde 09/10). | Reverter o commit. |
+| M32 | Números: cada um como uma afirmação própria, o número em 44 px em cima e a frase embaixo. | celular | Uma ideia por tela, com o número como protagonista. | Reverter o commit. |
+| M33 | Serviços: os quatro cartões e o de IA ficam abertos, um embaixo do outro, com ANTES e DEPOIS à vista. Saem os blocos que abrem ao tocar e o evento `servico_aberto`, que deixa de existir. O cartão de IA mostra a frase e o dado dos 60% do Gartner; as quatro etapas ficam só no desktop. | celular | O "+" escondia o conteúdo e não dava vontade de tocar. | Reverter o commit. |
+| M34 | Exemplos passam com o dedo: fichas com os seis nomes, um trilho com um painel por vez (a borda do próximo à vista) e o marcador "N de 6". Cada painel é desenhado para a tela em pé: a conclusão do gráfico como título, o indicador fora da faixa em destaque (`kpiCel` escolhe quando nenhum está), o gráfico principal na largura toda e o aviso. O Relatório automático aparece como conversa, sem a moldura de celular. O gráfico se desenha na primeira vez que o painel fica ativo; `exemplo_aberto` conta quando o visitante arrasta ou toca numa ficha. Revê a regra "sem carrosséis" de 19/10. | celular | A seção que mais vende virava uma lista de títulos com "+", e não ficava claro que havia outros painéis. | Reverter o commit. |
+| M35 | Sobre, Como funciona e fechamento com mais espaço e texto maior; no rodapé, saem as colunas Serviços e Empresa, que repetem o menu. | celular | Respiro e menos repetição no fim da página. | Reverter o commit. |
+
 ## Medidas da rodada
 
 | | Antes | Depois |
