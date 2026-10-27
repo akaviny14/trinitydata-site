@@ -999,7 +999,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   .rede-cel .sinal { fill: var(--pad-c); }
   .rede-cel.parada :is(.deriva, .acende) { animation-play-state: paused; }
   @keyframes deriva { to { transform: translate(-5px, 3px); } }
-  @keyframes acende { 0%, 100% { opacity: 0; transform: scale(.4); } 6% { opacity: 1; transform: scale(1); } 14% { opacity: 0; transform: scale(.4); } }
+  @keyframes acende { 0%, 100% { opacity: 0; transform: scale(.4); } 6% { opacity: var(--pico, 1); transform: scale(1); } 14% { opacity: 0; transform: scale(.4); } }
   .ret-cel circle { fill: var(--pad-a); opacity: .6; }
   .ondas-cel path { fill: none; stroke: var(--pad-b); stroke-width: 1.2; }
   /* Os arcos somem antes do fim da seção, para não encostar no título das perguntas (que começa sem respiro em cima) */
@@ -1450,7 +1450,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <div class="dif surge"><span class="n">02</span><h3>Seu time aprende a manter.</h3><p>O que é construído fica documentado e com a sua equipe.</p></div>
         <div class="dif surge"><span class="n">03</span><h3>Dados de qualidade, processos claros.</h3><p>Além do painel, apontamos onde os dados falham na origem e medimos a qualidade com indicadores.</p></div>
       </div>
-      <a class="seta porque-link" href="#">Conheça a empresa →</a>
+      <a class="seta porque-link" href="/empresa">Conheça a empresa →</a>
     </div>
   </section>
 
@@ -1570,7 +1570,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
             <p class="redes" id="redes" hidden><a data-rede="linkedin" href="#" aria-label="Trinity Data no LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V16M8 7.6v.01M11.5 16v-5.5M11.5 13.2c0-1.7 1-2.7 2.4-2.7S16 11.5 16 13.2V16"/></svg></a><a data-rede="instagram" href="#" aria-label="Trinity Data no Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.3 6.7v.01"/></svg></a><a data-rede="youtube" href="#" aria-label="Trinity Data no YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.5 9.5l4 2.5-4 2.5z"/></svg></a></p>
           </div>
           <div><h4>SERVIÇOS</h4><ul><li><a href="#servicos">Dashboards e integração</a></li><li><a href="#servicos">Qualidade de dados</a></li><li><a href="#servicos">Monitoramento e alertas</a></li><li><a href="#servicos">Automação de relatórios</a></li></ul></div>
-          <div><h4>EMPRESA</h4><ul><li><a href="#sobre">Sobre</a></li><li><a data-blog href="#blog">Blog</a></li><li><a href="#avaliar">Contato</a></li></ul></div>
+          <div><h4>EMPRESA</h4><ul><li><a href="/empresa">A empresa</a></li><li><a data-blog href="#blog">Blog</a></li><li><a href="#avaliar">Contato</a></li></ul></div>
           <div><h4>CONTATO</h4><ul><li><a data-zap data-origem="rodape" href="#">WhatsApp</a></li><li><a data-email href="#">E-mail</a></li></ul></div>
         </div>
         <div class="rod-base"><span>Trinity Data</span><a href="/politica-de-privacidade">Política de privacidade</a></div>
@@ -2116,22 +2116,25 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         var a = nos[i], b = nos[j], a2 = Math.min(a.a, b.a);
         if (a2 > 0.02 && Math.hypot(a.x - b.x, a.y - b.y) < passo * 1.45) {
           s += '<line x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '" x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '" opacity="' + a2.toFixed(2) + '"/>';
-          if (a2 > 0.9) { viz[i].push(j); viz[j].push(i); }
+          if (a2 > 0.15) { viz[i].push(j); viz[j].push(i); }
         }
       }
-      var fortes = nos.map(function (n, i) { return i; }).filter(function (i) { return nos[i].a > 0.9 && viz[i].length; }), vivo = '', k;
+      // Metade do movimento na parte forte (margens e vão antes do painel) e metade na parte suave (atrás do texto).
+      var ligados = nos.map(function (n, i) { return i; }).filter(function (i) { return nos[i].a > 0.15 && viz[i].length; }),
+        fortes = ligados.filter(function (i) { return nos[i].a > 0.9; }), suaves = ligados.filter(function (i) { return nos[i].a <= 0.9; }), vivo = '', k;
+      function sorteia(k) { var g = (k % 2 && suaves.length) || !fortes.length ? suaves : fortes; return g[Math.floor(rnd() * g.length)]; }
       nos.forEach(function (n) { if (n.a > 0.02) s += '<circle cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) + '" r="1.8" opacity="' + n.a.toFixed(2) + '"/>'; });
-      if (movOn() && fortes.length) {
-        // Alguns nós acendem, um de cada vez; nenhum fica atrás do texto.
-        for (k = 0; k < 8; k++) { var n = nos[fortes[Math.floor(rnd() * fortes.length)]]; vivo += '<circle class="acende" style="animation-delay:' + (k * 0.9).toFixed(1) + 's" cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) + '" r="3.2"/>'; }
-        // Três sinais percorrem caminhos de cinco ligações pela rede.
-        for (k = 0; k < 3; k++) {
-          var at = fortes[Math.floor(rnd() * fortes.length)], d = 'M' + nos[at].x.toFixed(1) + ' ' + nos[at].y.toFixed(1), antes = -1;
+      if (movOn() && ligados.length) {
+        // Alguns nós acendem, um de cada vez, em toda a rede; atrás do texto, com metade da força.
+        for (k = 0; k < 12; k++) { var n = nos[sorteia(k)]; vivo += '<circle class="acende" style="animation-delay:' + (k * 0.6).toFixed(1) + 's;--pico:' + (n.a > 0.9 ? 1 : 0.5) + '" cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) + '" r="3.2"/>'; }
+        // Quatro sinais percorrem caminhos de cinco ligações pela rede, também pela parte suave.
+        for (k = 0; k < 4; k++) {
+          var at = sorteia(k), d = 'M' + nos[at].x.toFixed(1) + ' ' + nos[at].y.toFixed(1), antes = -1;
           for (var q = 0; q < 5; q++) {
             var op = viz[at].filter(function (v) { return v !== antes; }); if (!op.length) break;
             antes = at; at = op[Math.floor(rnd() * op.length)]; d += 'L' + nos[at].x.toFixed(1) + ' ' + nos[at].y.toFixed(1);
           }
-          vivo += '<path id="rede-cam' + k + '" d="' + d + '" fill="none" stroke="none"/><circle class="sinal" r="2.6"><animateMotion dur="' + (6 + k * 1.5) + 's" begin="' + (k * 2.2) + 's" repeatCount="indefinite"><mpath href="#rede-cam' + k + '"/></animateMotion></circle>';
+          vivo += '<path id="rede-cam' + k + '" d="' + d + '" fill="none" stroke="none"/><circle class="sinal" r="2.6" opacity=".75"><animateMotion dur="' + (6 + k * 1.5) + 's" begin="' + (k * 2.2) + 's" repeatCount="indefinite"><mpath href="#rede-cam' + k + '"/></animateMotion></circle>';
         }
       }
       caixa(redeEl, m, '<g class="deriva">' + s + vivo + '</g>');

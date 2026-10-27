@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="assets/td-simbolo.svg" type="image/svg+xml">
+<title>A empresa · Trinity Data</title>
+<meta name="description" content="Quem é a Trinity Data, o que o símbolo significa, a missão, a visão e os valores: clareza, confiança e precisão.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+:root {
+  --td-azul-900: #0C2B37;
+  --td-azul-800: #17495B;
+  --td-azul-600: #2F6E87;
+  --td-azul-50: #E9F2F6;
+  --td-neutro-700: #2B363B;
+  --td-neutro-500: #5C6A71;
+  --td-neutro-100: #D5DCDF;
+  --td-neutro-50: #F3F6F7;
+  --td-neutro-0: #FFFFFF;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--td-neutro-0); color: var(--td-neutro-700); font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-size: 17px; line-height: 1.65; }
+a { color: var(--td-azul-600); text-underline-offset: 3px; }
+a:hover { color: var(--td-azul-800); }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+.cab { border-bottom: 1px solid var(--td-neutro-100); }
+.cab .wrap { max-width: 1280px; display: flex; align-items: center; justify-content: space-between; height: 76px; }
+.cab img { display: block; }
+.cab a.voltar { font-size: 15px; text-decoration: none; }
+.secao { padding: 80px 0; }
+.alt { background: var(--td-neutro-50); }
+.sobretitulo { font-family: "DM Mono", ui-monospace, monospace; font-size: 14px; letter-spacing: .08em; color: var(--td-azul-600); margin: 0 0 14px; }
+h1 { font-size: clamp(34px, 5vw, 48px); line-height: 1.12; letter-spacing: -.02em; color: var(--td-azul-800); margin: 0 0 20px; font-weight: 700; max-width: 18ch; }
+.lead { font-size: 19px; line-height: 1.6; margin: 0; max-width: 60ch; }
+h2 { font-size: 28px; line-height: 1.2; letter-spacing: -.01em; color: var(--td-azul-800); margin: 0 0 16px; font-weight: 700; }
+p { margin: 0; max-width: 64ch; }
+/* O símbolo: o "portanto" (∴), com a conclusão em cima e as premissas embaixo */
+.simbolo { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 56px; align-items: center; }
+.simbolo figure { margin: 0; display: grid; justify-items: center; gap: 14px; }
+.simbolo img { display: block; width: 120px; height: auto; }
+.simbolo figcaption { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--td-neutro-500); text-align: center; line-height: 1.5; }
+.simbolo p + p { margin-top: 14px; }
+/* Missão e visão lado a lado; cada uma com o rótulo em cima e a frase em destaque */
+.mv { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; }
+.mv h2 { font-family: "DM Mono", ui-monospace, monospace; font-size: 14px; letter-spacing: .08em; font-weight: 500; color: var(--td-azul-600); margin: 0 0 14px; }
+.mv p { font-size: 22px; line-height: 1.45; color: var(--td-azul-800); font-weight: 600; }
+/* Valores: a assinatura da marca, um por coluna */
+.valores { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.valores li { border-top: 3px solid var(--td-azul-800); padding-top: 20px; }
+.valores .n { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--td-azul-600); }
+.valores h3 { font-size: 22px; color: var(--td-azul-800); margin: 8px 0 10px; }
+.valores p { font-size: 16px; line-height: 1.6; }
+.fecho { background: var(--td-azul-900); color: var(--td-neutro-0); }
+.fecho h2 { color: var(--td-neutro-0); }
+.fecho p { color: var(--td-azul-50); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; margin-top: 28px; padding: 15px 24px; border-radius: 6px; background: var(--td-neutro-0); color: var(--td-azul-800); font-weight: 600; font-size: 16px; text-decoration: none; }
+.btn:hover { background: var(--td-azul-50); color: var(--td-azul-800); }
+.btn svg { width: 20px; height: 20px; }
+.rod { border-top: 1px solid var(--td-neutro-100); padding: 28px 0; font-size: 14px; color: var(--td-neutro-500); }
+.rod .wrap { max-width: 1280px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  .wrap { padding: 0 16px; }
+  .cab .wrap { height: 64px; }
+  .secao { padding: 64px 0; }
+  .lead { font-size: 18px; }
+  h2 { font-size: 26px; }
+  .simbolo { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .simbolo figure { justify-items: start; }
+  .simbolo figcaption { text-align: left; }
+  .mv { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .mv p { font-size: 21px; }
+  .valores { grid-template-columns: minmax(0, 1fr); gap: 32px; margin-top: 32px; }
+  .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="cab">
+  <div class="wrap">
+    <a href="/" aria-label="Trinity Data, página inicial"><img src="assets/td-reduzido.svg" alt="Trinity Data" width="150"></a>
+    <a class="voltar" href="/">← Voltar ao site</a>
+  </div>
+</header>
+
+<main>
+  <section class="secao">
+    <div class="wrap">
+      <p class="sobretitulo">A EMPRESA</p>
+      <h1>Primeiro os dados certos, depois a decisão</h1>
+      <p class="lead">A Trinity Data é uma consultoria de engenharia de dados e BI, criada em 2026 por três profissionais de dados que já trabalhavam juntos. Atendemos empresas no Brasil e no exterior que têm os dados espalhados em vários sistemas e precisam enxergar a própria operação.</p>
+    </div>
+  </section>
+
+  <section class="secao alt">
+    <div class="wrap simbolo">
+      <figure>
+        <img src="assets/td-simbolo.svg" alt="Símbolo da Trinity Data: três pontos em triângulo" width="120">
+        <figcaption>∴ PORTANTO</figcaption>
+      </figure>
+      <div>
+        <h2>O símbolo</h2>
+        <p>O símbolo da Trinity é o sinal de "portanto" da lógica. Os dois pontos de baixo são as premissas; o de cima, a conclusão.</p>
+        <p>É a ordem em que trabalhamos: os dados conferidos vêm antes de qualquer conclusão. Primeiro enxergar o que está acontecendo na operação, depois medir, e só então antecipar.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="wrap mv">
+      <div>
+        <h2>MISSÃO</h2>
+        <p>Dar a cada empresa uma visão clara e confiável da própria operação, para que as decisões partam do que está acontecendo de fato.</p>
+      </div>
+      <div>
+        <h2>VISÃO</h2>
+        <p>Ser a consultoria de dados que as empresas procuram quando precisam confiar nos próprios números.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao alt">
+    <div class="wrap">
+      <h2>Valores: clareza, confiança e precisão</h2>
+      <ol class="valores">
+        <li><span class="n">01</span><h3>Clareza</h3><p>Cada painel responde a uma pergunta que a equipe já faz, na língua do negócio. O que construímos fica documentado.</p></li>
+        <li><span class="n">02</span><h3>Confiança</h3><p>Quem atende é quem constrói, e o mesmo número vale para todas as áreas. O que entregamos fica com o seu time.</p></li>
+        <li><span class="n">03</span><h3>Precisão</h3><p>Os dados são conferidos na origem, e a qualidade é medida com indicadores. Nenhum número sem fonte.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="secao fecho">
+    <div class="wrap">
+      <h2>Fale com a Trinity sobre os dados da sua empresa</h2>
+      <p>Conte o que você precisa pelo WhatsApp.</p>
+      <a class="btn" data-zap href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9.2 8.6c.3 2.6 2 4.7 4.6 5.6l1.2-1.1 1.8.9-.5 1.6c-3.9.3-8-3.6-8-7.6l1.6-.6.9 1.8z"/></svg>Falar com a Trinity no WhatsApp</a>
+    </div>
+  </section>
+</main>
+
+<footer class="rod">
+  <div class="wrap"><span>Trinity Data</span><a href="/politica-de-privacidade">Política de privacidade</a></div>
+</footer>
+
+<script>
+  (function () {
+    var CFG = window.TD_CONFIG || {};
+    var zap = 'https://wa.me/' + (CFG.whatsapp || '') + (CFG.whatsappMensagem ? '?text=' + encodeURIComponent(CFG.whatsappMensagem) : '');
+    document.querySelectorAll('[data-zap]').forEach(function (a) { if (CFG.whatsapp) a.href = zap; else a.hidden = true; });
+  })();
+</script>
+</body>
+</html>
