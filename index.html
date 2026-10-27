@@ -227,7 +227,7 @@ a:hover { color: var(--link-hover); }
 .cab-in { position: relative; max-width: 1440px; margin: 0 auto; height: 76px; display: flex; align-items: center; gap: 32px; padding: 0 80px; }
 .cab-in > a:first-child { display: flex; align-items: center; height: 100%; }
 .cab .logo { display: block; width: 150px; height: auto; transform: translateY(2px); } /* correção óptica: o ponto de cima do símbolo puxa o peso para cima */
-.logo-escuro { display: none; }
+.cab .logo-escuro { display: none; } /* com .cab, para vencer o display: block de .cab .logo (antes a logo branca ficava na página, invisível no fundo branco) */
 [data-tema="escuro"] .logo-claro { display: none; }
 [data-tema="escuro"] .logo-escuro { display: block; }
 .cab nav { display: flex; gap: 32px; margin-left: auto; font-size: 15px; }
@@ -1186,7 +1186,7 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
         <a href="#sobre">Sobre</a>
         <a href="#como-funciona">Como funciona</a>
         <a data-blog href="https://blog.trinitydata.com.br/">Blog</a>
-        <a href="#perguntas">Perguntas frequentes</a>
+        <a href="#perguntas" hidden>Perguntas frequentes</a>
       </nav>
       <button class="menu-tema" type="button" id="menu-tema"><span>Tema</span><span class="menu-tema-v"><span class="so-claro">Claro</span><span class="so-escuro">Escuro</span></span></button>
       <div class="menu-acoes">
@@ -1521,8 +1521,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     </div>
   </section>
 
-  <!-- 11. Perguntas frequentes -->
-  <section class="secao faq-sec" id="perguntas">
+  <!-- 11. Perguntas frequentes (oculta por enquanto, M63: para voltar, tirar o hidden daqui e do link do menu) -->
+  <section class="secao faq-sec" id="perguntas" hidden>
     <div class="wrap faq-grid">
       <aside>
         <h2 class="secao-tit surge">O que as empresas perguntam antes de começar</h2>
