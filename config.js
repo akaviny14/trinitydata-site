@@ -10,6 +10,6 @@ window.TD_CONFIG = {
   posts: [], // [{ titulo, categoria, url }] (vazio = seção Blog oculta, e somem os links para ela)
   blogUrl: '', // endereço do blog no Ghost (ex.: https://blog.dominio.com.br/); vazio = sem o link "Ver todos os artigos"
   analytics: null, // ex.: { provedor: 'umami', id: '...' } ou { provedor: 'vercel' } (null = sem medição)
-  dominio: '', email: '', cidade: '', // vazios até haver dados reais
+  dominio: 'trinitydata.com.br', email: '', cidade: '', // vazios até haver dados reais
   linkedin: '', instagram: '', youtube: '' // redes sociais: endereço completo do perfil; cada ícone do rodapé só aparece com o seu
 };

@@ -4,7 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" href="assets/td-simbolo.svg" type="image/svg+xml">
-<title>Trinity Data · Protótipo da home</title>
+<title>Trinity Data · Consultoria de dados e BI</title>
+<meta name="description" content="Centralizamos os dados espalhados em planilhas e sistemas e entregamos visibilidade de vendas, caixa e operação, sem montagem manual.">
+<link rel="canonical" href="https://trinitydata.com.br/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Trinity Data">
+<meta property="og:title" content="Os dados da sua empresa num só lugar, sempre atualizados">
+<meta property="og:description" content="Centralizamos os dados espalhados em planilhas e sistemas e entregamos visibilidade de vendas, caixa e operação, sem montagem manual.">
+<meta property="og:url" content="https://trinitydata.com.br/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
@@ -14,7 +22,7 @@
   (function () {
     var t = new URLSearchParams(location.search).get('tema');
     if (!t) { try { t = localStorage.getItem('td-tema'); } catch (e) {} }
-    if (!t) t = 'claro';
+    if (t !== 'escuro') t = 'claro'; // só os dois temas valem, venha o valor da URL ou do navegador
     document.documentElement.dataset.tema = t;
   })();
 </script>
@@ -2734,7 +2742,9 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   reduzido.addEventListener('change', function () { reconstruir(); montar(); });
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
     reconstruir(); montar();
-    if (location.hash && document.querySelector(location.hash)) { var el = document.querySelector(location.hash); window.scrollTo(0, el.getBoundingClientRect().top + scrollY - document.querySelector('.cab').offsetHeight); pedirTudo(); }
+    // Por id, e não por seletor: um # malformado no endereço não pode quebrar o script.
+    var el = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (el) { window.scrollTo(0, el.getBoundingClientRect().top + scrollY - document.querySelector('.cab').offsetHeight); pedirTudo(); }
   });
 
 })();
