@@ -82,6 +82,7 @@ Especificação em `docs/superpowers/specs/2026-10-26-celular-respiro.md`, aprov
 | M53 | A rede da abertura também se mexe na parte suave: metade dos nós que acendem e dos sinais que correm fica atrás do texto e no esmaecimento antes do painel, com metade da força. Eram só a parte forte. | celular | O Vinicius notou que a parte suave da rede ficava parada. | Reverter o commit. |
 | M54 | Página nova "A empresa" (`prototipo/empresa.html`, publicada em `/empresa`): quem é a Trinity, o significado do símbolo (∴, as premissas antes da conclusão), missão, visão e os valores clareza, confiança e precisão (a assinatura da marca). O "Conheça a empresa →" da seção Sobre e o "A empresa" do rodapé levam a ela. | página nova, celular e desktop | O Vinicius pediu missão, visão e valores; a home já estava longa no celular, e o link "Conheça a empresa" estava reservado sem destino. | Apagar a página e voltar os dois links para "#" e "#sobre". |
 | M55 | O "Conheça a empresa →" vira um cartão inteiro clicável ("A EMPRESA · Missão, visão e valores", uma frase e a seta num círculo). A foto do contato "Relatório semanal" ganha um gráfico de barras no lugar do círculo vazio, no desktop e no celular. | celular e desktop | O Vinicius achou o link pouco atraente para ser clicado e o círculo vazio pouco concreto. | Reverter o commit. |
+| M56 | Volta o link de texto "Conheça a empresa →" no lugar do cartão de M55. A foto do Relatório semanal fica. | celular e desktop | O Vinicius não gostou do cartão. | Reverter o commit. |
 
 ## Medidas da rodada
 
