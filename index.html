@@ -1655,11 +1655,11 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
     }
     if (CFG.prazoResposta) document.getElementById('passo-prazo').lastChild.textContent = 'Respondemos ' + CFG.prazoResposta + '.';
   })();
-  // Blog: a seção e os links para ela só aparecem com pelo menos um post real. Os links já trazem o endereço do Ghost
-  // no HTML; com blogUrl preenchido, passam a usar o dele.
+  // Blog: os botões "Blog" (cabeçalho, menu do celular e rodapé) aparecem com o blogUrl preenchido e levam ao Ghost;
+  // a seção de artigos da home só aparece com pelo menos um post real em posts.
   var POSTS = (CFG.posts || []).filter(function (p) { return p && p.titulo && p.url; });
   document.getElementById('blog').hidden = !POSTS.length;
-  document.querySelectorAll('[data-blog]').forEach(function (a) { (a.closest('li') || a).hidden = !POSTS.length; if (CFG.blogUrl) a.href = CFG.blogUrl; });
+  document.querySelectorAll('[data-blog]').forEach(function (a) { (a.closest('li') || a).hidden = !CFG.blogUrl; if (CFG.blogUrl) a.href = CFG.blogUrl; });
   if (CFG.blogUrl) document.getElementById('blog-todos').href = CFG.blogUrl;
 
   // ---------- Medição: track(evento, dados) chama o provedor de TD_CONFIG.analytics; sem provedor, não faz nada ----------
