@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="assets/td-simbolo.svg" type="image/svg+xml">
+<title>Painel de fretamento · Trinity Data</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Exemplo com dados fictícios: receita, custo por km, ocupação e margem de cada contrato de fretamento no mesmo painel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+:root {
+  --td-azul-900: #0C2B37;
+  --td-azul-800: #17495B;
+  --td-azul-600: #2F6E87;
+  --td-azul-400: #5B9AB3;
+  --td-azul-200: #A9C7D6;
+  --td-azul-50: #E9F2F6;
+  --td-neutro-900: #0E1417;
+  --td-neutro-700: #2B363B;
+  --td-neutro-500: #5C6A71;
+  --td-neutro-300: #9AA7AD;
+  --td-neutro-100: #D5DCDF;
+  --td-neutro-50: #F3F6F7;
+  --td-neutro-0: #FFFFFF;
+  --td-semantica-positivo: #1F7A5C;
+  --td-semantica-positivo-texto: #186449;
+  --td-semantica-atencao: #C77B2E;
+  --td-semantica-atencao-texto: #A85F1E;
+  --td-semantica-critico: #B03F33;
+  --td-semantica-critico-texto: #93332A;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--td-neutro-0); color: var(--td-neutro-700); font-family: "DM Sans", Inter, system-ui, Arial, sans-serif; font-size: 17px; line-height: 1.65; }
+a { color: var(--td-azul-600); text-underline-offset: 3px; }
+a:hover { color: var(--td-azul-800); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--td-azul-600); outline-offset: 2px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.cab { border-bottom: 1px solid var(--td-neutro-100); }
+.cab .wrap { max-width: 1280px; display: flex; align-items: center; justify-content: space-between; height: 76px; }
+.cab img { display: block; }
+.cab a.voltar { font-size: 15px; text-decoration: none; }
+.secao { padding: 72px 0; }
+.alt { background: var(--td-neutro-50); }
+.abertura { padding: 56px 0 32px; }
+.sobretitulo { font-family: "DM Mono", ui-monospace, monospace; font-size: 14px; letter-spacing: .08em; color: var(--td-azul-600); margin: 0 0 14px; }
+h1 { font-size: clamp(32px, 4.6vw, 46px); line-height: 1.12; letter-spacing: -.02em; color: var(--td-azul-800); margin: 0 0 18px; font-weight: 700; max-width: 22ch; }
+.lead { font-size: 19px; line-height: 1.6; margin: 0; max-width: 62ch; }
+h2 { font-size: 28px; line-height: 1.2; letter-spacing: -.01em; color: var(--td-azul-800); margin: 0 0 16px; font-weight: 700; max-width: 30ch; }
+p { margin: 0; max-width: 64ch; }
+
+/* Painel de exemplo */
+.painel { border: 1px solid var(--td-neutro-100); border-radius: 8px; overflow: hidden; background: var(--td-neutro-0); margin-bottom: 72px; }
+.faixa { background: var(--td-azul-900); color: var(--td-neutro-0); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.faixa b { font-weight: 600; }
+.faixa .aviso { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--td-azul-200); margin-left: 10px; }
+.filtros { display: flex; gap: 4px; flex-wrap: wrap; }
+.filtros button { background: none; border: 1px solid var(--td-azul-600); color: var(--td-azul-50); border-radius: 4px; padding: 5px 12px; font-size: 14px; cursor: pointer; }
+.filtros button:hover { border-color: var(--td-azul-200); }
+.filtros button[aria-pressed="true"] { background: var(--td-neutro-0); border-color: var(--td-neutro-0); color: var(--td-azul-800); font-weight: 600; }
+.filtros button:focus-visible { outline-color: var(--td-neutro-0); }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--td-neutro-100); }
+.kpi { padding: 16px 20px; border-left: 1px solid var(--td-neutro-100); min-width: 0; }
+.kpi:first-child { border-left: 0; }
+.kpi .r { display: block; font-size: 14px; color: var(--td-neutro-500); line-height: 1.3; }
+.kpi .v { display: block; font-family: "DM Mono", ui-monospace, monospace; font-size: 25px; font-weight: 500; color: var(--td-azul-800); line-height: 1.35; white-space: nowrap; }
+.alerta { display: flex; gap: 12px; align-items: baseline; padding: 11px 20px; background: var(--td-neutro-0); border-bottom: 1px solid var(--td-neutro-100); border-left: 4px solid var(--td-azul-600); font-size: 15px; line-height: 1.45; }
+.alerta .tag { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; color: var(--td-azul-600); flex: none; }
+.alerta.critico { border-left-color: var(--td-semantica-critico); }
+.alerta.critico .tag { color: var(--td-semantica-critico-texto); }
+.alerta.atencao { border-left-color: var(--td-semantica-atencao); }
+.alerta.atencao .tag { color: var(--td-semantica-atencao-texto); }
+.corpo { display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 10fr); }
+.lista { padding: 8px 0; border-right: 1px solid var(--td-neutro-100); min-width: 0; }
+.lista .tit { display: flex; justify-content: space-between; padding: 8px 20px; font-size: 13px; color: var(--td-neutro-500); font-family: "DM Mono", ui-monospace, monospace; letter-spacing: .04em; }
+.linha { display: grid; grid-template-columns: minmax(0, 1fr) 96px 62px; align-items: center; gap: 12px; width: 100%; padding: 10px 20px; background: none; border: 0; border-left: 3px solid transparent; text-align: left; cursor: pointer; }
+.linha:hover { background: var(--td-neutro-50); }
+.linha[aria-pressed="true"] { background: var(--td-azul-50); border-left-color: var(--td-azul-800); }
+.linha .n { display: block; font-size: 15px; font-weight: 600; color: var(--td-azul-800); line-height: 1.3; }
+.linha .t { display: block; font-size: 13px; color: var(--td-neutro-500); line-height: 1.35; }
+.barra { position: relative; height: 8px; background: var(--td-neutro-100); border-radius: 2px; }
+.barra i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; background: var(--td-azul-800); }
+.barra.atencao i { background: var(--td-semantica-atencao); }
+.barra.critico i { background: var(--td-semantica-critico); }
+.linha .m { font-family: "DM Mono", ui-monospace, monospace; font-size: 15px; color: var(--td-azul-800); text-align: right; }
+.linha .m.atencao { color: var(--td-semantica-atencao-texto); }
+.linha[aria-pressed="true"] .m.atencao { color: var(--td-azul-900); } /* Atenção texto não atinge 4,5:1 sobre Azul 50 */
+.linha .m.critico { color: var(--td-semantica-critico-texto); }
+.detalhe { padding: 20px; min-width: 0; }
+.detalhe h3 { margin: 0 0 2px; font-size: 19px; line-height: 1.3; color: var(--td-azul-800); }
+.detalhe .sub { font-size: 14px; color: var(--td-neutro-500); margin: 0 0 14px; }
+.mini { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0 0 14px; }
+.mini div { min-width: 0; }
+.mini dt { font-size: 13px; color: var(--td-neutro-500); line-height: 1.25; }
+.mini dd { margin: 2px 0 0; font-family: "DM Mono", ui-monospace, monospace; font-size: 17px; color: var(--td-azul-800); white-space: nowrap; }
+.grafico { display: block; width: 100%; height: auto; }
+.grafico text { font-family: "DM Mono", ui-monospace, monospace; font-size: 11px; fill: var(--td-neutro-500); }
+.grafico .valor { font-size: 13px; font-weight: 500; fill: var(--td-azul-800); }
+.grafico .valor.critico { fill: var(--td-semantica-critico-texto); }
+.grafico .serie { fill: none; stroke: var(--td-azul-800); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.grafico .meta { stroke: var(--td-semantica-atencao); stroke-width: 1; stroke-dasharray: 4 3; }
+.grafico .zero { stroke: var(--td-neutro-300); stroke-width: 1; }
+.grafico .ponto { fill: var(--td-azul-800); }
+.grafico .ponto.critico { fill: var(--td-semantica-critico); }
+.leitura { margin-top: 12px; font-size: 15px; line-height: 1.55; }
+.leitura b { color: var(--td-azul-800); font-weight: 600; }
+
+/* Texto da página */
+.perguntas { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.perguntas li { border-top: 3px solid var(--td-azul-800); padding-top: 18px; }
+.perguntas .n { font-family: "DM Mono", ui-monospace, monospace; font-size: 13px; color: var(--td-azul-600); }
+.perguntas h3 { font-size: 20px; line-height: 1.3; color: var(--td-azul-800); margin: 8px 0 8px; }
+.perguntas p { font-size: 16px; line-height: 1.6; }
+.duas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px; align-items: start; }
+.duas p + p { margin-top: 14px; }
+.fontes { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--td-neutro-300); }
+.fontes li { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--td-neutro-300); font-size: 16px; }
+.fontes span { color: var(--td-neutro-500); text-align: right; }
+.fecho { background: var(--td-azul-900); color: var(--td-neutro-0); }
+.fecho h2 { color: var(--td-neutro-0); }
+.fecho p { color: var(--td-azul-50); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; margin-top: 28px; padding: 15px 24px; border-radius: 6px; background: var(--td-neutro-0); color: var(--td-azul-800); font-weight: 600; font-size: 16px; text-decoration: none; }
+.btn:hover { background: var(--td-azul-50); color: var(--td-azul-800); }
+.btn svg { width: 20px; height: 20px; }
+.fecho a.saber { display: block; margin-top: 18px; color: var(--td-azul-50); font-size: 15px; }
+.fecho a.saber:hover { color: var(--td-neutro-0); }
+.rod { border-top: 1px solid var(--td-neutro-100); padding: 28px 0; font-size: 14px; color: var(--td-neutro-500); }
+.rod .wrap { max-width: 1280px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .corpo { grid-template-columns: minmax(0, 1fr); }
+  .lista { border-right: 0; border-bottom: 1px solid var(--td-neutro-100); }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi:nth-child(odd) { border-left: 0; }
+  .kpi:nth-child(n+3) { border-top: 1px solid var(--td-neutro-100); }
+  .perguntas { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .duas { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+}
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  .wrap { padding: 0 16px; }
+  .cab .wrap { height: 64px; }
+  .abertura { padding: 40px 0 24px; }
+  .secao { padding: 56px 0; }
+  .lead { font-size: 18px; }
+  h2 { font-size: 26px; }
+  .painel { margin-bottom: 56px; }
+  .faixa { padding: 12px 14px; }
+  .faixa .aviso { display: block; margin: 2px 0 0; }
+  .kpi { padding: 12px 14px; }
+  .kpi .v { font-size: 21px; }
+  .alerta { padding: 10px 14px; flex-direction: column; gap: 2px; }
+  .lista .tit { padding: 8px 14px; }
+  .linha { grid-template-columns: minmax(0, 1fr) 54px 54px; gap: 8px; padding: 10px 14px; }
+  .detalhe { padding: 16px 14px; }
+  .mini { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grafico text { font-size: 14px; }
+  .grafico .valor { font-size: 15px; }
+  .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="cab">
+  <div class="wrap">
+    <a href="/" aria-label="Trinity Data, página inicial"><img src="assets/td-reduzido.svg" alt="Trinity Data" width="150"></a>
+    <a class="voltar" href="/">Conhecer o site →</a>
+  </div>
+</header>
+
+<main>
+  <section class="abertura">
+    <div class="wrap">
+      <p class="sobretitulo">FRETAMENTO · PAINEL DE EXEMPLO</p>
+      <h1>Quanto cada contrato de fretamento deixou no mês</h1>
+      <p class="lead">Receita, custo por km, km sem passageiro e ocupação no mesmo painel, contrato por contrato. Os dados abaixo são fictícios: escolha um contrato e veja o que muda.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="painel" aria-label="Painel de exemplo com dados fictícios">
+      <div class="faixa">
+        <div><b>Fretadora de exemplo · outubro</b><span class="aviso">DADOS FICTÍCIOS</span></div>
+        <div class="filtros" role="group" aria-label="Filtrar por tipo de contrato" id="filtros"></div>
+      </div>
+      <div class="kpis" id="kpis" aria-live="polite"></div>
+      <div class="alerta" id="alerta"></div>
+      <div class="corpo">
+        <div class="lista">
+          <div class="tit"><span>CONTRATO</span><span>MARGEM NO MÊS</span></div>
+          <div id="linhas"></div>
+        </div>
+        <div class="detalhe" id="detalhe" aria-live="polite"></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="secao alt">
+    <div class="wrap">
+      <h2>Três perguntas que esse painel responde</h2>
+      <ol class="perguntas">
+        <li><span class="n">01</span><h3>Qual contrato dá resultado depois de todos os custos?</h3><p>A receita de cada contrato ao lado do custo que ele consome de verdade, no mesmo período.</p></li>
+        <li><span class="n">02</span><h3>Quanto da km rodada não leva passageiro?</h3><p>O deslocamento vazio entre garagem, rota e turno, por contrato, em vez de uma média da frota inteira.</p></li>
+        <li><span class="n">03</span><h3>Com que número sentar na renovação?</h3><p>O histórico de 12 meses de cada contrato, para a conversa de reajuste partir do que aconteceu.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="wrap duas">
+      <div>
+        <h2>Por que esse número costuma chegar tarde</h2>
+        <p>Cada parte dele nasce num lugar diferente, e alguém precisa juntar tudo à mão no fechamento. Até lá, o mês já passou.</p>
+        <p>A Trinity Data monta essa base única, atualizada todo dia e com as regras conferidas, para que o relatório deixe de ser montado à mão.</p>
+      </div>
+      <ul class="fontes" aria-label="Onde cada dado costuma estar">
+        <li>Receita por contrato <span>financeiro</span></li>
+        <li>Km rodada e abastecimento <span>operação</span></li>
+        <li>Manutenção <span>frota</span></li>
+        <li>Escala e horas de motorista <span>RH e tráfego</span></li>
+        <li>Passageiros transportados <span>operação</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="secao fecho">
+    <div class="wrap">
+      <h2>Quer ver esse painel com os números da sua operação?</h2>
+      <p>A Trinity Data é uma consultoria de engenharia de dados e BI, criada em 2026. Quem atende é quem constrói, e o que entregamos fica com o seu time.</p>
+      <a class="btn" data-zap href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9.2 8.6c.3 2.6 2 4.7 4.6 5.6l1.2-1.1 1.8.9-.5 1.6c-3.9.3-8-3.6-8-7.6l1.6-.6.9 1.8z"/></svg>Falar com a Trinity no WhatsApp</a>
+      <a class="saber" href="/empresa">Conhecer a empresa</a>
+    </div>
+  </section>
+</main>
+
+<footer class="rod">
+  <div class="wrap"><span>Trinity Data</span><a href="/politica-de-privacidade">Política de privacidade</a></div>
+</footer>
+
+<script>
+(function () {
+  var CFG = window.TD_CONFIG || {};
+  var msg = 'Olá! Vi o painel de fretamento da Trinity Data e queria conversar sobre os dados da minha empresa.';
+  document.querySelectorAll('[data-zap]').forEach(function (a) {
+    if (CFG.whatsapp) a.href = 'https://wa.me/' + CFG.whatsapp + '?text=' + encodeURIComponent(msg); else a.hidden = true;
+  });
+
+  // Dados fictícios. Margem, custo por km e os totais são sempre calculados daqui, para os números fecharem entre si.
+  var META = 12;
+  var MESES = ['N', 'D', 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O'];
+  var CONTRATOS = [
+    { id: 'a', nome: 'Indústria de autopeças', detalhe: '3 turnos', tipo: 'Empresarial', receita: 186000, custo: 148800, km: 24000, vazio: 9, ocupacao: 86,
+      hist: [19, 20, 19, 20, 21, 20, 20, 19, 20, 20, 20, 20],
+      leitura: 'O melhor resultado entre os contratos empresariais, estável há 12 meses.' },
+    { id: 'b', nome: 'Centro de distribuição', detalhe: '2 turnos', tipo: 'Empresarial', receita: 142000, custo: 123540, km: 19500, vazio: 11, ocupacao: 78,
+      hist: [16, 16, 17, 16, 16, 16, 16, 15, 15, 14, 14, 13],
+      leitura: 'Ainda acima da meta, mas a margem perdeu 3 p.p. em seis meses.' },
+    { id: 'c', nome: 'Indústria química', detalhe: '3 turnos', tipo: 'Empresarial', receita: 98000, custo: 101920, km: 13200, vazio: 21, ocupacao: 64,
+      hist: [13, 12, 13, 12, 12, 12, 11, 12, 11, 7, 2, -4],
+      leitura: 'A margem era de 11% em julho. Depois da mudança de turno, em agosto, 21% da km passou a rodar sem passageiro, e o contrato fechou outubro no vermelho.' },
+    { id: 'd', nome: 'Hospital regional', detalhe: 'escala 12×36', tipo: 'Empresarial', receita: 64000, custo: 56960, km: 9800, vazio: 12, ocupacao: 71,
+      hist: [12, 12, 11, 12, 11, 11, 12, 11, 11, 11, 11, 11],
+      leitura: 'Margem estável, 1 p.p. abaixo da meta. Pede ajuste fino, não urgência.' },
+    { id: 'e', nome: 'Colégio particular', detalhe: '2 períodos', tipo: 'Escolar', receita: 38000, custo: 31160, km: 5200, vazio: 14, ocupacao: 82,
+      hist: [18, 17, 9, 16, 18, 19, 18, 12, 18, 18, 18, 18],
+      leitura: 'As quedas de janeiro e julho vêm das férias escolares. Fora delas, a margem fica perto de 18%.' },
+    { id: 'f', nome: 'Universidade', detalhe: 'noturno', tipo: 'Escolar', receita: 46000, custo: 43700, km: 6600, vazio: 17, ocupacao: 59,
+      hist: [9, 9, 8, 8, 8, 7, 7, 6, 6, 6, 5, 5],
+      leitura: 'A menor ocupação da carteira: quatro em cada dez lugares rodam vazios, e a margem cai aos poucos há um ano.' },
+    { id: 'g', nome: 'Excursões e eventos', detalhe: 'viagens eventuais', tipo: 'Turismo', receita: 72000, custo: 52560, km: 11000, vazio: 6, ocupacao: 91,
+      hist: [24, 30, 33, 25, 22, 24, 26, 30, 28, 26, 25, 27],
+      leitura: 'A maior margem e a menor km sem passageiro. Varia com a temporada, então o mês isolado diz pouco.' }
+  ];
+  var FILTROS = ['Todos', 'Empresarial', 'Escolar', 'Turismo'];
+  var estado = { filtro: 'Todos', sel: 'c' };
+
+  function el(tag, attrs, filhos) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (k === 'texto') e.textContent = attrs[k]; else e.setAttribute(k, attrs[k]);
+    });
+    (filhos || []).forEach(function (f) { e.appendChild(f); });
+    return e;
+  }
+  function pct(v) { return v.toFixed(1).replace('.', ',').replace('-', '−') + '%'; }
+  function inteiro(v) { return String(v).replace('-', '−') + '%'; }
+  function reais(v) { return 'R$ ' + (v / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + ' mil'; }
+  function reaisKm(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
+  function margem(c) { return (c.receita - c.custo) / c.receita * 100; }
+  function nivel(m) { return m < 0 ? 'critico' : m < META ? 'atencao' : ''; }
+  function visiveis() { return CONTRATOS.filter(function (c) { return estado.filtro === 'Todos' || c.tipo === estado.filtro; }); }
+
+  function desenharFiltros() {
+    var box = document.getElementById('filtros');
+    box.textContent = '';
+    FILTROS.forEach(function (f) {
+      var b = el('button', { type: 'button', 'aria-pressed': String(f === estado.filtro), texto: f });
+      b.addEventListener('click', function () {
+        estado.filtro = f;
+        var lista = visiveis();
+        if (!lista.some(function (c) { return c.id === estado.sel; })) {
+          estado.sel = lista.slice().sort(function (x, y) { return margem(x) - margem(y); })[0].id;
+        }
+        desenhar();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function desenharKpis() {
+    var lista = visiveis();
+    var r = 0, c = 0, k = 0, v = 0;
+    lista.forEach(function (x) { r += x.receita; c += x.custo; k += x.km; v += x.km * x.vazio / 100; });
+    var itens = [
+      ['Receita do mês', reais(r)],
+      ['Margem', pct((r - c) / r * 100)],
+      ['Custo por km', reaisKm(c / k)],
+      ['Km sem passageiro', pct(v / k * 100)]
+    ];
+    var box = document.getElementById('kpis');
+    box.textContent = '';
+    itens.forEach(function (i) {
+      box.appendChild(el('div', { 'class': 'kpi' }, [el('span', { 'class': 'r', texto: i[0] }), el('span', { 'class': 'v', texto: i[1] })]));
+    });
+  }
+
+  function desenharAlerta() {
+    var lista = visiveis().slice().sort(function (x, y) { return margem(x) - margem(y); });
+    var abaixo = lista.filter(function (c) { return margem(c) < META; });
+    var box = document.getElementById('alerta');
+    box.className = 'alerta';
+    box.textContent = '';
+    var tag, frase;
+    if (!abaixo.length) {
+      tag = 'EM DIA';
+      frase = 'Todos os contratos desta seleção estão acima da meta de ' + META + '%.';
+    } else {
+      var pior = abaixo[0], m = margem(pior);
+      box.classList.add(nivel(m));
+      tag = m < 0 ? 'CRÍTICO' : 'ATENÇÃO';
+      frase = pior.nome + ' fechou o mês com margem de ' + pct(m) + '. ' +
+        (abaixo.length === 1 ? 'É o único contrato' : abaixo.length + ' contratos estão') + ' abaixo da meta de ' + META + '%.';
+    }
+    box.appendChild(el('span', { 'class': 'tag', texto: tag }));
+    box.appendChild(el('span', { texto: frase }));
+  }
+
+  function desenharLinhas() {
+    var box = document.getElementById('linhas');
+    box.textContent = '';
+    visiveis().slice().sort(function (x, y) { return margem(y) - margem(x); }).forEach(function (c) {
+      var m = margem(c), n = nivel(m);
+      var barra = el('span', { 'class': 'barra ' + n }, [el('i', { style: 'width:' + Math.max(3, Math.abs(m) / 30 * 100) + '%' })]);
+      var b = el('button', { type: 'button', 'class': 'linha', 'aria-pressed': String(c.id === estado.sel) }, [
+        el('span', {}, [el('span', { 'class': 'n', texto: c.nome }), el('span', { 'class': 't', texto: c.tipo + ' · ' + c.detalhe })]),
+        barra,
+        el('span', { 'class': 'm ' + n, texto: pct(m) })
+      ]);
+      b.addEventListener('click', function () {
+        estado.sel = c.id;
+        desenharLinhas();
+        desenharDetalhe();
+        var d = document.getElementById('detalhe');
+        if (window.innerWidth <= 860 && d.scrollIntoView) {
+          var quieto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+          d.scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'start' });
+        }
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function grafico(c) {
+    var NS = 'http://www.w3.org/2000/svg', L = 420, A = 150, esq = 30, dir = 44, topo = 14, base = 22;
+    var dados = c.hist, min = Math.min.apply(null, dados.concat([0, META])), max = Math.max.apply(null, dados.concat([META]));
+    min = Math.floor(min - 2); max = Math.ceil(max + 2);
+    function X(i) { return esq + i * (L - esq - dir) / (dados.length - 1); }
+    function Y(v) { return topo + (max - v) * (A - topo - base) / (max - min); }
+    function s(tag, attrs, texto) {
+      var e = document.createElementNS(NS, tag);
+      Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+      if (texto !== undefined) e.textContent = texto;
+      return e;
+    }
+    var ult = dados[dados.length - 1], critico = ult < 0;
+    var svg = s('svg', { viewBox: '0 0 ' + L + ' ' + A, 'class': 'grafico', role: 'img',
+      'aria-label': 'Margem de ' + c.nome + ' nos últimos 12 meses, de ' + inteiro(dados[0]) + ' a ' + inteiro(ult) + ', com a meta de ' + META + '%.' });
+    svg.appendChild(s('line', { x1: esq, x2: L - dir, y1: Y(0), y2: Y(0), 'class': 'zero' }));
+    svg.appendChild(s('text', { x: esq - 6, y: Y(0) + 4, 'text-anchor': 'end' }, '0%'));
+    svg.appendChild(s('line', { x1: esq, x2: L - dir, y1: Y(META), y2: Y(META), 'class': 'meta' }));
+    svg.appendChild(s('text', { x: esq - 6, y: Y(META) + 4, 'text-anchor': 'end' }, META + '%'));
+    svg.appendChild(s('polyline', { 'class': 'serie', points: dados.map(function (v, i) { return X(i).toFixed(1) + ',' + Y(v).toFixed(1); }).join(' ') }));
+    svg.appendChild(s('circle', { cx: X(dados.length - 1), cy: Y(ult), r: 4, 'class': 'ponto' + (critico ? ' critico' : '') }));
+    svg.appendChild(s('text', { x: X(dados.length - 1) + 9, y: Y(ult) + 4, 'class': 'valor' + (critico ? ' critico' : '') }, inteiro(ult)));
+    MESES.forEach(function (m, i) { svg.appendChild(s('text', { x: X(i), y: A - 6, 'text-anchor': 'middle' }, m)); });
+    return svg;
+  }
+
+  function desenharDetalhe() {
+    var c = CONTRATOS.filter(function (x) { return x.id === estado.sel; })[0];
+    var box = document.getElementById('detalhe');
+    box.textContent = '';
+    box.appendChild(el('h3', { texto: c.nome }));
+    box.appendChild(el('p', { 'class': 'sub', texto: c.tipo + ' · ' + c.detalhe + ' · margem em 12 meses, meta tracejada' }));
+    box.appendChild(el('dl', { 'class': 'mini' }, [
+      ['Receita', reais(c.receita)],
+      ['Custo por km', reaisKm(c.custo / c.km)],
+      ['Km sem pass.', c.vazio + '%'],
+      ['Ocupação', c.ocupacao + '%']
+    ].map(function (i) { return el('div', {}, [el('dt', { texto: i[0] }), el('dd', { texto: i[1] })]); })));
+    box.appendChild(grafico(c));
+    box.appendChild(el('p', { 'class': 'leitura', texto: c.leitura }));
+  }
+
+  function desenhar() { desenharFiltros(); desenharKpis(); desenharAlerta(); desenharLinhas(); desenharDetalhe(); }
+  desenhar();
+})();
+</script>
+</body>
+</html>
