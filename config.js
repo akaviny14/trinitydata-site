@@ -11,5 +11,5 @@ window.TD_CONFIG = {
   blogUrl: 'https://blog.trinitydata.com.br/', // endereço do blog no Ghost; vazio = sem o link "Ver todos os artigos"
   analytics: null, // ex.: { provedor: 'umami', id: '...' } ou { provedor: 'vercel' } (null = sem medição)
   dominio: 'trinitydata.com.br', email: '', cidade: '', // vazios até haver dados reais
-  linkedin: '', instagram: '', youtube: '' // redes sociais: endereço completo do perfil; cada ícone do rodapé só aparece com o seu
+  linkedin: 'https://www.linkedin.com/company/trinitydata', instagram: 'https://www.instagram.com/_trinitydata/', youtube: '' // redes sociais: endereço completo do perfil; cada ícone do rodapé só aparece com o seu
 };
