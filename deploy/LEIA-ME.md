@@ -110,7 +110,7 @@ curl -sI https://trinitydata.com.br | head -20             # 200, com Content-Se
 curl -sI http://trinitydata.com.br | grep -i location      # 301 para https://trinitydata.com.br/
 curl -sI https://www.trinitydata.com.br | grep -i location # 301 para https://trinitydata.com.br/
 curl -so /dev/null -w '%{http_code}\n' https://trinitydata.com.br/empresa                  # 200
-curl -so /dev/null -w '%{http_code}\n' https://trinitydata.com.br/politica-de-privacidade  # 200
+curl -so /dev/null -w '%{http_code}\n' https://trinitydata.com.br/politica-de-privacidade  # 404 enquanto a política estiver fora do ar (M73)
 curl -so /dev/null -w '%{http_code}\n' https://trinitydata.com.br/empresa.html             # 301
 curl -so /dev/null -w '%{http_code}\n' https://trinitydata.com.br/MUDANCAS-SITE.md         # 404
 curl -so /dev/null -w '%{http_code}\n' https://trinitydata.com.br/deploy/LEIA-ME.md        # 404
