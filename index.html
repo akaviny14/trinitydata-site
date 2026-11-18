@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-<script src="config.js?v=d757489d94"></script>
+<script src="config.js?v=dd0096b37f"></script>
 <script>
   // Tema antes da pintura: ?tema= > escolha guardada > claro (no celular também; o escuro só pelo botão do menu).
   (function () {
@@ -1667,13 +1667,8 @@ h1 { font-size: 48px; line-height: 1.12; font-weight: 700; letter-spacing: -.018
   if (CFG.blogUrl) document.getElementById('blog-todos').href = CFG.blogUrl;
 
   // ---------- Medição: track(evento, dados) chama o provedor de TD_CONFIG.analytics; sem provedor, não faz nada ----------
-  // Os dois provedores previstos funcionam sem cookies. Ao ligar um deles, liberar o domínio na Content-Security-Policy do vercel.json.
+  // O script do provedor é carregado pelo config.js, em todas as páginas; aqui só os eventos.
   var AN = CFG.analytics && CFG.analytics.provedor ? CFG.analytics : null;
-  if (AN) {
-    var sc = document.createElement('script'); sc.defer = true;
-    if (AN.provedor === 'umami' && AN.id) { sc.src = AN.src || 'https://cloud.umami.is/script.js'; sc.dataset.websiteId = AN.id; document.head.appendChild(sc); }
-    if (AN.provedor === 'vercel') { window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); }; sc.src = '/_vercel/insights/script.js'; document.head.appendChild(sc); }
-  }
   function track(evento, dados) {
     if (!AN) return;
     try {
