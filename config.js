@@ -7,7 +7,11 @@ window.TD_CONFIG = {
   textoProva: '', // ex.: '+120 empresas já atendidas pelos nossos especialistas' (vazio = oculto)
   prazoResposta: '', // ex.: 'em até 1 dia útil' (vazio = oculto; o passo 2 do fechamento fica genérico)
   formularioDestino: 'https://formspree.io/f/mpppvpyq', // Formspree (envia por e-mail aos sócios); vazio = formulário oculto
-  posts: [], // [{ titulo, categoria, url }] (vazio = seção Blog oculta, e somem os links para ela)
+  posts: [ // até três aparecem na home; escolhidos em 24/11 para o lançamento (os de dor de quem decide)
+    { titulo: 'Quanto custa o relatório que alguém monta na mão toda segunda', categoria: 'Gestão com dados', url: 'https://blog.trinitydata.com.br/custo-relatorio-manual/' },
+    { titulo: 'Por que o mesmo indicador dá três números diferentes na sua empresa', categoria: 'Gestão com dados', url: 'https://blog.trinitydata.com.br/mesmo-indicador-tres-numeros/' },
+    { titulo: 'Antes do painel: 5 perguntas que decidem se um projeto de dados dá certo', categoria: 'Gestão com dados', url: 'https://blog.trinitydata.com.br/cinco-perguntas-antes-do-painel/' }
+  ], // [{ titulo, categoria, url }] (vazio = seção Blog oculta, e somem os links para ela)
   blogUrl: 'https://blog.trinitydata.com.br/', // endereço do blog no Ghost; vazio = sem o link "Ver todos os artigos"
   // Medição: Umami próprio da Trinity, sem cookies. Só conta visitas em trinitydata.com.br (não na Vercel nem no protótipo).
   analytics: { provedor: 'umami', id: '6cf81ded-a77c-495e-abf0-31e1ed1783f2', src: 'https://m.trinitydata.com.br/insights.js', dominios: 'trinitydata.com.br,www.trinitydata.com.br' }, // null = sem medição
